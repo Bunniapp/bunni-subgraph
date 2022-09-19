@@ -1,13 +1,13 @@
 {
-  "name": "bunni-goerli",
+  "name": "bunni-mainnet",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ bunni/bunni-goerli",
-    "create-local": "graph create --node http://localhost:8020/ bunni/bunni-goerli",
-    "remove-local": "graph remove --node http://localhost:8020/ bunni/bunni-goerli",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bunni/bunni-goerli"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ bunni/bunni-mainnet",
+    "create-local": "graph create --node http://localhost:8020/ bunni/bunni-mainnet",
+    "remove-local": "graph remove --node http://localhost:8020/ bunni/bunni-mainnet",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bunni/bunni-mainnet"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.33.1",
