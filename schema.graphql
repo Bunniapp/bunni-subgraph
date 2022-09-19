@@ -1,0 +1,6 @@
+type ExampleEntity @entity {
+  id: ID!
+  count: BigInt!
+  sender: Bytes! # address
+  bunniKeyHash: Bytes! # bytes32
+}
