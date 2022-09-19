@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: BunniHub
-    network: goerli
+    network: mainnet
     source:
       address: "0xd56553a1A886874853b2569FbB431a84590E5F34"
       abi: BunniHub
-      startBlock: 7622424
+      startBlock: 15568747
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
