@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.6
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,9 +8,10 @@ dataSources:
     source:
       address: "0xd56553a1A886874853b2569FbB431a84590E5F34"
       abi: BunniHub
+      startBlock: 7622424
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Compound
@@ -23,6 +24,8 @@ dataSources:
       abis:
         - name: BunniHub
           file: ./abis/BunniHub.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: Compound(indexed address,indexed bytes32,uint128,uint256,uint256)
           handler: handleCompound
@@ -38,4 +41,4 @@ dataSources:
           handler: handleSetProtocolFee
         - event: Withdraw(indexed address,indexed address,indexed bytes32,uint128,uint256,uint256,uint256)
           handler: handleWithdraw
-      file: ./src/mapping.ts
+      file: ./src/mappings/BunniHub.ts

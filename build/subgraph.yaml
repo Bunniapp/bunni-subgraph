@@ -1,0 +1,46 @@
+specVersion: 0.0.6
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: BunniHub
+    network: goerli
+    source:
+      address: "0xd56553a1A886874853b2569FbB431a84590E5F34"
+      abi: BunniHub
+      startBlock: 7622424
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Compound
+        - Deposit
+        - NewBunni
+        - OwnershipTransferred
+        - PayProtocolFee
+        - SetProtocolFee
+        - Withdraw
+      abis:
+        - name: BunniHub
+          file: BunniHub/abis/BunniHub.json
+        - name: ERC20
+          file: BunniHub/abis/ERC20.json
+      eventHandlers:
+        - event: Compound(indexed address,indexed bytes32,uint128,uint256,uint256)
+          handler: handleCompound
+        - event: Deposit(indexed address,indexed address,indexed
+            bytes32,uint128,uint256,uint256,uint256)
+          handler: handleDeposit
+        - event: NewBunni(indexed address,indexed bytes32,indexed address,int24,int24)
+          handler: handleNewBunni
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PayProtocolFee(uint256,uint256)
+          handler: handlePayProtocolFee
+        - event: SetProtocolFee(uint256)
+          handler: handleSetProtocolFee
+        - event: Withdraw(indexed address,indexed address,indexed
+            bytes32,uint128,uint256,uint256,uint256)
+          handler: handleWithdraw
+      file: BunniHub/BunniHub.wasm
