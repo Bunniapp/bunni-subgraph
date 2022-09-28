@@ -1,7 +1,9 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { BunniToken, Pool } from "../../generated/schema";
+import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool } from "../../generated/templates";
-import { ZERO_BD, ZERO_INT, ZERO_ADDR } from "./constants";
+import { ZERO_BD, ZERO_INT, ZERO_ADDR, NEG_ONE_INT } from "./constants";
+import { sqrtPriceX96ToTokenPrices } from "./math";
 
 export function getBunniToken(address: Address): BunniToken {
   let bunniToken = BunniToken.load(address.toHex());
@@ -29,21 +31,25 @@ export function getPool(address: Address): Pool {
   let pool = Pool.load(address.toHex());
 
   if (pool === null) {
-    UniswapV3Pool.create(address);
+    let poolContract = UniswapPool.bind(address);
+    let slot0 = poolContract.slot0();
+    let price = sqrtPriceX96ToTokenPrices(slot0.value0);
+
     pool = new Pool(address.toHex());
 
-    pool.fee = ZERO_INT;
-    pool.tick = ZERO_INT;
+    pool.fee = BigInt.fromI32(poolContract.fee());
+    pool.tick = BigInt.fromI32(slot0.value1);
     pool.address = address;
-    pool.liquidity = ZERO_INT;
+    pool.liquidity = NEG_ONE_INT;
 
-    pool.token0 = ZERO_ADDR;
-    pool.token1 = ZERO_ADDR;
-    pool.token0Price = ZERO_BD;
-    pool.token1Price = ZERO_BD;
+    pool.token0 = poolContract.token0();
+    pool.token1 = poolContract.token1();
+    pool.token0Price = price[0];
+    pool.token1Price = price[1];
 
     pool.save();
   }
 
+  UniswapV3Pool.create(address);
   return pool as Pool;
 }
