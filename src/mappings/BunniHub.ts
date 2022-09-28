@@ -3,7 +3,7 @@ import { BunniHub, Compound, Deposit, NewBunni, OwnershipTransferred, PayProtoco
 import { ERC20 } from "../../generated/BunniHub/ERC20";
 import { BunniToken } from "../../generated/schema";
 
-import { getBunniToken } from "../utils/entities";
+import { getBunniToken, getPool } from "../utils/entities";
 import { tenPow } from "../utils/math";
 
 export function handleCompound(event: Compound): void {}
@@ -11,6 +11,7 @@ export function handleCompound(event: Compound): void {}
 export function handleDeposit(event: Deposit): void {}
 
 export function handleNewBunni(event: NewBunni): void {
+  let pool = getPool(event.params.pool);
   let bunniToken = getBunniToken(event.params.token);
   let bunniTokenContract = ERC20.bind(event.params.token);
 
@@ -23,7 +24,7 @@ export function handleNewBunni(event: NewBunni): void {
   bunniToken.decimals = BigInt.fromI32(decimals);
   bunniToken.precision = tenPow(decimals);
 
-  bunniToken.pool = event.params.pool;
+  bunniToken.pool = pool.id;
   bunniToken.tickLower = BigInt.fromI32(event.params.tickLower);
   bunniToken.tickUpper = BigInt.fromI32(event.params.tickUpper);
   bunniToken.save();

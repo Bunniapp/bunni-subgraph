@@ -21,7 +21,7 @@ export class BunniToken extends Entity {
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("decimals", Value.fromBigInt(BigInt.zero()));
     this.set("precision", Value.fromBigInt(BigInt.zero()));
-    this.set("pool", Value.fromBytes(Bytes.empty()));
+    this.set("pool", Value.fromString(""));
     this.set("tickLower", Value.fromBigInt(BigInt.zero()));
     this.set("tickUpper", Value.fromBigInt(BigInt.zero()));
   }
@@ -97,13 +97,13 @@ export class BunniToken extends Entity {
     this.set("precision", Value.fromBigInt(value));
   }
 
-  get pool(): Bytes {
+  get pool(): string {
     let value = this.get("pool");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set pool(value: Bytes) {
-    this.set("pool", Value.fromBytes(value));
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
   }
 
   get tickLower(): BigInt {
@@ -122,5 +122,119 @@ export class BunniToken extends Entity {
 
   set tickUpper(value: BigInt) {
     this.set("tickUpper", Value.fromBigInt(value));
+  }
+}
+
+export class Pool extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("fee", Value.fromBigInt(BigInt.zero()));
+    this.set("tick", Value.fromBigInt(BigInt.zero()));
+    this.set("address", Value.fromBytes(Bytes.empty()));
+    this.set("liquidity", Value.fromBigInt(BigInt.zero()));
+    this.set("token0", Value.fromBytes(Bytes.empty()));
+    this.set("token1", Value.fromBytes(Bytes.empty()));
+    this.set("token0Price", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("token1Price", Value.fromBigDecimal(BigDecimal.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Pool entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Pool entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Pool", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Pool | null {
+    return changetype<Pool | null>(store.get("Pool", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get fee(): BigInt {
+    let value = this.get("fee");
+    return value!.toBigInt();
+  }
+
+  set fee(value: BigInt) {
+    this.set("fee", Value.fromBigInt(value));
+  }
+
+  get tick(): BigInt {
+    let value = this.get("tick");
+    return value!.toBigInt();
+  }
+
+  set tick(value: BigInt) {
+    this.set("tick", Value.fromBigInt(value));
+  }
+
+  get address(): Bytes {
+    let value = this.get("address");
+    return value!.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get liquidity(): BigInt {
+    let value = this.get("liquidity");
+    return value!.toBigInt();
+  }
+
+  set liquidity(value: BigInt) {
+    this.set("liquidity", Value.fromBigInt(value));
+  }
+
+  get token0(): Bytes {
+    let value = this.get("token0");
+    return value!.toBytes();
+  }
+
+  set token0(value: Bytes) {
+    this.set("token0", Value.fromBytes(value));
+  }
+
+  get token1(): Bytes {
+    let value = this.get("token1");
+    return value!.toBytes();
+  }
+
+  set token1(value: Bytes) {
+    this.set("token1", Value.fromBytes(value));
+  }
+
+  get token0Price(): BigDecimal {
+    let value = this.get("token0Price");
+    return value!.toBigDecimal();
+  }
+
+  set token0Price(value: BigDecimal) {
+    this.set("token0Price", Value.fromBigDecimal(value));
+  }
+
+  get token1Price(): BigDecimal {
+    let value = this.get("token1Price");
+    return value!.toBigDecimal();
+  }
+
+  set token1Price(value: BigDecimal) {
+    this.set("token1Price", Value.fromBigDecimal(value));
   }
 }
