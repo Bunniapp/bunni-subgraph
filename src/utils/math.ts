@@ -9,6 +9,10 @@ export function tenPow(exponent: number): BigInt {
   return result;
 }
 
+export function normalize(i: BigInt, decimals: number = 18): BigDecimal {
+  return i.toBigDecimal().div(new BigDecimal(tenPow(decimals)));
+}
+
 export function safeDiv(amount0: BigDecimal, amount1: BigDecimal): BigDecimal {
   if (amount1.equals(ZERO_BD)) {
     return ZERO_BD;

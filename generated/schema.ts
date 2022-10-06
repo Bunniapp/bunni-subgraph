@@ -24,6 +24,7 @@ export class BunniToken extends Entity {
     this.set("pool", Value.fromString(""));
     this.set("tickLower", Value.fromBigInt(BigInt.zero()));
     this.set("tickUpper", Value.fromBigInt(BigInt.zero()));
+    this.set("totalSupply", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -122,6 +123,15 @@ export class BunniToken extends Entity {
 
   set tickUpper(value: BigInt) {
     this.set("tickUpper", Value.fromBigInt(value));
+  }
+
+  get totalSupply(): BigDecimal {
+    let value = this.get("totalSupply");
+    return value!.toBigDecimal();
+  }
+
+  set totalSupply(value: BigDecimal) {
+    this.set("totalSupply", Value.fromBigDecimal(value));
   }
 }
 

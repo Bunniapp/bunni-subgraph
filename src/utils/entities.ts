@@ -1,7 +1,7 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { BunniToken, Pool } from "../../generated/schema";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
-import { UniswapV3Pool } from "../../generated/templates";
+import { UniswapV3Pool, ERC20 } from "../../generated/templates";
 import { ZERO_BD, ZERO_INT, ZERO_ADDR, NEG_ONE_INT } from "./constants";
 import { sqrtPriceX96ToTokenPrices } from "./math";
 
@@ -20,8 +20,10 @@ export function getBunniToken(address: Address): BunniToken {
     bunniToken.pool = ZERO_ADDR.toHex();
     bunniToken.tickLower = ZERO_INT;
     bunniToken.tickUpper = ZERO_INT;
+    bunniToken.totalSupply = ZERO_BD;
 
     bunniToken.save();
+    ERC20.create(address);
   }
 
   return bunniToken as BunniToken;
@@ -48,8 +50,8 @@ export function getPool(address: Address): Pool {
     pool.token1Price = price[1];
 
     pool.save();
+    UniswapV3Pool.create(address);
   }
 
-  UniswapV3Pool.create(address);
   return pool as Pool;
 }

@@ -9,6 +9,7 @@ type BunniToken @entity {
   pool: Pool!                                               # uniswap v3 Pool
   tickLower: BigInt!                                        # lower tick of the uniswap v3 position
   tickUpper: BigInt!                                        # upper tick of the uniswap v3 position
+  totalSupply: BigDecimal!                                  # total amount of BunniTokens in existence
 }
 
 type Pool @entity {
