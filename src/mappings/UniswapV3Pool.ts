@@ -32,6 +32,7 @@ export function handleSwap(event: Swap): void {
 
   pool.tick = BigInt.fromI32(event.params.tick);
   pool.liquidity = event.params.liquidity;
+  pool.sqrtPriceX96 = event.params.sqrtPriceX96;
   pool.token0Price = prices[0];
   pool.token1Price = prices[1];
 

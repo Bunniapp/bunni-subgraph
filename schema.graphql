@@ -18,6 +18,7 @@ type Pool @entity {
   tick: BigInt!                                             # current tick
   address: Bytes!                                           # pool address
   liquidity: BigInt!                                        # in range liquidity
+  sqrtPriceX96: BigInt!                                     #
 
   token0: Bytes!                                            # token0 address
   token1: Bytes!                                            # token1 address

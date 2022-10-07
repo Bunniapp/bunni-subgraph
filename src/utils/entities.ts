@@ -43,6 +43,7 @@ export function getPool(address: Address): Pool {
     pool.tick = BigInt.fromI32(slot0.value1);
     pool.address = address;
     pool.liquidity = ZERO_INT;
+    pool.sqrtPriceX96 = slot0.value0;
 
     pool.token0 = poolContract.token0();
     pool.token1 = poolContract.token1();

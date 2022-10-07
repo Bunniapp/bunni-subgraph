@@ -144,6 +144,7 @@ export class Pool extends Entity {
     this.set("tick", Value.fromBigInt(BigInt.zero()));
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("liquidity", Value.fromBigInt(BigInt.zero()));
+    this.set("sqrtPriceX96", Value.fromBigInt(BigInt.zero()));
     this.set("token0", Value.fromBytes(Bytes.empty()));
     this.set("token1", Value.fromBytes(Bytes.empty()));
     this.set("token0Price", Value.fromBigDecimal(BigDecimal.zero()));
@@ -210,6 +211,15 @@ export class Pool extends Entity {
 
   set liquidity(value: BigInt) {
     this.set("liquidity", Value.fromBigInt(value));
+  }
+
+  get sqrtPriceX96(): BigInt {
+    let value = this.get("sqrtPriceX96");
+    return value!.toBigInt();
+  }
+
+  set sqrtPriceX96(value: BigInt) {
+    this.set("sqrtPriceX96", Value.fromBigInt(value));
   }
 
   get token0(): Bytes {
