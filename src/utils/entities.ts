@@ -2,7 +2,7 @@ import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { BunniToken, Pool } from "../../generated/schema";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool, ERC20 } from "../../generated/templates";
-import { ZERO_BD, ZERO_INT, ZERO_ADDR, NEG_ONE_INT } from "./constants";
+import { ZERO_BD, ZERO_INT, ZERO_ADDR } from "./constants";
 import { sqrtPriceX96ToTokenPrices } from "./math";
 
 export function getBunniToken(address: Address): BunniToken {
@@ -42,7 +42,7 @@ export function getPool(address: Address): Pool {
     pool.fee = BigInt.fromI32(poolContract.fee());
     pool.tick = BigInt.fromI32(slot0.value1);
     pool.address = address;
-    pool.liquidity = NEG_ONE_INT;
+    pool.liquidity = ZERO_INT;
 
     pool.token0 = poolContract.token0();
     pool.token1 = poolContract.token1();
