@@ -120,20 +120,20 @@ export class NewBunni__Params {
   }
 }
 
-export class OwnershipTransferred extends ethereum.Event {
-  get params(): OwnershipTransferred__Params {
-    return new OwnershipTransferred__Params(this);
+export class OwnerUpdated extends ethereum.Event {
+  get params(): OwnerUpdated__Params {
+    return new OwnerUpdated__Params(this);
   }
 }
 
-export class OwnershipTransferred__Params {
-  _event: OwnershipTransferred;
+export class OwnerUpdated__Params {
+  _event: OwnerUpdated;
 
-  constructor(event: OwnershipTransferred) {
+  constructor(event: OwnerUpdated) {
     this._event = event;
   }
 
-  get previousOwner(): Address {
+  get user(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
@@ -353,21 +353,6 @@ export class BunniHub extends ethereum.SmartContract {
     return new BunniHub("BunniHub", address);
   }
 
-  WETH9(): Address {
-    let result = super.call("WETH9", "WETH9():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_WETH9(): ethereum.CallResult<Address> {
-    let result = super.tryCall("WETH9", "WETH9():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   compound(key: BunniHub__compoundInputKeyStruct): BunniHub__compoundResult {
     let result = super.call(
       "compound",
@@ -557,7 +542,7 @@ export class ConstructorCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get WETH9_(): Address {
+  get owner_(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
@@ -808,58 +793,6 @@ export class MulticallCall__Outputs {
   }
 }
 
-export class RefundETHCall extends ethereum.Call {
-  get inputs(): RefundETHCall__Inputs {
-    return new RefundETHCall__Inputs(this);
-  }
-
-  get outputs(): RefundETHCall__Outputs {
-    return new RefundETHCall__Outputs(this);
-  }
-}
-
-export class RefundETHCall__Inputs {
-  _call: RefundETHCall;
-
-  constructor(call: RefundETHCall) {
-    this._call = call;
-  }
-}
-
-export class RefundETHCall__Outputs {
-  _call: RefundETHCall;
-
-  constructor(call: RefundETHCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceOwnershipCall extends ethereum.Call {
-  get inputs(): RenounceOwnershipCall__Inputs {
-    return new RenounceOwnershipCall__Inputs(this);
-  }
-
-  get outputs(): RenounceOwnershipCall__Outputs {
-    return new RenounceOwnershipCall__Outputs(this);
-  }
-}
-
-export class RenounceOwnershipCall__Inputs {
-  _call: RenounceOwnershipCall;
-
-  constructor(call: RenounceOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceOwnershipCall__Outputs {
-  _call: RenounceOwnershipCall;
-
-  constructor(call: RenounceOwnershipCall) {
-    this._call = call;
-  }
-}
-
 export class SelfPermitCall extends ethereum.Call {
   get inputs(): SelfPermitCall__Inputs {
     return new SelfPermitCall__Inputs(this);
@@ -1060,6 +993,36 @@ export class SelfPermitIfNecessaryCall__Outputs {
   }
 }
 
+export class SetOwnerCall extends ethereum.Call {
+  get inputs(): SetOwnerCall__Inputs {
+    return new SetOwnerCall__Inputs(this);
+  }
+
+  get outputs(): SetOwnerCall__Outputs {
+    return new SetOwnerCall__Outputs(this);
+  }
+}
+
+export class SetOwnerCall__Inputs {
+  _call: SetOwnerCall;
+
+  constructor(call: SetOwnerCall) {
+    this._call = call;
+  }
+
+  get newOwner(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetOwnerCall__Outputs {
+  _call: SetOwnerCall;
+
+  constructor(call: SetOwnerCall) {
+    this._call = call;
+  }
+}
+
 export class SetProtocolFeeCall extends ethereum.Call {
   get inputs(): SetProtocolFeeCall__Inputs {
     return new SetProtocolFeeCall__Inputs(this);
@@ -1086,44 +1049,6 @@ export class SetProtocolFeeCall__Outputs {
   _call: SetProtocolFeeCall;
 
   constructor(call: SetProtocolFeeCall) {
-    this._call = call;
-  }
-}
-
-export class SweepTokenCall extends ethereum.Call {
-  get inputs(): SweepTokenCall__Inputs {
-    return new SweepTokenCall__Inputs(this);
-  }
-
-  get outputs(): SweepTokenCall__Outputs {
-    return new SweepTokenCall__Outputs(this);
-  }
-}
-
-export class SweepTokenCall__Inputs {
-  _call: SweepTokenCall;
-
-  constructor(call: SweepTokenCall) {
-    this._call = call;
-  }
-
-  get token(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get amountMinimum(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get recipient(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-}
-
-export class SweepTokenCall__Outputs {
-  _call: SweepTokenCall;
-
-  constructor(call: SweepTokenCall) {
     this._call = call;
   }
 }
@@ -1162,36 +1087,6 @@ export class SweepTokensCall__Outputs {
   }
 }
 
-export class TransferOwnershipCall extends ethereum.Call {
-  get inputs(): TransferOwnershipCall__Inputs {
-    return new TransferOwnershipCall__Inputs(this);
-  }
-
-  get outputs(): TransferOwnershipCall__Outputs {
-    return new TransferOwnershipCall__Outputs(this);
-  }
-}
-
-export class TransferOwnershipCall__Inputs {
-  _call: TransferOwnershipCall;
-
-  constructor(call: TransferOwnershipCall) {
-    this._call = call;
-  }
-
-  get newOwner(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class TransferOwnershipCall__Outputs {
-  _call: TransferOwnershipCall;
-
-  constructor(call: TransferOwnershipCall) {
-    this._call = call;
-  }
-}
-
 export class UniswapV3MintCallbackCall extends ethereum.Call {
   get inputs(): UniswapV3MintCallbackCall__Inputs {
     return new UniswapV3MintCallbackCall__Inputs(this);
@@ -1226,40 +1121,6 @@ export class UniswapV3MintCallbackCall__Outputs {
   _call: UniswapV3MintCallbackCall;
 
   constructor(call: UniswapV3MintCallbackCall) {
-    this._call = call;
-  }
-}
-
-export class UnwrapWETH9Call extends ethereum.Call {
-  get inputs(): UnwrapWETH9Call__Inputs {
-    return new UnwrapWETH9Call__Inputs(this);
-  }
-
-  get outputs(): UnwrapWETH9Call__Outputs {
-    return new UnwrapWETH9Call__Outputs(this);
-  }
-}
-
-export class UnwrapWETH9Call__Inputs {
-  _call: UnwrapWETH9Call;
-
-  constructor(call: UnwrapWETH9Call) {
-    this._call = call;
-  }
-
-  get amountMinimum(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get recipient(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-}
-
-export class UnwrapWETH9Call__Outputs {
-  _call: UnwrapWETH9Call;
-
-  constructor(call: UnwrapWETH9Call) {
     this._call = call;
   }
 }

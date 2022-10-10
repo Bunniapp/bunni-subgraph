@@ -1,5 +1,5 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { BunniHub, Compound, Deposit, NewBunni, OwnershipTransferred, PayProtocolFee, SetProtocolFee, Withdraw } from "../../generated/BunniHub/BunniHub";
+import { BunniHub, Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../../generated/BunniHub/BunniHub";
 import { ERC20 } from "../../generated/BunniHub/ERC20";
 import { BunniToken } from "../../generated/schema";
 
@@ -29,8 +29,6 @@ export function handleNewBunni(event: NewBunni): void {
   bunniToken.tickUpper = BigInt.fromI32(event.params.tickUpper);
   bunniToken.save();
 }
-
-export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
 
 export function handlePayProtocolFee(event: PayProtocolFee): void {}
 

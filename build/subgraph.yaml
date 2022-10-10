@@ -6,9 +6,9 @@ dataSources:
     name: BunniHub
     network: mainnet
     source:
-      address: "0xd56553a1A886874853b2569FbB431a84590E5F34"
+      address: "0xa048ff56741E8B43430F5CEa085405316EA4Ea52"
       abi: BunniHub
-      startBlock: 15568747
+      startBlock: 15699042
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -36,8 +36,6 @@ dataSources:
           handler: handleDeposit
         - event: NewBunni(indexed address,indexed bytes32,indexed address,int24,int24)
           handler: handleNewBunni
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: PayProtocolFee(uint256,uint256)
           handler: handlePayProtocolFee
         - event: SetProtocolFee(uint256)

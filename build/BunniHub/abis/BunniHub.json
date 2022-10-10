@@ -2,13 +2,13 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract IUniswapV3Factory",
         "name": "factory_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "WETH9_",
+        "name": "owner_",
         "type": "address"
       },
       {
@@ -19,6 +19,11 @@
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "T",
+    "type": "error"
   },
   {
     "anonymous": false,
@@ -149,7 +154,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "previousOwner",
+        "name": "user",
         "type": "address"
       },
       {
@@ -159,7 +164,7 @@
         "type": "address"
       }
     ],
-    "name": "OwnershipTransferred",
+    "name": "OwnerUpdated",
     "type": "event"
   },
   {
@@ -242,19 +247,6 @@
     ],
     "name": "Withdraw",
     "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "WETH9",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "inputs": [
@@ -431,7 +423,7 @@
     "name": "factory",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "contract IUniswapV3Factory",
         "name": "",
         "type": "address"
       }
@@ -518,20 +510,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "refundETH",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -689,6 +667,19 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "setOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "value",
         "type": "uint256"
@@ -697,29 +688,6 @@
     "name": "setProtocolFee",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amountMinimum",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      }
-    ],
-    "name": "sweepToken",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -736,19 +704,6 @@
       }
     ],
     "name": "sweepTokens",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -774,24 +729,6 @@
     "name": "uniswapV3MintCallback",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountMinimum",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      }
-    ],
-    "name": "unwrapWETH9",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -871,9 +808,5 @@
     ],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
   }
 ]
