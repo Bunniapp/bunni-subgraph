@@ -6,9 +6,9 @@ dataSources:
     name: BunniHub
     network: mainnet
     source:
-      address: "0xa048ff56741E8B43430F5CEa085405316EA4Ea52"
+      address: "0xb5087F95643A9a4069471A28d32C569D9bd57fE4"
       abi: BunniHub
-      startBlock: 15699042
+      startBlock: 15743582
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

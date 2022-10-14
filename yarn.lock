@@ -926,12 +926,11 @@
 
 "concat-stream@github:hugomrdias/concat-stream#feat/smaller":
   "integrity" "sha512-MWufYdFw53ccGjCA+Ol7XJYpAlW6/prSMzuPOTRnJGcGzuhLn4Scrz7qf6o8bROZ514ltazcIFJZevcfbo0x7A=="
+  "resolved" "git+ssh://git@github.com/hugomrdias/concat-stream.git#057bc7b5d6d8df26c8cf00a3f151b6721a0a8034"
   "version" "2.0.0"
   dependencies:
-    "buffer-from" "^1.0.0"
     "inherits" "^2.0.3"
     "readable-stream" "^3.0.2"
-    "typedarray" "^0.0.6"
 
 "core-util-is@~1.0.0":
   "integrity" "sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ=="
@@ -2424,12 +2423,13 @@
 
 "ndjson@github:hugomrdias/ndjson#feat/readable-stream3":
   "integrity" "sha512-hUPLuaziboGjNF7wHngkgVc0FOclR8dDk/HfEvTtDr/iUrqBWiRcRSTK3/nLOqKH33th714BrMmTPtObI9gZxQ=="
+  "resolved" "git+ssh://git@github.com/hugomrdias/ndjson.git#4db16da6b42e5b39bf300c3a7cde62abb3fa3a11"
   "version" "1.5.0"
   dependencies:
     "json-stringify-safe" "^5.0.1"
     "minimist" "^1.2.0"
-    "split2" "^2.1.0"
-    "through2" "^2.0.3"
+    "split2" "^3.1.0"
+    "through2" "^3.0.0"
 
 "node-addon-api@^2.0.0":
   "integrity" "sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA=="
@@ -3010,7 +3010,7 @@
   "resolved" "https://registry.npmjs.org/split-ca/-/split-ca-1.0.1.tgz"
   "version" "1.0.1"
 
-"split2@^2.1.0":
+"split2@^3.1.0":
   "integrity" "sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg=="
   "resolved" "https://registry.npmjs.org/split2/-/split2-3.2.2.tgz"
   "version" "3.2.2"
@@ -3201,7 +3201,7 @@
   "resolved" "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
   "version" "2.3.8"
 
-"through2@^2.0.3", "through2@^3.0.1":
+"through2@^3.0.0", "through2@^3.0.1":
   "integrity" "sha512-enaDQ4MUyP2W6ZyT6EsMzqBPZaM/avg8iuo+l2d3QCs0J+6RaqkHV/2/lOwDTueBHeJ/2LG9lrLW3d5rWPucuQ=="
   "resolved" "https://registry.npmjs.org/through2/-/through2-3.0.2.tgz"
   "version" "3.0.2"
