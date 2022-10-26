@@ -50,6 +50,13 @@ export function getPool(address: Address): Pool {
     pool.token0Price = price[0];
     pool.token1Price = price[1];
 
+    pool.totalValueLockedToken0 = ZERO_INT;
+    pool.totalValueLockedToken1 = ZERO_INT;
+    pool.totalVolumeToken0 = ZERO_INT;
+    pool.totalVolumeToken1 = ZERO_INT;
+    pool.totalFeesToken0 = ZERO_INT;
+    pool.totalFeesToken1 = ZERO_INT;
+
     pool.save();
     UniswapV3Pool.create(address);
   }
