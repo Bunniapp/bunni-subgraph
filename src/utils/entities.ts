@@ -22,6 +22,8 @@ export function getBunniToken(address: Address): BunniToken {
     bunniToken.tickUpper = ZERO_INT;
     bunniToken.totalSupply = ZERO_BD;
 
+    bunniToken.gauge = ZERO_ADDR;
+
     bunniToken.save();
     ERC20.create(address);
   }

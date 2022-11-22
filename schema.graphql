@@ -10,6 +10,8 @@ type BunniToken @entity {
   tickLower: BigInt!                                        # lower tick of the uniswap v3 position
   tickUpper: BigInt!                                        # upper tick of the uniswap v3 position
   totalSupply: BigDecimal!                                  # total amount of BunniTokens in existence
+
+  gauge: Bytes!                                             # address of the liquidity gauge
 }
 
 type Pool @entity {
