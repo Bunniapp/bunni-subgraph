@@ -42,6 +42,30 @@ dataSources:
         - event: Withdraw(indexed address,indexed address,indexed bytes32,uint128,uint256,uint256,uint256)
           handler: handleWithdraw
       file: ./src/mappings/BunniHub.ts
+  - kind: ethereum
+    name: LiquidityGaugeFactory
+    network: mainnet
+    source:
+      address: "0x822E5828Cb9C0e2aD2DC5035577E6d63B672D0e2"
+      abi: LiquidityGaugeFactory
+      startBlock: 16345397
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BunniToken
+      abis:
+        - name: BunniHub
+          file: ./abis/BunniHub.json
+        - name: LiquidityGaugeFactory
+          file: ./abis/LiquidityGaugeFactory.json
+        - name: LiquidityGauge
+          file: ./abis/LiquidityGauge.json
+      eventHandlers:
+        - event: GaugeCreated(indexed address)
+          handler: handleGaugeCreated
+      file: ./src/mappings/LiquidityGaugeFactory.ts
 templates:
   - kind: ethereum/contract
     name: UniswapV3Pool
