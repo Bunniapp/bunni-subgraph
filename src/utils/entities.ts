@@ -1,9 +1,24 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { BunniToken, Pool } from "../../generated/schema";
+import { Bunni, BunniToken, Pool } from "../../generated/schema";
+import { BunniHub } from "../../generated/BunniHub/BunniHub";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool, ERC20 } from "../../generated/templates";
-import { ZERO_BD, ZERO_INT, ZERO_ADDR } from "./constants";
+import { BUNNI_HUB, ZERO_BD, ZERO_INT, ZERO_ADDR } from "./constants";
 import { sqrtPriceX96ToTokenPrices } from "./math";
+
+export function getBunni(): Bunni {
+  let bunni = Bunni.load(BUNNI_HUB);
+
+  if (bunni === null) {
+    let bunniHubContract = BunniHub.bind(BUNNI_HUB);
+
+    bunni = new Bunni(BUNNI_HUB);
+    bunni.protocolFee = bunniHubContract.protocolFee();
+    bunni.save();
+  }
+
+  return bunni as Bunni;
+}
 
 export function getBunniToken(address: Address): BunniToken {
   let bunniToken = BunniToken.load(address.toHex());
