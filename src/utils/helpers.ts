@@ -13,6 +13,14 @@ export function encodeKey(owner: Address, tickLower: i32, tickUpper: i32): Bytes
     return encoded;
 }
 
+export function bunniKey(pool: Address, tickLower: i32, tickUpper: i32): Bytes {
+    const encodedHex = encodeKey(pool, tickLower, tickUpper).toHex();
+    const keyArray = crypto.keccak256(ByteArray.fromHexString(encodedHex));
+    const key = Bytes.fromByteArray(keyArray);
+
+    return key as Bytes;
+}
+
 export function uniswapV3PositionKey(owner: Address, tickLower: i32, tickUpper: i32): Bytes {
     const encodedHex = encodeKey(owner, tickLower, tickUpper).toHex();
     const encodedPacked = "0x" + encodedHex.substr(26, 40) + encodedHex.substr(124, 6) + encodedHex.substr(188, 6);

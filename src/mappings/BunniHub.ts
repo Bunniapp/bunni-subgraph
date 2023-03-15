@@ -16,7 +16,7 @@ export function handleNewBunni(event: NewBunni): void {
   let bunni = getBunni();
 
   let pool = getPool(event.params.pool);
-  let bunniToken = getBunniToken(event.params.token);
+  let bunniToken = getBunniToken(event.params.bunniKeyHash);
   let bunniTokenContract = ERC20.bind(event.params.token);
 
   let name = bunniTokenContract.name();
@@ -25,6 +25,7 @@ export function handleNewBunni(event: NewBunni): void {
 
   bunniToken.name = name;
   bunniToken.symbol = symbol;
+  bunniToken.address = event.params.token;
   bunniToken.decimals = BigInt.fromI32(decimals);
   bunniToken.precision = tenPow(decimals);
 
@@ -32,7 +33,6 @@ export function handleNewBunni(event: NewBunni): void {
   bunniToken.tickLower = BigInt.fromI32(event.params.tickLower);
   bunniToken.tickUpper = BigInt.fromI32(event.params.tickUpper);
 
-  bunniToken.bunniKey = event.params.bunniKeyHash;
   bunniToken.positionKey = uniswapV3PositionKey(BUNNI_HUB, event.params.tickLower, event.params.tickUpper)
 
   bunniToken.save();

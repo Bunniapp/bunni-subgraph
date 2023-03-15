@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { Bunni, BunniToken, Gauge, Pool } from "../../generated/schema";
 import { BunniHub } from "../../generated/BunniHub/BunniHub";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
@@ -20,15 +20,15 @@ export function getBunni(): Bunni {
   return bunni as Bunni;
 }
 
-export function getBunniToken(address: Address): BunniToken {
-  let bunniToken = BunniToken.load(address);
+export function getBunniToken(bunniKey: Bytes): BunniToken {
+  let bunniToken = BunniToken.load(bunniKey);
 
   if (bunniToken === null) {
-    bunniToken = new BunniToken(address);
+    bunniToken = new BunniToken(bunniKey);
 
     bunniToken.name = '';
     bunniToken.symbol = '';
-    bunniToken.address = address;
+    bunniToken.address = ZERO_ADDR;
     bunniToken.decimals = ZERO_INT;
     bunniToken.precision = ZERO_INT;
 
@@ -36,7 +36,7 @@ export function getBunniToken(address: Address): BunniToken {
     bunniToken.tickLower = ZERO_INT;
     bunniToken.tickUpper = ZERO_INT;
 
-    bunniToken.bunniKey = ZERO_ADDR;
+    bunniToken.bunniKey = bunniKey;
     bunniToken.positionKey = ZERO_ADDR;
 
     bunniToken.gauge = ZERO_ADDR;
