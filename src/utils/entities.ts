@@ -35,6 +35,7 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
     bunniToken.pool = ZERO_ADDR;
     bunniToken.tickLower = ZERO_INT;
     bunniToken.tickUpper = ZERO_INT;
+    bunniToken.liquidity = ZERO_INT;
 
     bunniToken.bunniKey = bunniKey;
     bunniToken.positionKey = ZERO_ADDR;

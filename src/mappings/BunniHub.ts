@@ -8,9 +8,25 @@ import { getBunni, getBunniToken, getPool } from "../utils/entities";
 import { uniswapV3PositionKey } from "../utils/helpers";
 import { tenPow } from "../utils/math";
 
-export function handleCompound(event: Compound): void {}
+export function handleCompound(event: Compound): void {
+  let bunniToken = getBunniToken(event.params.bunniKeyHash);
 
-export function handleDeposit(event: Deposit): void {}
+  let liquidity = bunniToken.liquidity;
+  liquidity = liquidity.plus(event.params.liquidity);
+  bunniToken.liquidity = liquidity;
+
+  bunniToken.save();
+}
+
+export function handleDeposit(event: Deposit): void {
+  let bunniToken = getBunniToken(event.params.bunniKeyHash);
+
+  let liquidity = bunniToken.liquidity;
+  liquidity = liquidity.plus(event.params.liquidity);
+  bunniToken.liquidity = liquidity;
+
+  bunniToken.save();
+}
 
 export function handleNewBunni(event: NewBunni): void {
   let bunni = getBunni();
@@ -49,4 +65,12 @@ export function handleSetProtocolFee(event: SetProtocolFee): void {
   bunni.save();
 }
 
-export function handleWithdraw(event: Withdraw): void {}
+export function handleWithdraw(event: Withdraw): void {
+  let bunniToken = getBunniToken(event.params.bunniKeyHash);
+
+  let liquidity = bunniToken.liquidity;
+  liquidity = liquidity.minus(event.params.liquidity);
+  bunniToken.liquidity = liquidity;
+
+  bunniToken.save();
+}

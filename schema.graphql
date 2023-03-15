@@ -14,6 +14,7 @@ type BunniToken @entity {
   pool: Pool!                                               # uniswap v3 Pool
   tickLower: BigInt!                                        # lower tick of the uniswap v3 position
   tickUpper: BigInt!                                        # upper tick of the uniswap v3 position
+  liquidity: BigInt!                                        # current position liquidity
 
   bunniKey: Bytes!                                          # the hash of the bunni key
   positionKey: Bytes!                                       # the uniswap v3 position key
