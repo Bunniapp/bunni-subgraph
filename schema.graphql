@@ -12,6 +12,7 @@ type BunniToken @entity {
   precision: BigInt!                                        #
 
   pool: Pool!                                               # uniswap v3 Pool
+  positionKey: Bytes!                                       # 
   tickLower: BigInt!                                        # lower tick of the uniswap v3 position
   tickUpper: BigInt!                                        # upper tick of the uniswap v3 position
   totalSupply: BigDecimal!                                  # total amount of BunniTokens in existence

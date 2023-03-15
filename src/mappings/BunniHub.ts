@@ -3,7 +3,9 @@ import { BunniHub, Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, 
 import { ERC20 } from "../../generated/BunniHub/ERC20";
 import { BunniToken } from "../../generated/schema";
 
+import { BUNNI_HUB } from "../utils/constants";
 import { getBunni, getBunniToken, getPool } from "../utils/entities";
+import { uniswapV3PositionKey } from "../utils/helpers";
 import { tenPow } from "../utils/math";
 
 export function handleCompound(event: Compound): void {}
@@ -27,6 +29,7 @@ export function handleNewBunni(event: NewBunni): void {
   bunniToken.precision = tenPow(decimals);
 
   bunniToken.pool = pool.id;
+  bunniToken.positionKey = uniswapV3PositionKey(BUNNI_HUB, event.params.tickLower, event.params.tickUpper);
   bunniToken.tickLower = BigInt.fromI32(event.params.tickLower);
   bunniToken.tickUpper = BigInt.fromI32(event.params.tickUpper);
   bunniToken.save();
