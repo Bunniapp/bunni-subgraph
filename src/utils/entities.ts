@@ -33,10 +33,12 @@ export function getBunniToken(address: Address): BunniToken {
     bunniToken.precision = ZERO_INT;
 
     bunniToken.pool = ZERO_ADDR.toHex();
-    bunniToken.positionKey = ZERO_ADDR;
     bunniToken.tickLower = ZERO_INT;
     bunniToken.tickUpper = ZERO_INT;
     bunniToken.totalSupply = ZERO_BD;
+
+    bunniToken.bunniKey = ZERO_ADDR;
+    bunniToken.positionKey = ZERO_ADDR;
 
     bunniToken.gauge = ZERO_ADDR;
 

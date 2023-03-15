@@ -29,9 +29,12 @@ export function handleNewBunni(event: NewBunni): void {
   bunniToken.precision = tenPow(decimals);
 
   bunniToken.pool = pool.id;
-  bunniToken.positionKey = uniswapV3PositionKey(BUNNI_HUB, event.params.tickLower, event.params.tickUpper);
   bunniToken.tickLower = BigInt.fromI32(event.params.tickLower);
   bunniToken.tickUpper = BigInt.fromI32(event.params.tickUpper);
+
+  bunniToken.bunniKey = event.params.bunniKeyHash;
+  bunniToken.positionKey = uniswapV3PositionKey(BUNNI_HUB, event.params.tickLower, event.params.tickUpper)
+
   bunniToken.save();
 }
 
