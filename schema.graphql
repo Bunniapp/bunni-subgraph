@@ -21,6 +21,12 @@ type BunniToken @entity {
   gauge: Bytes!                                             # address of the liquidity gauge
 }
 
+type Gauge @entity {
+  id: Bytes!                                                #
+  address: Bytes!                                           # the address of the Gauge
+  bunniToken: BunniToken!                                   # the address of the associated BunniToken
+}
+
 type Pool @entity {
   id: Bytes!                                                #
   fee: BigInt!                                              # fee tier

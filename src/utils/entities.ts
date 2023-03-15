@@ -1,5 +1,5 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { Bunni, BunniToken, Pool } from "../../generated/schema";
+import { Bunni, BunniToken, Gauge, Pool } from "../../generated/schema";
 import { BunniHub } from "../../generated/BunniHub/BunniHub";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool } from "../../generated/templates";
@@ -45,6 +45,21 @@ export function getBunniToken(address: Address): BunniToken {
   }
 
   return bunniToken as BunniToken;
+}
+
+export function getGauge(address: Address): Gauge {
+  let gauge = Gauge.load(address);
+
+  if (gauge === null) {
+    gauge = new Gauge(address);
+
+    gauge.address = address;
+    gauge.bunniToken = ZERO_ADDR;
+
+    gauge.save();
+  }
+
+  return gauge as Gauge;
 }
 
 export function getPool(address: Address): Pool {
