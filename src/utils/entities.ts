@@ -21,10 +21,10 @@ export function getBunni(): Bunni {
 }
 
 export function getBunniToken(address: Address): BunniToken {
-  let bunniToken = BunniToken.load(address.toHex());
+  let bunniToken = BunniToken.load(address);
 
   if (bunniToken === null) {
-    bunniToken = new BunniToken(address.toHex());
+    bunniToken = new BunniToken(address);
 
     bunniToken.name = '';
     bunniToken.symbol = '';
@@ -32,7 +32,7 @@ export function getBunniToken(address: Address): BunniToken {
     bunniToken.decimals = ZERO_INT;
     bunniToken.precision = ZERO_INT;
 
-    bunniToken.pool = ZERO_ADDR.toHex();
+    bunniToken.pool = ZERO_ADDR;
     bunniToken.tickLower = ZERO_INT;
     bunniToken.tickUpper = ZERO_INT;
     bunniToken.totalSupply = ZERO_BD;
@@ -50,14 +50,14 @@ export function getBunniToken(address: Address): BunniToken {
 }
 
 export function getPool(address: Address): Pool {
-  let pool = Pool.load(address.toHex());
+  let pool = Pool.load(address);
 
   if (pool === null) {
     let poolContract = UniswapPool.bind(address);
     let slot0 = poolContract.slot0();
     let price = sqrtPriceX96ToTokenPrices(slot0.value0);
 
-    pool = new Pool(address.toHex());
+    pool = new Pool(address);
 
     pool.fee = BigInt.fromI32(poolContract.fee());
     pool.tick = BigInt.fromI32(slot0.value1);

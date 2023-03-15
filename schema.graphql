@@ -4,7 +4,7 @@ type Bunni @entity {
 }
 
 type BunniToken @entity {
-  id: ID!                                                   #
+  id: Bytes!                                                #
   name: String!                                             #
   symbol: String!                                           #
   address: Bytes!                                           #
@@ -23,7 +23,7 @@ type BunniToken @entity {
 }
 
 type Pool @entity {
-  id: ID!                                                   #
+  id: Bytes!                                                #
   fee: BigInt!                                              # fee tier
   tick: BigInt!                                             # current tick
   address: Bytes!                                           # pool address
