@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
 import { BunniHub, Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../../generated/BunniHub/BunniHub";
 import { ERC20 } from "../../generated/BunniHub/ERC20";
 import { BunniToken } from "../../generated/schema";
@@ -57,6 +57,21 @@ export function handleNewBunni(event: NewBunni): void {
 export function handlePayProtocolFee(event: PayProtocolFee): void {
   let bunni = getBunni();
   bunni.save();
+
+  const eventReceipt = event.receipt;
+  if (eventReceipt) {
+    const eventLogs = eventReceipt.logs;
+    const signatureHash = crypto.keccak256(ByteArray.fromUTF8("Compound(address,bytes32,uint128,uint256,uint256)"));
+
+    for (let i = 0; i < eventLogs.length; i++) {
+      if (eventLogs[i].topics[0].toHex() == signatureHash.toHex()) {        
+        let bunniToken = getBunniToken(eventLogs[i].topics[2]);
+        bunniToken.collectedFeesToken0 = bunniToken.collectedFeesToken0.plus(event.params.amount0);
+        bunniToken.collectedFeesToken1 = bunniToken.collectedFeesToken1.plus(event.params.amount1);
+        bunniToken.save();
+      }
+    }
+  }
 }
 
 export function handleSetProtocolFee(event: SetProtocolFee): void {

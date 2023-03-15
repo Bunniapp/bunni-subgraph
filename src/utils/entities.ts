@@ -40,6 +40,9 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
     bunniToken.bunniKey = bunniKey;
     bunniToken.positionKey = ZERO_ADDR;
 
+    bunniToken.collectedFeesToken0 = ZERO_INT;
+    bunniToken.collectedFeesToken1 = ZERO_INT;
+
     bunniToken.gauge = ZERO_ADDR;
 
     bunniToken.save();

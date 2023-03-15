@@ -19,6 +19,9 @@ type BunniToken @entity {
   bunniKey: Bytes!                                          # the hash of the bunni key
   positionKey: Bytes!                                       # the uniswap v3 position key
 
+  collectedFeesToken0: BigInt!                              # the amount of token0 collected as protocol fees 
+  collectedFeesToken1: BigInt!                              # the amount of token1 collected as protocol fees
+
   gauge: Bytes!                                             # address of the liquidity gauge
 }
 
