@@ -1,3 +1,4 @@
+import { Bytes, crypto } from "@graphprotocol/graph-ts";
 import { GaugeCreated } from "../../generated/LiquidityGaugeFactory/LiquidityGaugeFactory";
 import { LiquidityGauge } from "../../generated/LiquidityGaugeFactory/LiquidityGauge";
 import { BunniToken } from "../../generated/LiquidityGaugeFactory/BunniToken";
@@ -13,7 +14,8 @@ export function handleGaugeCreated(event: GaugeCreated): void {
   let tickLower = bunniTokenContract.tickLower();
   let tickUpper = bunniTokenContract.tickUpper();
 
-  let gauge = getGauge(event.params.gauge);
+  let gauge = getGauge(Bytes.fromByteArray(crypto.keccak256(event.params.gauge)));
+  gauge.address = event.params.gauge;
   gauge.bunniToken = bunniKey(pool, tickLower, tickUpper);
   gauge.save();
 

@@ -68,6 +68,27 @@ dataSources:
         - event: GaugeCreated(indexed address)
           handler: handleGaugeCreated
       file: ./src/mappings/LiquidityGaugeFactory.ts
+  - kind: ethereum
+    name: BunniBribe
+    network: mainnet
+    source:
+      address: "0x78C45fBDB71E7c0FbDfe49bDEFdACDcc4764336f"
+      abi: BunniBribe
+      startBlock: 16617430
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+        - Bribe
+      abis:
+        - name: BunniBribe
+          file: ./abis/BunniBribe.json
+      eventHandlers:
+        - event: DepositBribe(indexed bytes32,indexed address,uint256,bytes32,bytes32,indexed address)
+          handler: handleDepositBribe
+      file: ./src/mappings/BunniBribe.ts
 templates:
   - kind: ethereum/contract
     name: UniswapV3Pool

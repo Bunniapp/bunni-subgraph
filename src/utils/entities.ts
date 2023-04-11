@@ -1,5 +1,5 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
-import { Bunni, BunniToken, Gauge, Pool } from "../../generated/schema";
+import { Bunni, BunniToken, Gauge, Bribe, Pool } from "../../generated/schema";
 import { BunniHub } from "../../generated/BunniHub/BunniHub";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool } from "../../generated/templates";
@@ -51,19 +51,41 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
   return bunniToken as BunniToken;
 }
 
-export function getGauge(address: Address): Gauge {
-  let gauge = Gauge.load(address);
+export function getGauge(gaugeIdentifier: Bytes): Gauge {
+  let gauge = Gauge.load(gaugeIdentifier);
 
   if (gauge === null) {
-    gauge = new Gauge(address);
+    gauge = new Gauge(gaugeIdentifier);
 
-    gauge.address = address;
+    gauge.address = ZERO_ADDR;
     gauge.bunniToken = ZERO_ADDR;
 
     gauge.save();
   }
 
   return gauge as Gauge;
+}
+
+export function getBribe(bribeIdentifier: Bytes): Bribe {
+  let bribe = Bribe.load(bribeIdentifier);
+
+  if (bribe == null) {
+    bribe = new Bribe(bribeIdentifier);
+
+    bribe.gauge = ZERO_ADDR;
+    bribe.proposal = ZERO_ADDR;
+    bribe.bribeIdentifier = bribeIdentifier;
+    bribe.rewardIdentifier = ZERO_ADDR;
+
+    bribe.token = ZERO_ADDR;
+    bribe.amount = ZERO_INT;
+    bribe.deadline = ZERO_INT;
+    bribe.briber = ZERO_ADDR;
+
+    bribe.save();
+  }
+
+  return bribe as Bribe;
 }
 
 export function getPool(address: Address): Pool {
