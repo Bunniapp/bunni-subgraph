@@ -22,7 +22,7 @@ type BunniToken @entity {
   collectedFeesToken0: BigInt!                              # the amount of token0 collected as protocol fees 
   collectedFeesToken1: BigInt!                              # the amount of token1 collected as protocol fees
 
-  gauge: Bytes!                                             # address of the liquidity gauge
+  gauge: Gauge @derivedFrom(field: "bunniToken")            # Gauge associated with the BunniToken
 }
 
 type Gauge @entity {
