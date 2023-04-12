@@ -4,10 +4,10 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ bunniapp/bunni-mainnet",
-    "create-local": "graph create --node http://localhost:8020/ bunniapp/bunni-mainnet",
-    "remove-local": "graph remove --node http://localhost:8020/ bunniapp/bunni-mainnet",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bunniapp/bunni-mainnet"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ bunniapp/bunni-mainnet-development",
+    "create-local": "graph create --node http://localhost:8020/ bunniapp/bunni-mainnet-development",
+    "remove-local": "graph remove --node http://localhost:8020/ bunniapp/bunni-mainnet-development",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bunniapp/bunni-mainnet-development"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.37.1",
