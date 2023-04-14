@@ -121,6 +121,8 @@ export function getPool(address: Address): Pool {
     pool.totalFeesToken0 = ZERO_INT;
     pool.totalFeesToken1 = ZERO_INT;
 
+    pool.bunniTokens = new Array<Bytes>();
+
     pool.save();
     UniswapV3Pool.create(address);
   }
