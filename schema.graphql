@@ -24,9 +24,9 @@ type BunniToken @entity {
 
   gauge: Gauge @derivedFrom(field: "bunniToken")            # Gauge associated with the BunniToken
 
-  totalVolumeToken0: BigInt!                                # The total volume processed by this Bunni pool's liquidity in token0
-  totalVolumeToken1: BigInt!                                # The total volume processed by this Bunni pool's liquidity in token1
-  poolLiquidityInRange: BigInt!                             # The Uniswap pool's total liquidity within the range of this Bunni token
+  totalVolumeToken0: BigInt!                                # The total volume processed by this Bunni pool's liquidity in terms of token0
+  totalVolumeToken1: BigInt!                                # The total volume processed by this Bunni pool's liquidity in terms of token1
+  poolLiquidityInRange: BigInt!                             # The cumulative liquidity of the Uniswap pool in this Bunni position's range
 }
 
 type Gauge @entity {

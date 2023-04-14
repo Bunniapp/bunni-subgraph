@@ -27,9 +27,8 @@ export function handleMint(event: Mint): void {
       // range overlap exists
       let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
       let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
-      let overlapWidth = tickUpper.minus(tickLower).plus(pool.tickSpacing);
-      let newPositionWidth = BigInt.fromI32(event.params.tickUpper - event.params.tickLower).plus(pool.tickSpacing);
-      let liquidityAddedInRange = event.params.amount.times(overlapWidth).div(newPositionWidth);
+      let overlapTickNum = tickUpper.minus(tickLower).div(pool.tickSpacing).plus(BigInt.fromI32(1));
+      let liquidityAddedInRange = event.params.amount.times(overlapTickNum);
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidityAddedInRange);
       bunniToken.save();
     }
@@ -57,9 +56,8 @@ export function handleBurn(event: Burn): void {
       // range overlap exists
       let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
       let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
-      let overlapWidth = tickUpper.minus(tickLower).plus(pool.tickSpacing);
-      let burnPositionWidth = BigInt.fromI32(event.params.tickUpper - event.params.tickLower).plus(pool.tickSpacing);
-      let liquidityRemovedInRange = event.params.amount.times(overlapWidth).div(burnPositionWidth);
+      let overlapTickNum = tickUpper.minus(tickLower).div(pool.tickSpacing).plus(BigInt.fromI32(1));
+      let liquidityRemovedInRange = event.params.amount.times(overlapTickNum);
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.minus(liquidityRemovedInRange);
       bunniToken.save();
     }
@@ -100,8 +98,9 @@ export function handleSwap(event: Swap): void {
     let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
     if (event.params.tick <= bunniToken.tickUpper.toI32() && event.params.tick >= bunniToken.tickLower.toI32() && bunniToken.poolLiquidityInRange.gt(BigInt.zero()) && bunniToken.liquidity.gt(BigInt.zero())) {
       // volume touches BunniToken's position
-      let adjustedVolumeToken0 = amount0.abs().times(bunniToken.liquidity).div(bunniToken.poolLiquidityInRange);
-      let adjustedVolumeToken1 = amount1.abs().times(bunniToken.liquidity).div(bunniToken.poolLiquidityInRange);
+      let bunniTickNum = bunniToken.tickUpper.minus(bunniToken.tickLower).div(pool.tickSpacing).plus(BigInt.fromI32(1));
+      let adjustedVolumeToken0 = amount0.abs().times(bunniToken.liquidity).times(bunniTickNum).div(bunniToken.poolLiquidityInRange);
+      let adjustedVolumeToken1 = amount1.abs().times(bunniToken.liquidity).times(bunniTickNum).div(bunniToken.poolLiquidityInRange);
       bunniToken.totalVolumeToken0 = bunniToken.totalVolumeToken0.plus(adjustedVolumeToken0);
       bunniToken.totalVolumeToken1 = bunniToken.totalVolumeToken1.plus(adjustedVolumeToken1);
       bunniToken.save();
