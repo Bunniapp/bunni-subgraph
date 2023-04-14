@@ -1,10 +1,14 @@
 {
-  "name": "bunni-mainnet",
+  "name": "bunni-development",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ bunniapp/bunni-mainnet-development",
+    "deploy": "graph deploy bunniapp/bunni-mainnet-development --node https://api.thegraph.com/deploy/",
+    "deploy:goerli": "graph deploy bunniapp/bunni-goerli-development subgraph.goerli.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy:optimism": "graph deploy bunniapp/bunni-optimism-development subgraph.optimism.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy:polygon": "graph deploy bunniapp/bunni-polygon-development subgraph.polygon.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy:arbitrum": "graph deploy bunniapp/bunni-arbitrum-development subgraph.arbitrum.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "create-local": "graph create --node http://localhost:8020/ bunniapp/bunni-mainnet-development",
     "remove-local": "graph remove --node http://localhost:8020/ bunniapp/bunni-mainnet-development",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bunniapp/bunni-mainnet-development"
