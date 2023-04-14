@@ -28,8 +28,8 @@ export function handleMint(event: Mint): void {
       let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
       let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
       let overlapWidth = tickUpper.minus(tickLower).plus(pool.tickSpacing);
-      let newPositionLength = BigInt.fromI32(event.params.tickUpper - event.params.tickLower).plus(pool.tickSpacing);
-      let liquidityAddedInRange = event.params.amount.times(overlapWidth).div(newPositionLength);
+      let newPositionWidth = BigInt.fromI32(event.params.tickUpper - event.params.tickLower).plus(pool.tickSpacing);
+      let liquidityAddedInRange = event.params.amount.times(overlapWidth).div(newPositionWidth);
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidityAddedInRange);
       bunniToken.save();
     }
@@ -58,9 +58,9 @@ export function handleBurn(event: Burn): void {
       let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
       let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
       let overlapWidth = tickUpper.minus(tickLower).plus(pool.tickSpacing);
-      let newPositionLength = BigInt.fromI32(event.params.tickUpper - event.params.tickLower).plus(pool.tickSpacing);
-      let liquidityAddedInRange = event.params.amount.times(overlapWidth).div(newPositionLength);
-      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.minus(liquidityAddedInRange);
+      let burnPositionWidth = BigInt.fromI32(event.params.tickUpper - event.params.tickLower).plus(pool.tickSpacing);
+      let liquidityRemovedInRange = event.params.amount.times(overlapWidth).div(burnPositionWidth);
+      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.minus(liquidityRemovedInRange);
       bunniToken.save();
     }
   }

@@ -1,6 +1,7 @@
 import { BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
 import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../../generated/BunniHub/BunniHub";
 import { ERC20 } from "../../generated/BunniHub/ERC20";
+import { UniswapV3Pool } from "../../generated/BunniHub/UniswapV3Pool";
 
 import { BUNNI_HUB } from "../utils/constants";
 import { getBunni, getBunniToken, getPool } from "../utils/entities";
@@ -33,6 +34,7 @@ export function handleNewBunni(event: NewBunni): void {
   let pool = getPool(event.params.pool);
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
   let bunniTokenContract = ERC20.bind(event.params.token);
+  let poolContract = UniswapV3Pool.bind(event.params.pool);
 
   let name = bunniTokenContract.name();
   let symbol = bunniTokenContract.symbol();
@@ -49,6 +51,73 @@ export function handleNewBunni(event: NewBunni): void {
   bunniToken.tickUpper = BigInt.fromI32(event.params.tickUpper);
 
   bunniToken.positionKey = uniswapV3PositionKey(BUNNI_HUB, event.params.tickLower, event.params.tickUpper)
+
+  // initialize total pool liquidity in the range of the BunniToken's price range
+  // If we are iterating ascending and we found an initialized tick we immediately apply
+  // it to the current processed tick we are building.
+  // If we are iterating descending, we don't want to apply the net liquidity until the following tick.
+  if (pool.tick.gt(bunniToken.tickUpper)) {
+    // tick to the right of range
+    let liquidity = poolContract.liquidity();
+    let previousLiquidityNet = poolContract.ticks(pool.tick.toI32()).value1;
+
+    // move tick to tickUpper
+    for (let tick = pool.tick.toI32() - pool.tickSpacing.toI32(); tick > bunniToken.tickUpper.toI32(); tick -= pool.tickSpacing.toI32()) {
+      let result = poolContract.ticks(tick);
+      liquidity = liquidity.minus(previousLiquidityNet);
+      previousLiquidityNet = result.value1;
+    }
+
+    // start counting liquidity in range
+    for (let tick = bunniToken.tickUpper.toI32(); tick >= bunniToken.tickLower.toI32(); tick -= pool.tickSpacing.toI32()) {
+      let result = poolContract.ticks(tick);
+      liquidity = liquidity.minus(previousLiquidityNet);
+      previousLiquidityNet = result.value1;
+      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
+    }
+  } else if (pool.tick.lt(bunniToken.tickLower)) {
+    // tick to the left of range
+    let liquidity = poolContract.liquidity();
+
+    // move tick to tickLower
+    for (let tick = pool.tick.toI32() + pool.tickSpacing.toI32(); tick < bunniToken.tickLower.toI32(); tick += pool.tickSpacing.toI32()) {
+      let result = poolContract.ticks(tick);
+      liquidity = liquidity.plus(result.value1);
+    }
+
+    // start counting liquidity in range
+    for (let tick = bunniToken.tickLower.toI32(); tick <= bunniToken.tickUpper.toI32(); tick += pool.tickSpacing.toI32()) {
+      let result = poolContract.ticks(tick);
+      liquidity = liquidity.plus(result.value1);
+      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
+    }
+  } else {
+    // tick within range
+    let liquidity = poolContract.liquidity();
+    let currentTickLiquidity = BigInt.fromString(liquidity.toString()); // make a copy
+
+    // count liquidity in [tick + tickSpacing, tickUpper]
+    for (let tick = pool.tick.toI32() + pool.tickSpacing.toI32(); tick <= bunniToken.tickUpper.toI32(); tick += pool.tickSpacing.toI32()) {
+      let result = poolContract.ticks(tick);
+      liquidity = liquidity.plus(result.value1);
+      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
+    }
+
+    // reset liquidity
+    liquidity = currentTickLiquidity;
+    let previousLiquidityNet = poolContract.ticks(pool.tick.toI32()).value1;
+
+    // count current tick liquidity
+    bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
+
+    // count liquidity in [tickLower, tick - tickSpacing]
+    for (let tick = pool.tick.toI32() - pool.tickSpacing.toI32(); tick >= bunniToken.tickLower.toI32(); tick -= pool.tickSpacing.toI32()) {
+      let result = poolContract.ticks(tick);
+      liquidity = liquidity.minus(previousLiquidityNet);
+      previousLiquidityNet = result.value1;
+      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
+    }
+  }
 
   bunniToken.save();
 
