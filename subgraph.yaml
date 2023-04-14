@@ -28,6 +28,8 @@ dataSources:
           file: ./abis/ERC20.json
         - name: UniswapV3Pool
           file: ./abis/UniswapV3Pool.json
+        - name: UniswapV3Factory
+          file: ./abis/UniswapV3Factory.json
       eventHandlers:
         - event: Compound(indexed address,indexed bytes32,uint128,uint256,uint256)
           handler: handleCompound

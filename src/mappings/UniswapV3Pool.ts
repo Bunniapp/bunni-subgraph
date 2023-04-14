@@ -1,5 +1,6 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { ERC20 } from "../../generated/BunniHub/ERC20";
+import { BunniToken } from "../../generated/schema";
 import { Mint, Burn, Swap } from "../../generated/templates/UniswapV3Pool/UniswapV3Pool";
 import { ZERO_INT } from "../utils/constants";
 import { getPool } from "../utils/entities";
@@ -18,6 +19,21 @@ export function handleMint(event: Mint): void {
   }
 
   pool.save();
+
+  // update relevant BunniToken liquidity data
+  for (let i = 0; i < pool.bunniTokens.length; i++) {
+    let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
+    if (event.params.tickLower <= bunniToken.tickUpper.toI32() && event.params.tickUpper >= bunniToken.tickLower.toI32()) {
+      // range overlap exists
+      let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
+      let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
+      let overlapWidth = tickUpper.minus(tickLower).plus(pool.tickSpacing);
+      let newPositionLength = BigInt.fromI32(event.params.tickUpper - event.params.tickLower).plus(pool.tickSpacing);
+      let liquidityAddedInRange = event.params.amount.times(overlapWidth).div(newPositionLength);
+      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidityAddedInRange);
+      bunniToken.save();
+    }
+  }
 }
 
 export function handleBurn(event: Burn): void {
@@ -33,6 +49,21 @@ export function handleBurn(event: Burn): void {
   }
 
   pool.save();
+
+  // update relevant BunniToken liquidity data
+  for (let i = 0; i < pool.bunniTokens.length; i++) {
+    let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
+    if (event.params.tickLower <= bunniToken.tickUpper.toI32() && event.params.tickUpper >= bunniToken.tickLower.toI32()) {
+      // range overlap exists
+      let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
+      let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
+      let overlapWidth = tickUpper.minus(tickLower).plus(pool.tickSpacing);
+      let newPositionLength = BigInt.fromI32(event.params.tickUpper - event.params.tickLower).plus(pool.tickSpacing);
+      let liquidityAddedInRange = event.params.amount.times(overlapWidth).div(newPositionLength);
+      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.minus(liquidityAddedInRange);
+      bunniToken.save();
+    }
+  }
 }
 
 export function handleSwap(event: Swap): void {
@@ -63,4 +94,17 @@ export function handleSwap(event: Swap): void {
   pool.token1Price = prices[1];
 
   pool.save();
+
+  // update relevant BunniToken volume data
+  for (let i = 0; i < pool.bunniTokens.length; i++) {
+    let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
+    if (event.params.tick <= bunniToken.tickUpper.toI32() && event.params.tick >= bunniToken.tickLower.toI32()) {
+      // volume touches BunniToken's position
+      let adjustedVolumeToken0 = amount0.times(bunniToken.liquidity).div(bunniToken.poolLiquidityInRange);
+      let adjustedVolumeToken1 = amount1.times(bunniToken.liquidity).div(bunniToken.poolLiquidityInRange);
+      bunniToken.totalVolumeToken0 = bunniToken.totalVolumeToken0.plus(adjustedVolumeToken0);
+      bunniToken.totalVolumeToken1 = bunniToken.totalVolumeToken1.plus(adjustedVolumeToken1);
+      bunniToken.save();
+    }
+  }
 }

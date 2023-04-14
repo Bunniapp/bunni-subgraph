@@ -1,7 +1,6 @@
-import { Address, BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
-import { BunniHub, Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../../generated/BunniHub/BunniHub";
+import { BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
+import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../../generated/BunniHub/BunniHub";
 import { ERC20 } from "../../generated/BunniHub/ERC20";
-import { BunniToken } from "../../generated/schema";
 
 import { BUNNI_HUB } from "../utils/constants";
 import { getBunni, getBunniToken, getPool } from "../utils/entities";
@@ -52,6 +51,11 @@ export function handleNewBunni(event: NewBunni): void {
   bunniToken.positionKey = uniswapV3PositionKey(BUNNI_HUB, event.params.tickLower, event.params.tickUpper)
 
   bunniToken.save();
+
+  let bunniTokensOfPool = pool.bunniTokens;
+  bunniTokensOfPool.push(bunniToken.id);
+  pool.bunniTokens = bunniTokensOfPool;
+  pool.save();
 }
 
 export function handlePayProtocolFee(event: PayProtocolFee): void {
@@ -64,7 +68,7 @@ export function handlePayProtocolFee(event: PayProtocolFee): void {
     const signatureHash = crypto.keccak256(ByteArray.fromUTF8("Compound(address,bytes32,uint128,uint256,uint256)"));
 
     for (let i = 0; i < eventLogs.length; i++) {
-      if (eventLogs[i].topics[0].toHex() == signatureHash.toHex()) {        
+      if (eventLogs[i].topics[0].toHex() == signatureHash.toHex()) {
         let bunniToken = getBunniToken(eventLogs[i].topics[2]);
         bunniToken.collectedFeesToken0 = bunniToken.collectedFeesToken0.plus(event.params.amount0);
         bunniToken.collectedFeesToken1 = bunniToken.collectedFeesToken1.plus(event.params.amount1);

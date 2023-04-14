@@ -23,6 +23,10 @@ type BunniToken @entity {
   collectedFeesToken1: BigInt!                              # the amount of token1 collected as protocol fees
 
   gauge: Gauge @derivedFrom(field: "bunniToken")            # Gauge associated with the BunniToken
+
+  totalVolumeToken0: BigInt!                                # The total volume processed by this Bunni pool's liquidity in token0
+  totalVolumeToken1: BigInt!                                # The total volume processed by this Bunni pool's liquidity in token1
+  poolLiquidityInRange: BigInt!                             # The Uniswap pool's total liquidity within the range of this Bunni token
 }
 
 type Gauge @entity {
@@ -50,6 +54,7 @@ type Pool @entity {
   id: Bytes!                                                #
   fee: BigInt!                                              # fee tier
   tick: BigInt!                                             # current tick
+  tickSpacing: BigInt!                                      # tick spacing value (related to fee tier)
   address: Bytes!                                           # pool address
   liquidity: BigInt!                                        # in range liquidity
   sqrtPriceX96: BigInt!                                     #
@@ -66,5 +71,5 @@ type Pool @entity {
   totalFeesToken0: BigInt!                                  #
   totalFeesToken1: BigInt!                                  #
 
-  bunniTokens: [BunniToken!]! @derivedFrom(field: "pool")   # BunniTokens associated with the Pool
+  bunniTokens: [BunniToken!]!                               # BunniTokens associated with the Pool
 }

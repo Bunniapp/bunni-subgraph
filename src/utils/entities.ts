@@ -3,8 +3,9 @@ import { Bunni, BunniToken, Gauge, Bribe, Pool } from "../../generated/schema";
 import { BunniHub } from "../../generated/BunniHub/BunniHub";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool } from "../../generated/templates";
-import { BUNNI_HUB, ZERO_BD, ZERO_INT, ZERO_ADDR } from "./constants";
+import { BUNNI_HUB, ZERO_INT, ZERO_ADDR } from "./constants";
 import { sqrtPriceX96ToTokenPrices } from "./math";
+import { UniswapV3Factory } from "../../generated/BunniHub/UniswapV3Factory";
 
 export function getBunni(): Bunni {
   let bunni = Bunni.load(BUNNI_HUB);
@@ -42,6 +43,10 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
 
     bunniToken.collectedFeesToken0 = ZERO_INT;
     bunniToken.collectedFeesToken1 = ZERO_INT;
+
+    bunniToken.poolLiquidityInRange = ZERO_INT;
+    bunniToken.totalVolumeToken0 = ZERO_INT;
+    bunniToken.totalVolumeToken1 = ZERO_INT;
 
     bunniToken.save();
   }
@@ -91,6 +96,7 @@ export function getPool(address: Address): Pool {
 
   if (pool === null) {
     let poolContract = UniswapPool.bind(address);
+    let factoryContract = UniswapV3Factory.bind(Address.fromString("0x1F98431c8aD98523631AE4a59f267346ea31F984"));
     let slot0 = poolContract.slot0();
     let price = sqrtPriceX96ToTokenPrices(slot0.value0);
 
@@ -98,6 +104,7 @@ export function getPool(address: Address): Pool {
 
     pool.fee = BigInt.fromI32(poolContract.fee());
     pool.tick = BigInt.fromI32(slot0.value1);
+    pool.tickSpacing = BigInt.fromI32(factoryContract.feeAmountTickSpacing(pool.fee.toI32()));
     pool.address = address;
     pool.liquidity = ZERO_INT;
     pool.sqrtPriceX96 = slot0.value0;
