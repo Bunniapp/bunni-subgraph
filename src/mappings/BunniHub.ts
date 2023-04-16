@@ -174,7 +174,7 @@ function multicallTicksLiquidityDelta(pool: Pool, tickLower: BigInt, tickUpper: 
     callStruct[1] = ethereum.Value.fromBytes(ticksSig.concat(ethereum.encode(ethereum.Value.fromI32(tick))!));
     multicallCalls.push(callStruct);
   }
-  let multicallResult: BigInt[] = aggregate(multicallCalls).getReturnData().map<BigInt>((rawBytes) => ethereum.decode("(uint128,int128,uint256,uint256,int56,uint160,uint32,bool)", rawBytes)!.toTuple().at(1).toBigInt());
+  let multicallResult: BigInt[] = aggregate(multicallCalls).map<BigInt>((rawBytes) => ethereum.decode("(uint128,int128,uint256,uint256,int56,uint160,uint32,bool)", rawBytes)!.toTuple().at(1).toBigInt());
   let result = new Map<number, BigInt>();
   let i = 0;
   for (let tick = tickLower.toI32(); tick <= tickUpper.toI32(); tick += pool.tickSpacing.toI32()) {
@@ -185,17 +185,21 @@ function multicallTicksLiquidityDelta(pool: Pool, tickLower: BigInt, tickUpper: 
 }
 
 function aggregate(
-  calls: Array<ethereum.Tuple>
-): Multicall3__aggregateResult {
+  calls: Array<ethereum.Tuple>,
+  batchSize: i32 = 1000
+): Bytes[] {
   let multicall = Multicall3.bind(Address.fromString("0xcA11bde05977b3631167028862bE2a173976CA11"));
-  let result = multicall.call(
-    "aggregate",
-    "aggregate((address,bytes)[]):(uint256,bytes[])",
-    [ethereum.Value.fromTupleArray(calls)]
-  );
+  let numBatches = Math.ceil((calls.length as f32) / (batchSize as f32));
+  let result: Bytes[] = [];
+  for (let batch: i32 = 0; batch < numBatches; batch++) {
+    let callsBatch = calls.slice(batch * batchSize, (batch + 1) * batchSize);
+    let batchResult = multicall.call(
+      "aggregate",
+      "aggregate((address,bytes)[]):(uint256,bytes[])",
+      [ethereum.Value.fromTupleArray(callsBatch)]
+    );
+    result = result.concat(batchResult[1].toBytesArray());
+  }
 
-  return new Multicall3__aggregateResult(
-    result[0].toBigInt(),
-    result[1].toBytesArray()
-  );
+  return result;
 }
