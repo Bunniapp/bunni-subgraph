@@ -23,7 +23,7 @@ export function handleMint(event: Mint): void {
   // update relevant BunniToken liquidity data
   for (let i = 0; i < pool.bunniTokens.length; i++) {
     let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
-    if (event.params.tickLower < bunniToken.tickUpper.toI32() && event.params.tickUpper > bunniToken.tickLower.toI32()) {
+    if (event.params.tickLower <= bunniToken.tickUpper.toI32() && event.params.tickUpper >= bunniToken.tickLower.toI32()) {
       // range overlap exists
       let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
       let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
@@ -52,7 +52,7 @@ export function handleBurn(event: Burn): void {
   // update relevant BunniToken liquidity data
   for (let i = 0; i < pool.bunniTokens.length; i++) {
     let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
-    if (event.params.tickLower < bunniToken.tickUpper.toI32() && event.params.tickUpper > bunniToken.tickLower.toI32()) {
+    if (event.params.tickLower <= bunniToken.tickUpper.toI32() && event.params.tickUpper >= bunniToken.tickLower.toI32()) {
       // range overlap exists
       let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
       let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
