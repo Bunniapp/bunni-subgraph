@@ -27,7 +27,7 @@ export function handleMint(event: Mint): void {
       // range overlap exists
       let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
       let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
-      let overlapTickNum = tickUpper.minus(tickLower).div(pool.tickSpacing).plus(BigInt.fromI32(1));
+      let overlapTickNum = tickUpper.minus(tickLower).div(pool.tickSpacing);
       let liquidityAddedInRange = event.params.amount.times(overlapTickNum);
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidityAddedInRange);
       bunniToken.save();
@@ -56,7 +56,7 @@ export function handleBurn(event: Burn): void {
       // range overlap exists
       let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
       let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
-      let overlapTickNum = tickUpper.minus(tickLower).div(pool.tickSpacing).plus(BigInt.fromI32(1));
+      let overlapTickNum = tickUpper.minus(tickLower).div(pool.tickSpacing);
       let liquidityRemovedInRange = event.params.amount.times(overlapTickNum);
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.minus(liquidityRemovedInRange);
       bunniToken.save();

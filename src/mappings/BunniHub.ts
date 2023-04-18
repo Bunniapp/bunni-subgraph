@@ -60,7 +60,7 @@ export function handleNewBunni(event: NewBunni): void {
   // If we are iterating descending, we don't want to apply the net liquidity until the following tick.
   // The pool's current tick isn't necessarily a tick that can actually be initialized.
   // Find the nearest valid tick given the tick spacing.
-  const activeTick = pool.tick.div(pool.tickSpacing).times(pool.tickSpacing);
+  const activeTick = BigInt.fromI32((Math.floor((pool.tick.toI32() as f32) / (pool.tickSpacing.toI32() as f32)) as i32) * pool.tickSpacing.toI32());
   if (activeTick.gt(bunniToken.tickUpper)) {
     // tick to the right of range
     let liquidity = poolContract.liquidity();
@@ -68,13 +68,13 @@ export function handleNewBunni(event: NewBunni): void {
     let previousLiquidityNet = liquidityDeltas.get(activeTick.toI32());
 
     // move tick to tickUpper
-    for (let tick = activeTick.toI32() - pool.tickSpacing.toI32(); tick > bunniToken.tickUpper.toI32(); tick -= pool.tickSpacing.toI32()) {
+    for (let tick = activeTick.toI32() - pool.tickSpacing.toI32(); tick >= bunniToken.tickUpper.toI32(); tick -= pool.tickSpacing.toI32()) {
       liquidity = liquidity.minus(previousLiquidityNet);
       previousLiquidityNet = liquidityDeltas.get(tick);
     }
 
     // start counting liquidity in range
-    for (let tick = bunniToken.tickUpper.toI32(); tick >= bunniToken.tickLower.toI32(); tick -= pool.tickSpacing.toI32()) {
+    for (let tick = bunniToken.tickUpper.toI32() - pool.tickSpacing.toI32(); tick >= bunniToken.tickLower.toI32(); tick -= pool.tickSpacing.toI32()) {
       liquidity = liquidity.minus(previousLiquidityNet);
       previousLiquidityNet = liquidityDeltas.get(tick);
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
@@ -90,7 +90,7 @@ export function handleNewBunni(event: NewBunni): void {
     }
 
     // start counting liquidity in range
-    for (let tick = bunniToken.tickLower.toI32(); tick <= bunniToken.tickUpper.toI32(); tick += pool.tickSpacing.toI32()) {
+    for (let tick = bunniToken.tickLower.toI32(); tick < bunniToken.tickUpper.toI32(); tick += pool.tickSpacing.toI32()) {
       liquidity = liquidity.plus(liquidityDeltas.get(tick));
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
     }
@@ -100,23 +100,23 @@ export function handleNewBunni(event: NewBunni): void {
     let liquidityDeltas = multicallTicksLiquidityDelta(pool, bunniToken.tickLower, bunniToken.tickUpper);
     let currentTickLiquidity = BigInt.fromString(liquidity.toString()); // make a copy
 
-    // count liquidity in [tick + tickSpacing, tickUpper]
-    for (let tick = activeTick.toI32() + pool.tickSpacing.toI32(); tick <= bunniToken.tickUpper.toI32(); tick += pool.tickSpacing.toI32()) {
+    // count liquidity in [tick + tickSpacing, tickUpper)
+    for (let tick = activeTick.toI32() + pool.tickSpacing.toI32(); tick < bunniToken.tickUpper.toI32(); tick += pool.tickSpacing.toI32()) {
       liquidity = liquidity.plus(liquidityDeltas.get(tick));
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
     }
 
     // reset liquidity
     liquidity = currentTickLiquidity;
-    let previousLiquidityNet = poolContract.ticks(activeTick.toI32()).value1;
 
     // count current tick liquidity
     bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
 
     // count liquidity in [tickLower, tick - tickSpacing]
+    let previousLiquidityNet = liquidityDeltas.get(activeTick.toI32()); // Define previousLiquidityNet
     for (let tick = activeTick.toI32() - pool.tickSpacing.toI32(); tick >= bunniToken.tickLower.toI32(); tick -= pool.tickSpacing.toI32()) {
       liquidity = liquidity.minus(previousLiquidityNet);
-      previousLiquidityNet = liquidityDeltas.get(tick);
+      previousLiquidityNet = liquidityDeltas.get(tick); // Update the previousLiquidityNet value correctly
       bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidity);
     }
   }
@@ -186,10 +186,11 @@ function multicallTicksLiquidityDelta(pool: Pool, tickLower: BigInt, tickUpper: 
 
 function aggregate(
   calls: Array<ethereum.Tuple>,
-  batchSize: i32 = 1000
+  batchSize: i32 = 2500
 ): Bytes[] {
   let multicall = Multicall3.bind(Address.fromString("0xcA11bde05977b3631167028862bE2a173976CA11"));
   let numBatches = Math.ceil((calls.length as f32) / (batchSize as f32));
+  log.info("numBatches = {}", [numBatches.toString()]);
   let result: Bytes[] = [];
   for (let batch: i32 = 0; batch < numBatches; batch++) {
     let callsBatch = calls.slice(batch * batchSize, (batch + 1) * batchSize);
