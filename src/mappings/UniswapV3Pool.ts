@@ -1,7 +1,7 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { ERC20 } from "../../generated/BunniHub/ERC20";
 import { BunniToken } from "../../generated/schema";
-import { Mint, Burn, Swap, UniswapV3Pool } from "../../generated/templates/UniswapV3Pool/UniswapV3Pool";
+import { Mint, Burn, Swap } from "../../generated/templates/UniswapV3Pool/UniswapV3Pool";
 import { ZERO_INT } from "../utils/constants";
 import { getPool } from "../utils/entities";
 import { sqrtPriceX96ToTokenPrices } from "../utils/math";
@@ -43,8 +43,6 @@ export function handleSwap(event: Swap): void {
   let amount1 = event.params.amount1;
   let token0Contract = ERC20.bind(Address.fromBytes(pool.token0));
   let token1Contract = ERC20.bind(Address.fromBytes(pool.token1));
-  let poolContract = UniswapV3Pool.bind(event.address);
-  let liquidity = poolContract.liquidity();
 
   pool.totalValueLockedToken0 = token0Contract.balanceOf(event.address);
   pool.totalValueLockedToken1 = token1Contract.balanceOf(event.address);
@@ -72,8 +70,8 @@ export function handleSwap(event: Swap): void {
     let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
     if (event.params.tick < bunniToken.tickUpper.toI32() && event.params.tick >= bunniToken.tickLower.toI32() && bunniToken.liquidity.gt(BigInt.zero())) {
       // volume touches BunniToken's position
-      let adjustedVolumeToken0 = amount0.abs().times(bunniToken.liquidity).div(liquidity);
-      let adjustedVolumeToken1 = amount1.abs().times(bunniToken.liquidity).div(liquidity);
+      let adjustedVolumeToken0 = amount0.abs().times(bunniToken.liquidity).div(event.params.liquidity);
+      let adjustedVolumeToken1 = amount1.abs().times(bunniToken.liquidity).div(event.params.liquidity);
       bunniToken.totalVolumeToken0 = bunniToken.totalVolumeToken0.plus(adjustedVolumeToken0);
       bunniToken.totalVolumeToken1 = bunniToken.totalVolumeToken1.plus(adjustedVolumeToken1);
       bunniToken.save();

@@ -53,7 +53,6 @@ type Pool @entity {
   id: Bytes!                                                #
   fee: BigInt!                                              # fee tier
   tick: BigInt!                                             # current tick
-  tickSpacing: BigInt!                                      # tick spacing value (related to fee tier)
   address: Bytes!                                           # pool address
   liquidity: BigInt!                                        # in range liquidity
   sqrtPriceX96: BigInt!                                     #
