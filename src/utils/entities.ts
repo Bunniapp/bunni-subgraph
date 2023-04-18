@@ -44,7 +44,6 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
     bunniToken.collectedFeesToken0 = ZERO_INT;
     bunniToken.collectedFeesToken1 = ZERO_INT;
 
-    bunniToken.poolLiquidityInRange = ZERO_INT;
     bunniToken.totalVolumeToken0 = ZERO_INT;
     bunniToken.totalVolumeToken1 = ZERO_INT;
 

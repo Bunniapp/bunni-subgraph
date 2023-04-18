@@ -26,7 +26,6 @@ type BunniToken @entity {
 
   totalVolumeToken0: BigInt!                                # The total volume processed by this Bunni pool's liquidity in terms of token0
   totalVolumeToken1: BigInt!                                # The total volume processed by this Bunni pool's liquidity in terms of token1
-  poolLiquidityInRange: BigInt!                             # The cumulative liquidity of the Uniswap pool in this Bunni position's range
 }
 
 type Gauge @entity {

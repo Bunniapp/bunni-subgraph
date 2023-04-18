@@ -1,7 +1,7 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { ERC20 } from "../../generated/BunniHub/ERC20";
 import { BunniToken } from "../../generated/schema";
-import { Mint, Burn, Swap } from "../../generated/templates/UniswapV3Pool/UniswapV3Pool";
+import { Mint, Burn, Swap, UniswapV3Pool } from "../../generated/templates/UniswapV3Pool/UniswapV3Pool";
 import { ZERO_INT } from "../utils/constants";
 import { getPool } from "../utils/entities";
 import { sqrtPriceX96ToTokenPrices } from "../utils/math";
@@ -19,20 +19,6 @@ export function handleMint(event: Mint): void {
   }
 
   pool.save();
-
-  // update relevant BunniToken liquidity data
-  for (let i = 0; i < pool.bunniTokens.length; i++) {
-    let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
-    if (event.params.tickLower <= bunniToken.tickUpper.toI32() && event.params.tickUpper >= bunniToken.tickLower.toI32()) {
-      // range overlap exists
-      let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
-      let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
-      let overlapTickNum = tickUpper.minus(tickLower).div(pool.tickSpacing);
-      let liquidityAddedInRange = event.params.amount.times(overlapTickNum);
-      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.plus(liquidityAddedInRange);
-      bunniToken.save();
-    }
-  }
 }
 
 export function handleBurn(event: Burn): void {
@@ -48,20 +34,6 @@ export function handleBurn(event: Burn): void {
   }
 
   pool.save();
-
-  // update relevant BunniToken liquidity data
-  for (let i = 0; i < pool.bunniTokens.length; i++) {
-    let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
-    if (event.params.tickLower <= bunniToken.tickUpper.toI32() && event.params.tickUpper >= bunniToken.tickLower.toI32()) {
-      // range overlap exists
-      let tickUpper = BigInt.fromI32(min(event.params.tickUpper, bunniToken.tickUpper.toI32()));
-      let tickLower = BigInt.fromI32(max(event.params.tickLower, bunniToken.tickLower.toI32()));
-      let overlapTickNum = tickUpper.minus(tickLower).div(pool.tickSpacing);
-      let liquidityRemovedInRange = event.params.amount.times(overlapTickNum);
-      bunniToken.poolLiquidityInRange = bunniToken.poolLiquidityInRange.minus(liquidityRemovedInRange);
-      bunniToken.save();
-    }
-  }
 }
 
 export function handleSwap(event: Swap): void {
@@ -71,6 +43,7 @@ export function handleSwap(event: Swap): void {
   let amount1 = event.params.amount1;
   let token0Contract = ERC20.bind(Address.fromBytes(pool.token0));
   let token1Contract = ERC20.bind(Address.fromBytes(pool.token1));
+  let poolContract = UniswapV3Pool.bind(event.address);
 
   pool.totalValueLockedToken0 = token0Contract.balanceOf(event.address);
   pool.totalValueLockedToken1 = token1Contract.balanceOf(event.address);
@@ -96,11 +69,11 @@ export function handleSwap(event: Swap): void {
   // update relevant BunniToken volume data
   for (let i = 0; i < pool.bunniTokens.length; i++) {
     let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
-    if (event.params.tick < bunniToken.tickUpper.toI32() && event.params.tick >= bunniToken.tickLower.toI32() && bunniToken.poolLiquidityInRange.gt(BigInt.zero()) && bunniToken.liquidity.gt(BigInt.zero())) {
+    if (event.params.tick < bunniToken.tickUpper.toI32() && event.params.tick >= bunniToken.tickLower.toI32() && bunniToken.liquidity.gt(BigInt.zero())) {
       // volume touches BunniToken's position
-      let bunniTickNum = bunniToken.tickUpper.minus(bunniToken.tickLower).div(pool.tickSpacing);
-      let adjustedVolumeToken0 = amount0.abs().times(bunniToken.liquidity).times(bunniTickNum).div(bunniToken.poolLiquidityInRange);
-      let adjustedVolumeToken1 = amount1.abs().times(bunniToken.liquidity).times(bunniTickNum).div(bunniToken.poolLiquidityInRange);
+      let liquidity = poolContract.liquidity();
+      let adjustedVolumeToken0 = amount0.abs().times(bunniToken.liquidity).div(liquidity);
+      let adjustedVolumeToken1 = amount1.abs().times(bunniToken.liquidity).div(liquidity);
       bunniToken.totalVolumeToken0 = bunniToken.totalVolumeToken0.plus(adjustedVolumeToken0);
       bunniToken.totalVolumeToken1 = bunniToken.totalVolumeToken1.plus(adjustedVolumeToken1);
       bunniToken.save();
