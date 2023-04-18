@@ -98,7 +98,7 @@ export function handleSwap(event: Swap): void {
     let bunniToken = BunniToken.load(pool.bunniTokens[i])!;
     if (event.params.tick <= bunniToken.tickUpper.toI32() && event.params.tick >= bunniToken.tickLower.toI32() && bunniToken.poolLiquidityInRange.gt(BigInt.zero()) && bunniToken.liquidity.gt(BigInt.zero())) {
       // volume touches BunniToken's position
-      let bunniTickNum = bunniToken.tickUpper.minus(bunniToken.tickLower).div(pool.tickSpacing).plus(BigInt.fromI32(1));
+      let bunniTickNum = bunniToken.tickUpper.minus(bunniToken.tickLower).div(pool.tickSpacing);
       let adjustedVolumeToken0 = amount0.abs().times(bunniToken.liquidity).times(bunniTickNum).div(bunniToken.poolLiquidityInRange);
       let adjustedVolumeToken1 = amount1.abs().times(bunniToken.liquidity).times(bunniTickNum).div(bunniToken.poolLiquidityInRange);
       bunniToken.totalVolumeToken0 = bunniToken.totalVolumeToken0.plus(adjustedVolumeToken0);
