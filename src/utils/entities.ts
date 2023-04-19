@@ -3,7 +3,7 @@ import { Bunni, BunniToken, Gauge, Bribe, Pool } from "../../generated/schema";
 import { BunniHub } from "../../generated/BunniHub/BunniHub";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool } from "../../generated/templates";
-import { BUNNI_HUB, ZERO_BD, ZERO_INT, ZERO_ADDR } from "./constants";
+import { BUNNI_HUB, ZERO_INT, ZERO_ADDR } from "./constants";
 import { sqrtPriceX96ToTokenPrices } from "./math";
 
 export function getBunni(): Bunni {
@@ -42,6 +42,9 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
 
     bunniToken.collectedFeesToken0 = ZERO_INT;
     bunniToken.collectedFeesToken1 = ZERO_INT;
+
+    bunniToken.totalVolumeToken0 = ZERO_INT;
+    bunniToken.totalVolumeToken1 = ZERO_INT;
 
     bunniToken.save();
   }
@@ -113,6 +116,8 @@ export function getPool(address: Address): Pool {
     pool.totalVolumeToken1 = ZERO_INT;
     pool.totalFeesToken0 = ZERO_INT;
     pool.totalFeesToken1 = ZERO_INT;
+
+    pool.bunniTokens = new Array<Bytes>();
 
     pool.save();
     UniswapV3Pool.create(address);
