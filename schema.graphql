@@ -64,10 +64,10 @@ type Pool @entity {
 
   totalValueLockedToken0: BigInt!                           #
   totalValueLockedToken1: BigInt!                           #
-  totalVolumeToken0: BigInt!                                #
-  totalVolumeToken1: BigInt!                                #
-  totalFeesToken0: BigInt!                                  #
-  totalFeesToken1: BigInt!                                  #
+  totalVolumeToken0: BigInt!                                # The total volume processed by the Pool in terms of token0
+  totalVolumeToken1: BigInt!                                # The total volume processed by the Pool in terms of token1
+  totalFeesToken0: BigInt!                                  # The total fees earned by the Pool in terms of token0
+  totalFeesToken1: BigInt!                                  # The total fees earned by the Pool in terms of token1
 
   bunniTokens: [BunniToken!]!                               # BunniTokens associated with the Pool
 }
