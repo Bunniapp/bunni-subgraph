@@ -4,7 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy bunniapp/bunni-mainnet-development --node https://api.thegraph.com/deploy/",
+    "deploy": "graph deploy bunniapp/bunni-mainnet-development subgraph.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy:goerli": "graph deploy bunniapp/bunni-goerli-development subgraph.goerli.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy:optimism": "graph deploy bunniapp/bunni-optimism-development subgraph.optimism.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy:polygon": "graph deploy bunniapp/bunni-polygon-development subgraph.polygon.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
