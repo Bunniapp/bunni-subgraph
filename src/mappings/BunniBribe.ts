@@ -5,9 +5,8 @@ export function handleDepositBribe(event: DepositBribe): void {
     let bribeContract = BunniBribe.bind(event.address);
 
     let gauge = getGauge(event.params.proposal);
-    let bribe = getBribe(event.params.bribeIdentifier);
+    let bribe = getBribe(event.params.bribeIdentifier, gauge.bribes.length);
 
-    bribe.gauge = gauge.id;
     bribe.proposal = event.params.proposal;
     bribe.bribeIdentifier = event.params.bribeIdentifier;
     bribe.rewardIdentifier = event.params.rewardIdentifier;
@@ -18,4 +17,8 @@ export function handleDepositBribe(event: DepositBribe): void {
     bribe.briber = event.params.briber;
 
     bribe.save();
+
+    let bribes = gauge.bribes;
+    bribes.push(bribe.id);
+    gauge.save();
 }

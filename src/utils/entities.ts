@@ -60,6 +60,7 @@ export function getGauge(gaugeIdentifier: Bytes): Gauge {
 
     gauge.address = ZERO_ADDR;
     gauge.bunniToken = ZERO_ADDR;
+    gauge.bribes = new Array<string>();
 
     gauge.save();
   }
@@ -67,13 +68,12 @@ export function getGauge(gaugeIdentifier: Bytes): Gauge {
   return gauge as Gauge;
 }
 
-export function getBribe(bribeIdentifier: Bytes): Bribe {
-  let bribe = Bribe.load(bribeIdentifier);
+export function getBribe(bribeIdentifier: Bytes, bribeIndex: i32): Bribe {
+  let bribe = Bribe.load(bribeIdentifier.toHex() + '-' + bribeIndex.toString());
 
   if (bribe == null) {
-    bribe = new Bribe(bribeIdentifier);
+    bribe = new Bribe(bribeIdentifier.toHex() + '-' + bribeIndex.toString());
 
-    bribe.gauge = ZERO_ADDR;
     bribe.proposal = ZERO_ADDR;
     bribe.bribeIdentifier = bribeIdentifier;
     bribe.rewardIdentifier = ZERO_ADDR;

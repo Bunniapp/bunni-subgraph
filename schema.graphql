@@ -33,12 +33,12 @@ type Gauge @entity {
   address: Bytes!                                           # the address of the Gauge
   bunniToken: BunniToken!                                   # the associated BunniToken
 
-  bribes: [Bribe!]! @derivedFrom(field: "gauge")            # Bribes associated with the Gauge
+  bribes: [Bribe!]!                                         # Bribes associated with the Gauge
 }
 
 type Bribe @entity {
-  id: Bytes!                                                # bribeIdentifier
-  gauge: Gauge!                                             # the associated Gauge
+  id: ID!                                                   # 
+
   proposal: Bytes!                                          # the hashed address of the associated Gauge
   bribeIdentifier: Bytes!                                   # the bribe identifier
   rewardIdentifier: Bytes!                                  # the reward identifier
