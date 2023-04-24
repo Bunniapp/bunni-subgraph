@@ -20,5 +20,6 @@ export function handleDepositBribe(event: DepositBribe): void {
 
     let bribes = gauge.bribes;
     bribes.push(bribe.id);
+    gauge.bribes = bribes;
     gauge.save();
 }
