@@ -68,6 +68,28 @@ dataSources:
         - event: GaugeCreated(indexed address)
           handler: handleGaugeCreated
       file: ./src/mappings/LiquidityGaugeFactory.ts
+  - kind: ethereum
+    name: GaugeController
+    network: goerli
+    source:
+      address: "0xFe16CC67B62b10119BC03E7E7Bf2983f868f8CE5"
+      abi: GaugeController
+      startBlock: 7995565
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+      abis:
+        - name: GaugeController
+          file: ./abis/GaugeController.json
+        - name: VotingEscrow
+          file: ./abis/VotingEscrow.json
+      eventHandlers:
+        - event: VoteForGauge(uint256,address,address,uint256)
+          handler: handleVoteForGauge
+      file: ./src/mappings/GaugeController.ts
 templates:
   - kind: ethereum/contract
     name: UniswapV3Pool

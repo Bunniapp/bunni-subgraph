@@ -69,6 +69,28 @@ dataSources:
           handler: handleGaugeCreated
       file: ./src/mappings/LiquidityGaugeFactory.ts
   - kind: ethereum
+    name: GaugeController
+    network: mainnet
+    source:
+      address: "0x901c8aA6A61f74aC95E7f397E22A0Ac7c1242218"
+      abi: GaugeController
+      startBlock: 16345397
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+      abis:
+        - name: GaugeController
+          file: ./abis/GaugeController.json
+        - name: VotingEscrow
+          file: ./abis/VotingEscrow.json
+      eventHandlers:
+        - event: VoteForGauge(uint256,address,address,uint256)
+          handler: handleVoteForGauge
+      file: ./src/mappings/GaugeController.ts
+  - kind: ethereum
     name: BunniBribe
     network: mainnet
     source:

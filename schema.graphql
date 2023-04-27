@@ -33,7 +33,19 @@ type Gauge @entity {
   address: Bytes!                                           # the address of the Gauge
   bunniToken: BunniToken!                                   # the associated BunniToken
 
+  votes: [Vote!]! @derivedFrom(field: "gauge")              # Votes associated with the Gauge
   bribes: [Bribe!]!                                         # Bribes associated with the Gauge
+}
+
+type Vote @entity {
+  id: Bytes!                                                # hash of the user address and gauge address
+
+  gauge: Gauge!                                             # Gauge associated with the Vote
+  power: BigInt!                                            # the vote power used (veLIT balance * vote percent)
+  decay: BigInt!                                            # the vote power decay per second
+  timestamp: BigInt!                                        # timestamp when the vote was cast
+  voter: Bytes!                                             # address of the voter
+  weight: BigInt!                                           # user voting weight allocated to the gauge
 }
 
 type Bribe @entity {

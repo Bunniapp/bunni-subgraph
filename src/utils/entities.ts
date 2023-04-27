@@ -1,5 +1,5 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
-import { Bunni, BunniToken, Gauge, Bribe, Pool } from "../../generated/schema";
+import { Bunni, BunniToken, Gauge, Vote, Bribe, Pool } from "../../generated/schema";
 import { BunniHub } from "../../generated/BunniHub/BunniHub";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool } from "../../generated/templates";
@@ -66,6 +66,25 @@ export function getGauge(gaugeIdentifier: Bytes): Gauge {
   }
 
   return gauge as Gauge;
+}
+
+export function getVote(voteIdentifier: Bytes): Vote {
+  let vote = Vote.load(voteIdentifier);
+
+  if (vote === null) {
+    vote = new Vote(voteIdentifier);
+    
+    vote.gauge = ZERO_ADDR;
+    vote.power = ZERO_INT;
+    vote.decay = ZERO_INT;
+    vote.timestamp = ZERO_INT;
+    vote.voter = ZERO_ADDR;
+    vote.weight = ZERO_INT;
+
+    vote.save();
+  }
+
+  return vote as Vote;
 }
 
 export function getBribe(bribeIdentifier: Bytes, bribeIndex: i32): Bribe {
