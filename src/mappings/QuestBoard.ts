@@ -12,7 +12,7 @@ export function handleNewQuest(event: NewQuest): void {
     quest.startPeriod = event.params.startPeriod;
     quest.deadline = event.params.startPeriod.plus(event.params.duration.times(WEEK));
     quest.duration = event.params.duration;
-    quest.objetiveVotes = event.params.objectiveVotes;
+    quest.objectiveVotes = event.params.objectiveVotes;
     quest.rewardPerVote = event.params.rewardPerVote;
     quest.creator = event.params.creator;
 

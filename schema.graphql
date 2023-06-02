@@ -70,7 +70,7 @@ type Quest @entity {
   startPeriod: BigInt!                                      # timestamp when the Quest begins
   deadline: BigInt!                                         # timestamp when the Quest ends
   duration: BigInt!                                         # number of periods for the Quest
-  objetiveVotes: BigInt!                                    # target number of votes for the Quest
+  objectiveVotes: BigInt!                                   # target number of votes for the Quest
   rewardPerVote: BigInt!                                    # amount of rewards for each vote
   creator: Bytes!                                           # the quest creator
 }

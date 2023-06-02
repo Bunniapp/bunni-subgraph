@@ -119,7 +119,7 @@ export function getQuest(questID: BigInt): Quest {
     quest.startPeriod = ZERO_INT;
     quest.duration = ZERO_INT;
     quest.deadline = ZERO_INT;
-    quest.objetiveVotes = ZERO_INT;
+    quest.objectiveVotes = ZERO_INT;
     quest.rewardPerVote = ZERO_INT;
     quest.creator = ZERO_ADDR;
 
