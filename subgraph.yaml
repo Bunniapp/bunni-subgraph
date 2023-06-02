@@ -111,6 +111,26 @@ dataSources:
         - event: DepositBribe(indexed bytes32,indexed address,uint256,bytes32,bytes32,indexed address)
           handler: handleDepositBribe
       file: ./src/mappings/BunniBribe.ts
+  - kind: ethereum
+    name: QuestBoard
+    network: mainnet
+    source:
+      address: "0x602E94D90F34126f31444D001732a1974378D9FC"
+      abi: QuestBoard
+      startBlock: 16613263
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Quest
+      abis:
+        - name: QuestBoard
+          file: ./abis/QuestBoard.json
+      eventHandlers:
+        - event: NewQuest(indexed uint256,indexed address,indexed address,address,uint48,uint256,uint256,uint256)
+          handler: handleNewQuest
+      file: ./src/mappings/QuestBoard.ts
 templates:
   - kind: ethereum/contract
     name: UniswapV3Pool
