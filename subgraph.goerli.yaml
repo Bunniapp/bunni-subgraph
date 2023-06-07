@@ -90,6 +90,26 @@ dataSources:
         - event: VoteForGauge(uint256,address,address,uint256)
           handler: handleVoteForGauge
       file: ./src/mappings/GaugeController.ts
+  - kind: ethereum
+    name: BalancerOracle
+    network: goerli
+    source:
+      address: "0x049feC23d5D4c5f2570233216BCE7114294fCb6C"
+      abi: BalancerOracle
+      startBlock: 7995539
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Bunni
+      abis:
+        - name: BalancerOracle
+          file: ./abis/BalancerOracle.json
+      eventHandlers:
+        - event: SetParams(uint16,uint56,uint56,uint128)
+          handler: handleSetParams
+      file: ./src/mappings/OptionsToken.ts
 templates:
   - kind: ethereum/contract
     name: UniswapV3Pool
