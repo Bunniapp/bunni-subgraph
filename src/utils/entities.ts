@@ -1,5 +1,5 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
-import { Bunni, BunniToken, Gauge, Vote, Bribe, Pool } from "../../generated/schema";
+import { Bunni, BunniToken, Gauge, Vote, Bribe, Quest, Pool } from "../../generated/schema";
 import { BunniHub } from "../../generated/BunniHub/BunniHub";
 import { UniswapV3Pool as UniswapPool } from "../../generated/BunniHub/UniswapV3Pool";
 import { UniswapV3Pool } from "../../generated/templates";
@@ -14,6 +14,7 @@ export function getBunni(): Bunni {
 
     bunni = new Bunni(BUNNI_HUB);
     bunni.protocolFee = bunniHubContract.protocolFee();
+    bunni.optionDiscount = ZERO_INT;
     bunni.save();
   }
 
@@ -106,6 +107,27 @@ export function getBribe(bribeIdentifier: Bytes, bribeIndex: i32): Bribe {
   }
 
   return bribe as Bribe;
+}
+
+export function getQuest(questID: BigInt): Quest {
+  let quest = Quest.load(questID.toHex());
+
+  if (quest == null) {
+    quest = new Quest(questID.toHex());
+
+    quest.gauge = ZERO_ADDR;
+    quest.rewardToken = ZERO_ADDR;
+    quest.startPeriod = ZERO_INT;
+    quest.duration = ZERO_INT;
+    quest.deadline = ZERO_INT;
+    quest.objectiveVotes = ZERO_INT;
+    quest.rewardPerVote = ZERO_INT;
+    quest.creator = ZERO_ADDR;
+
+    quest.save();
+  }
+
+  return quest as Quest;
 }
 
 export function getPool(address: Address): Pool {
