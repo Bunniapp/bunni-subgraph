@@ -1,7 +1,8 @@
 import { Bytes, crypto } from "@graphprotocol/graph-ts";
 import { GaugeCreated } from "../../generated/LiquidityGaugeFactory/LiquidityGaugeFactory";
 import { LiquidityGauge } from "../../generated/LiquidityGaugeFactory/LiquidityGauge";
-import { DeployedGauge } from "../../generated/ChildGaugeFactory/ChildGaugeFactory";
+import { DeployedGauge as DeployedRootGauge } from "../../generated/RootGaugeFactory/RootGaugeFactory";
+import { DeployedGauge as DeployedChildGauge } from "../../generated/ChildGaugeFactory/ChildGaugeFactory";
 import { ChildGauge } from "../../generated/ChildGaugeFactory/ChildGauge";
 import { BunniToken } from "../../generated/LiquidityGaugeFactory/BunniToken";
 import { getGauge } from "../utils/entities";
@@ -22,7 +23,7 @@ export function handleGaugeCreated(event: GaugeCreated): void {
   gauge.save();
 }
 
-export function handleDeployedGauge(event: DeployedGauge): void {
+export function handleDeployedChildGauge(event: DeployedChildGauge): void {
   let childGauge = ChildGauge.bind(event.params._gauge);
   let lpToken = childGauge.lp_token();
 
@@ -34,5 +35,12 @@ export function handleDeployedGauge(event: DeployedGauge): void {
   let gauge = getGauge(Bytes.fromByteArray(crypto.keccak256(event.params._gauge)));
   gauge.address = event.params._gauge;
   gauge.bunniToken = bunniKey(pool, tickLower, tickUpper);
+  gauge.save();
+}
+
+export function handleDeployedRootGauge(event: DeployedRootGauge): void {
+  let gauge = getGauge(Bytes.fromByteArray(crypto.keccak256(event.params._gauge)));
+  gauge.address = event.params._gauge;
+  // leave the gauge.bunniToken as ZERO_ADDRESS for root gauges (this is how we know it's a root gauge)
   gauge.save();
 }
