@@ -35,6 +35,7 @@ type Gauge @entity {
 
   votes: [Vote!]! @derivedFrom(field: "gauge")              # Votes associated with the Gauge
   bribes: [Bribe!]!                                         # Bribes associated with the Gauge
+  quests: [Quest!]! @derivedFrom(field: "gauge")            # Quests associated with the Gauge
 }
 
 type Vote @entity {
@@ -59,6 +60,19 @@ type Bribe @entity {
   amount: BigInt!                                           # the bribe amount
   deadline: BigInt!                                         # timestamp when the bribe ends
   briber: Bytes!                                            # the bribe creator
+}
+
+type Quest @entity {
+  id: ID!
+
+  gauge: Gauge!                                             # Gauge associated with the Quest
+  rewardToken: Bytes!                                       # the reward token address
+  startPeriod: BigInt!                                      # timestamp when the Quest begins
+  deadline: BigInt!                                         # timestamp when the Quest ends
+  duration: BigInt!                                         # number of periods for the Quest
+  objectiveVotes: BigInt!                                   # target number of votes for the Quest
+  rewardPerVote: BigInt!                                    # amount of rewards for each vote
+  creator: Bytes!                                           # the quest creator
 }
 
 type Pool @entity {
