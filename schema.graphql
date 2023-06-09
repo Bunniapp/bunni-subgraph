@@ -1,6 +1,7 @@
 type Bunni @entity {
   id: Bytes!                                                # the BunniHub address
   protocolFee: BigInt!                                      # the proportion of swap fees taken by Bunni
+  optionDiscount: BigInt!                                   # the discount of the option token (oLIT)
 }
 
 type BunniToken @entity {

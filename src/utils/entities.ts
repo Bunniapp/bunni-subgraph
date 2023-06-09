@@ -14,6 +14,7 @@ export function getBunni(): Bunni {
 
     bunni = new Bunni(BUNNI_HUB);
     bunni.protocolFee = bunniHubContract.protocolFee();
+    bunni.optionDiscount = ZERO_INT;
     bunni.save();
   }
 
