@@ -59,6 +59,7 @@ export function getGauge(gaugeIdentifier: Bytes): Gauge {
   if (gauge === null) {
     gauge = new Gauge(gaugeIdentifier);
 
+    gauge.chain = ZERO_INT;
     gauge.address = ZERO_ADDR;
     gauge.bunniToken = ZERO_ADDR;
     gauge.bribes = new Array<string>();

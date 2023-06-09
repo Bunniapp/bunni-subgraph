@@ -31,6 +31,7 @@ type BunniToken @entity {
 
 type Gauge @entity {
   id: Bytes!                                                # the hashed address of the Gauge
+  chain: BigInt!                                            # the numeric chain ID the Gauge is associated with (relevant for Root gauges)
   address: Bytes!                                           # the address of the Gauge
   bunniToken: BunniToken!                                   # the associated BunniToken
 
