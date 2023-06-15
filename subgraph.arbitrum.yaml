@@ -42,6 +42,28 @@ dataSources:
         - event: Withdraw(indexed address,indexed address,indexed bytes32,uint128,uint256,uint256,uint256)
           handler: handleWithdraw
       file: ./src/mappings/BunniHub.ts
+  - kind: ethereum
+    name: ChildGaugeFactory
+    network: arbitrum-one
+    source:
+      address: "0x7cd196F5a5e31f8c5f97613069b4be936a868363"
+      abi: ChildGaugeFactory
+      startBlock: 101537477
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+      abis:
+        - name: ChildGaugeFactory
+          file: ./abis/ChildGaugeFactory.json
+        - name: ChildGauge
+          file: ./abis/ChildGauge.json
+      eventHandlers:
+        - event: DeployedGauge(indexed address,(address,int24,int24),address)
+          handler: handleDeployedGauge
+      file: ./src/mappings/LiquidityGaugeFactory.ts
 templates:
   - kind: ethereum/contract
     name: UniswapV3Pool

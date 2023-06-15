@@ -69,6 +69,26 @@ dataSources:
           handler: handleGaugeCreated
       file: ./src/mappings/LiquidityGaugeFactory.ts
   - kind: ethereum
+    name: RootGaugeFactory
+    network: mainnet
+    source:
+      address: "0xC5C3A1F095aC7cCA8c832FcAe526b3487e343AC2"
+      abi: RootGaugeFactory
+      startBlock: 17487763
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+      abis:
+        - name: RootGaugeFactory
+          file: ./abis/RootGaugeFactory.json
+      eventHandlers:
+        - event: DeployedGauge(indexed address,indexed uint256,(address,int24,int24),address)
+          handler: handleDeployedGauge
+      file: ./src/mappings/LiquidityGaugeFactory.ts
+  - kind: ethereum
     name: GaugeController
     network: mainnet
     source:
