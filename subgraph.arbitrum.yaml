@@ -60,6 +60,8 @@ dataSources:
           file: ./abis/ChildGaugeFactory.json
         - name: ChildGauge
           file: ./abis/ChildGauge.json
+        - name: BunniToken
+          file: ./abis/BunniToken.json
       eventHandlers:
         - event: DeployedGauge(indexed address,(address,int24,int24),address)
           handler: handleDeployedChildGauge
