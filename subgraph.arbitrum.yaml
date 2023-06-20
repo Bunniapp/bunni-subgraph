@@ -62,7 +62,7 @@ dataSources:
           file: ./abis/ChildGauge.json
       eventHandlers:
         - event: DeployedGauge(indexed address,(address,int24,int24),address)
-          handler: handleDeployedGauge
+          handler: handleDeployedChildGauge
       file: ./src/mappings/LiquidityGaugeFactory.ts
 templates:
   - kind: ethereum/contract

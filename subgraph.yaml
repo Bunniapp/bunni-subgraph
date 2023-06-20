@@ -86,7 +86,7 @@ dataSources:
           file: ./abis/RootGaugeFactory.json
       eventHandlers:
         - event: DeployedGauge(indexed address,indexed uint256,(address,int24,int24),address)
-          handler: handleDeployedGauge
+          handler: handleDeployedRootGauge
       file: ./src/mappings/LiquidityGaugeFactory.ts
   - kind: ethereum
     name: GaugeController
