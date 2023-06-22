@@ -46,9 +46,9 @@ dataSources:
     name: ChildGaugeFactory
     network: arbitrum-one
     source:
-      address: "0x7cd196F5a5e31f8c5f97613069b4be936a868363"
+      address: "0xC5C3A1F095aC7cCA8c832FcAe526b3487e343AC2"
       abi: ChildGaugeFactory
-      startBlock: 101537477
+      startBlock: 103520454
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
