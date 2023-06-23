@@ -1,3 +1,7 @@
 node_modules
 generated
 build
+
+# Subgraph specific
+src/types/
+subgraph*.yaml
