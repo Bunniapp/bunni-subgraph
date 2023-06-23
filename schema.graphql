@@ -1,3 +1,17 @@
+type BunniToken @entity {
+  id: Bytes!                                                              # hash of the bunni key
+
+  address: Bytes!                                                         # bunni token address
+  decimals: BigInt!                                                       # bunni token decimals
+  name: String!                                                           # bunni token name                                         
+  symbol: String!                                                         # bunni token symbol
+}
+
 type Token @entity {
-  id: Bytes!
+  id: Bytes!                                                              # token address
+
+  address: Bytes!                                                         # token address
+  decimals: BigInt!                                                       # token decimals
+  name: String!                                                           # token name                                         
+  symbol: String!                                                         # token symbol
 }
