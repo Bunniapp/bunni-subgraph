@@ -1,1 +1,3 @@
-
+type Token @entity {
+  id: Bytes!
+}
