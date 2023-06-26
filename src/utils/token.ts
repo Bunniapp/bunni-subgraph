@@ -4,7 +4,7 @@ import { ERC20 } from '../types/BunniHub/ERC20'
 export function fetchTokenDecimals(tokenAddress: Address): BigInt {
   let contract = ERC20.bind(tokenAddress);
 
-  let decimalsValue = null;
+  let decimalsValue = 0;
   let decimalsResult = contract.try_decimals();
   
   if (decimalsResult.reverted) {
