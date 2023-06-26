@@ -23,6 +23,9 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
     bunniToken.tickLower = BigInt.zero();
     bunniToken.tickUpper = BigInt.zero();
 
+    bunniToken.token0Reserve = BigDecimal.zero();
+    bunniToken.token1Reserve = BigDecimal.zero();
+
     bunniToken.pool = Address.zero();
 
     bunniToken.save();
@@ -47,6 +50,8 @@ export function getPool(poolAddress: Address): Pool {
     pool.token1 = fetchPoolToken1(poolAddress);
     pool.token0Price = sqrtPriceX96ToTokenPrices(pool.sqrtPriceX96)[0];
     pool.token1Price = sqrtPriceX96ToTokenPrices(pool.sqrtPriceX96)[1];
+
+    pool.bunniTokens = [];
 
     pool.save();
     UniswapV3Pool.create(poolAddress);
