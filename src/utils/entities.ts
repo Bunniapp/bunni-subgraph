@@ -19,6 +19,12 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
     bunniToken.symbol = '';
     bunniToken.totalSupply = BigDecimal.zero();
 
+    bunniToken.liquidity = BigInt.zero();
+    bunniToken.tickLower = BigInt.zero();
+    bunniToken.tickUpper = BigInt.zero();
+
+    bunniToken.pool = Address.zero();
+
     bunniToken.save();
   }
 

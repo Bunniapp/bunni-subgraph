@@ -6,6 +6,12 @@ type BunniToken @entity {
   name: String!                                                           # bunni token name                                         
   symbol: String!                                                         # bunni token symbol
   totalSupply: BigDecimal!                                                # bunni token total supply
+
+  liquidity: BigInt!                                                      # position liquidity
+  tickLower: BigInt!                                                      # lower tick of the position
+  tickUpper: BigInt!                                                      # upper tick of the position
+
+  pool: Pool!                                                             # pool         
 }
 
 type Pool @entity {
