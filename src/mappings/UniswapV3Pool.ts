@@ -1,20 +1,45 @@
-import { Address, BigDecimal, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, ethereum } from "@graphprotocol/graph-ts";
 import { Mint, Burn, Swap } from "../types/templates/UniswapV3Pool/UniswapV3Pool";
 import { BunniLens, BunniLens__getReservesInputKeyStruct } from "../types/templates/UniswapV3Pool/BunniLens";
 
 import { BUNNI_LENS } from "../utils/constants";
 import { getBunniToken, getPool, getToken } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
+import { sqrtPriceX96ToTokenPrices } from "../utils/price";
 
-export function handleMint(event: Mint): void {}
+export function handleMint(event: Mint): void {
+  let pool = getPool(event.address);
 
-export function handleBurn(event: Burn): void {}
+  /// update pool liquidity
+  if (BigInt.fromI32(event.params.tickLower).le(pool.tick) && BigInt.fromI32(event.params.tickUpper).gt(pool.tick)) {
+    pool.liquidity = pool.liquidity.plus(event.params.amount);
+  }
+  pool.save();
+}
+
+export function handleBurn(event: Burn): void {
+  let pool = getPool(event.address);
+
+  /// update pool liquidity
+  if (BigInt.fromI32(event.params.tickLower).le(pool.tick) && BigInt.fromI32(event.params.tickUpper).gt(pool.tick)) {
+    pool.liquidity = pool.liquidity.minus(event.params.amount);
+  }
+
+  pool.save();
+}
 
 export function handleSwap(event: Swap): void {
   let pool = getPool(event.address);
 
   let token0 = getToken(Address.fromBytes(pool.token0));
   let token1 = getToken(Address.fromBytes(pool.token1));
+
+  /// update pool liquidity, tick and prices
+  pool.liquidity = event.params.liquidity;
+  pool.sqrtPriceX96 = event.params.sqrtPriceX96;
+  pool.tick = BigInt.fromI32(event.params.tick);
+  pool.token0Price = sqrtPriceX96ToTokenPrices(event.params.sqrtPriceX96)[0];
+  pool.token1Price = sqrtPriceX96ToTokenPrices(event.params.sqrtPriceX96)[1];
 
   /// update bunni token(s) data
   let bunniLens = BunniLens.bind(BUNNI_LENS);

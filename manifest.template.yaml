@@ -51,6 +51,7 @@ templates:
       entities:
         - BunniToken
         - Pool
+        - Token
       abis:
         - name: UniswapV3Pool
           file: ./abis/UniswapV3Pool.json
