@@ -8,13 +8,13 @@ import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "../utils/t
 export function handleCompound(event: Compound): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
 
-  /// update the position liquidity
-  bunniToken.liquidity = bunniToken.liquidity.plus(event.params.liquidity);
-
   /// load the ancillary entities
   let pool = getPool(Address.fromBytes(bunniToken.pool));
   let token0 = getToken(Address.fromBytes(pool.token0));
   let token1 = getToken(Address.fromBytes(pool.token1));
+
+  /// update the position liquidity
+  bunniToken.liquidity = bunniToken.liquidity.plus(event.params.liquidity);
 
   /// update the position reserve and shares
   let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
@@ -39,12 +39,12 @@ export function handleDeposit(event: Deposit): void {
   let pool = getPool(Address.fromBytes(bunniToken.pool));
   let token0 = getToken(Address.fromBytes(pool.token0));
   let token1 = getToken(Address.fromBytes(pool.token1));
-  
-  /// update bunni token total supply
-  bunniToken.totalSupply = bunniToken.totalSupply.plus(convertToDecimals(event.params.shares, bunniToken.decimals));
 
   /// update the position liquidity
   bunniToken.liquidity = bunniToken.liquidity.plus(event.params.liquidity);
+  
+  /// update bunni token total supply
+  bunniToken.totalSupply = bunniToken.totalSupply.plus(convertToDecimals(event.params.shares, bunniToken.decimals));
 
   /// update the position reserve and share
   let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
@@ -99,12 +99,12 @@ export function handleWithdraw(event: Withdraw): void {
   let pool = getPool(Address.fromBytes(bunniToken.pool));
   let token0 = getToken(Address.fromBytes(pool.token0));
   let token1 = getToken(Address.fromBytes(pool.token1));
-  
-  /// update bunni token total supply
-  bunniToken.totalSupply = bunniToken.totalSupply.minus(convertToDecimals(event.params.shares, bunniToken.decimals));
 
   /// update the position liquidity
   bunniToken.liquidity = bunniToken.liquidity.minus(event.params.liquidity);
+
+  /// update bunni token total supply
+  bunniToken.totalSupply = bunniToken.totalSupply.minus(convertToDecimals(event.params.shares, bunniToken.decimals));
 
   /// update the position reserve and shares
   let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
