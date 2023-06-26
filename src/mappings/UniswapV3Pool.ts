@@ -71,9 +71,17 @@ export function handleSwap(event: Swap): void {
         pool.token0Reserve = pool.token0Reserve.plus(bunniToken.token0Reserve);
         pool.token1Reserve = pool.token1Reserve.plus(bunniToken.token1Reserve);
       }
+    }
 
-      bunniToken.save();
-    }    
+    /// update the bunni token volume
+    if (bunniToken.liquidity.gt(BigInt.zero()) && pool.tick.lt(bunniToken.tickUpper) && pool.tick.ge(bunniToken.tickLower)) {
+      let adjustedVolumeToken0 = event.params.amount0.abs().times(bunniToken.liquidity).div(event.params.liquidity);
+      let adjustedVolumeToken1 = event.params.amount0.abs().times(bunniToken.liquidity).div(event.params.liquidity);
+      bunniToken.token0Volume = bunniToken.token0Volume.plus(convertToDecimals(adjustedVolumeToken0, token0.decimals));
+      bunniToken.token1Volume = bunniToken.token1Volume.plus(convertToDecimals(adjustedVolumeToken1, token1.decimals));
+    }
+
+    bunniToken.save();
   }
 
   pool.save();
