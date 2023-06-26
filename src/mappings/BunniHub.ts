@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
 import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../types/BunniHub/BunniHub";
 
 import { getBunniToken, getPool, getToken } from "../utils/entities";
@@ -88,7 +88,35 @@ export function handleNewBunni(event: NewBunni): void {
   pool.save();
 }
 
-export function handlePayProtocolFee(event: PayProtocolFee): void {}
+export function handlePayProtocolFee(event: PayProtocolFee): void {
+  const eventReceipt = event.receipt;
+
+  if (eventReceipt) {
+    const eventLogs = eventReceipt.logs;
+    const signatureHash = crypto.keccak256(ByteArray.fromUTF8("Compound(address,bytes32,uint128,uint256,uint256)"));
+
+    for (let i = 0; i < eventLogs.length; i++) {
+      if (eventLogs[i].topics[0].toHex() == signatureHash.toHex()) {
+        let bunniToken = getBunniToken(eventLogs[i].topics[2]);
+
+        /// load the ancillary entities
+        let pool = getPool(Address.fromBytes(bunniToken.pool));
+        let token0 = getToken(Address.fromBytes(pool.token0));
+        let token1 = getToken(Address.fromBytes(pool.token1));
+
+        /// update the bunni token fees
+        bunniToken.token0Fees = bunniToken.token0Fees.plus(convertToDecimals(event.params.amount0, token0.decimals));
+        bunniToken.token1Fees = bunniToken.token1Fees.plus(convertToDecimals(event.params.amount1, token1.decimals));
+        bunniToken.save();
+
+        // update the pool aggregates with new amounts
+        pool.token0Fees = pool.token0Fees.plus(convertToDecimals(event.params.amount0, token0.decimals));
+        pool.token1Fees = pool.token1Fees.plus(convertToDecimals(event.params.amount1, token1.decimals));
+        pool.save();
+      }
+    }
+  }
+}
 
 export function handleSetProtocolFee(event: SetProtocolFee): void {}
 
