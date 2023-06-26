@@ -3,7 +3,8 @@ import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { BunniToken, Pool, Token } from "../types/schema";
 import { UniswapV3Pool } from "../types/templates";
 
-import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick } from "./pool";
+import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fetchPoolToken1 } from "./pool";
+import { sqrtPriceX96ToTokenPrices } from "./price";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "./token";
 
 export function getBunniToken(bunniKey: Bytes): BunniToken {
@@ -35,6 +36,11 @@ export function getPool(poolAddress: Address): Pool {
     pool.fee = fetchPoolFee(poolAddress);
     pool.sqrtPriceX96 = fetchPoolSqrtPriceX96(poolAddress);
     pool.tick = fetchPoolTick(poolAddress);
+
+    pool.token0 = fetchPoolToken0(poolAddress);
+    pool.token1 = fetchPoolToken1(poolAddress);
+    pool.token0Price = sqrtPriceX96ToTokenPrices(pool.sqrtPriceX96)[0];
+    pool.token1Price = sqrtPriceX96ToTokenPrices(pool.sqrtPriceX96)[1];
 
     pool.save();
     UniswapV3Pool.create(poolAddress);

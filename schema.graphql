@@ -16,6 +16,11 @@ type Pool @entity {
   liquidity: BigInt!                                                      # in range liquidity
   sqrtPriceX96: BigInt!                                                   # current price tracker
   tick: BigInt!                                                           # current tick
+
+  token0: Token!                                                          # token0
+  token1: Token!                                                          # token1
+  token0Price: BigDecimal!                                                # token0 per token1
+  token1Price: BigDecimal!                                                # token1 per token0
 }
 
 type Token @entity {

@@ -11,3 +11,11 @@ export function tenPow(exponent: number): BigInt {
   }
   return result;
 }
+
+export function safeDiv(amount0: BigDecimal, amount1: BigDecimal): BigDecimal {
+  if (amount1.equals(BigDecimal.zero())) {
+    return BigDecimal.zero();
+  } else {
+    return amount0.div(amount1);
+  }
+}

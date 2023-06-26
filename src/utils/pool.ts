@@ -1,5 +1,6 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { UniswapV3Pool } from "../types/templates/UniswapV3Pool/UniswapV3Pool";
+import { getToken } from "./entities";
 
 export function fetchPoolFee(poolAddress: Address): BigInt {
   let contract = UniswapV3Pool.bind(poolAddress);
@@ -44,4 +45,36 @@ export function fetchPoolTick(poolAddress: Address): BigInt {
   }
 
   return tickValue;
+}
+
+export function fetchPoolToken0(poolAddress: Address): Address {
+  let contract = UniswapV3Pool.bind(poolAddress);
+
+  let token0Value = Address.zero();
+  let token0Result = contract.try_token0();
+
+  if (token0Result.reverted) {
+    // @dev handle revert scenario
+  } else {
+    token0Value = token0Result.value;
+    getToken(token0Value);
+  }
+
+  return token0Value;
+}
+
+export function fetchPoolToken1(poolAddress: Address): Address {
+  let contract = UniswapV3Pool.bind(poolAddress);
+
+  let token1Value = Address.zero();
+  let token1Result = contract.try_token1();
+
+  if (token1Result.reverted) {
+    // @dev handle revert scenario
+  } else {
+    token1Value = token1Result.value;
+    getToken(token1Value);
+  }
+
+  return token1Value;
 }
