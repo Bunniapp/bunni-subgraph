@@ -75,10 +75,18 @@ export function handleSwap(event: Swap): void {
 
     /// update the bunni token volume
     if (bunniToken.liquidity.gt(BigInt.zero()) && pool.tick.lt(bunniToken.tickUpper) && pool.tick.ge(bunniToken.tickLower)) {
+      /// reset pool aggregates until new amounts calculated
+      pool.token0Volume = pool.token0Volume.minus(bunniToken.token0Volume);
+      pool.token1Volume = pool.token1Volume.minus(bunniToken.token1Volume);
+
       let adjustedVolumeToken0 = event.params.amount0.abs().times(bunniToken.liquidity).div(event.params.liquidity);
       let adjustedVolumeToken1 = event.params.amount0.abs().times(bunniToken.liquidity).div(event.params.liquidity);
       bunniToken.token0Volume = bunniToken.token0Volume.plus(convertToDecimals(adjustedVolumeToken0, token0.decimals));
       bunniToken.token1Volume = bunniToken.token1Volume.plus(convertToDecimals(adjustedVolumeToken1, token1.decimals));
+
+      /// update the pool aggregates with new amounts
+      pool.token0Volume = pool.token0Volume.plus(bunniToken.token0Volume);
+      pool.token1Volume = pool.token1Volume.plus(bunniToken.token1Volume);
     }
 
     bunniToken.save();

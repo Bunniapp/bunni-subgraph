@@ -59,6 +59,9 @@ export function getPool(poolAddress: Address): Pool {
     pool.token0Reserve = BigDecimal.zero();
     pool.token1Reserve = BigDecimal.zero();
 
+    pool.token0Volume = BigDecimal.zero();
+    pool.token1Volume = BigDecimal.zero();
+
     pool.bunniTokens = [];
 
     pool.save();

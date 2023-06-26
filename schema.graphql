@@ -39,6 +39,9 @@ type Pool @entity {
   token0Reserve: BigDecimal!                                              # total amount of token0 held by bunni token liquidity positions
   token1Reserve: BigDecimal!                                              # total amount of token1 held by bunni token liquidity positions
 
+  token0Volume: BigDecimal!                                               # total volume processed by bunni token positions in terms of token0
+  token1Volume: BigDecimal!                                               # total volume processed by bunni token positions in terms of token1
+
   bunniTokens: [BunniToken!]!                                             # bunni tokens associated with the pool
 }
 
