@@ -32,12 +32,22 @@ export function handleSwap(event: Swap): void {
       let reserveResult = bunniLens.try_getReserves(key);
 
       if (!reserveResult.reverted) {
+        /// reset pool aggregates until new amounts calculated
+        pool.token0Reserve = pool.token0Reserve.minus(bunniToken.token0Reserve);
+        pool.token1Reserve = pool.token1Reserve.minus(bunniToken.token1Reserve);
+
         /// update the position reserves
         bunniToken.token0Reserve = convertToDecimals(reserveResult.value.value0, token0.decimals);
         bunniToken.token1Reserve = convertToDecimals(reserveResult.value.value1, token1.decimals);
+
+        /// update the pool aggregates with new amounts
+        pool.token0Reserve = pool.token0Reserve.plus(bunniToken.token0Reserve);
+        pool.token1Reserve = pool.token1Reserve.plus(bunniToken.token1Reserve);
       }
 
       bunniToken.save();
     }    
   }
+
+  pool.save();
 }

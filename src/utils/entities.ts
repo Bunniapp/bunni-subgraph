@@ -51,6 +51,9 @@ export function getPool(poolAddress: Address): Pool {
     pool.token0Price = sqrtPriceX96ToTokenPrices(pool.sqrtPriceX96)[0];
     pool.token1Price = sqrtPriceX96ToTokenPrices(pool.sqrtPriceX96)[1];
 
+    pool.token0Reserve = BigDecimal.zero();
+    pool.token1Reserve = BigDecimal.zero();
+
     pool.bunniTokens = [];
 
     pool.save();

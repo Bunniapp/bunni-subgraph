@@ -22,7 +22,12 @@ export function handleCompound(event: Compound): void {
   bunniToken.token0Reserve = bunniToken.token0Reserve.plus(amount0);
   bunniToken.token1Reserve = bunniToken.token1Reserve.plus(amount1);
 
+  /// update the pool aggregates with new amounts
+  pool.token0Reserve = pool.token0Reserve.plus(amount0);
+  pool.token1Reserve = pool.token1Reserve.plus(amount1);
+
   bunniToken.save();
+  pool.save();
 }
 
 export function handleDeposit(event: Deposit): void {
@@ -45,7 +50,12 @@ export function handleDeposit(event: Deposit): void {
   bunniToken.token0Reserve = bunniToken.token0Reserve.plus(amount0);
   bunniToken.token1Reserve = bunniToken.token1Reserve.plus(amount1);
 
+  /// update the pool aggregates with new amounts
+  pool.token0Reserve = pool.token0Reserve.plus(amount0);
+  pool.token1Reserve = pool.token1Reserve.plus(amount1);
+
   bunniToken.save();
+  pool.save();
 }
 
 export function handleNewBunni(event: NewBunni): void {
@@ -98,5 +108,10 @@ export function handleWithdraw(event: Withdraw): void {
   bunniToken.token0Reserve = bunniToken.token0Reserve.minus(amount0);
   bunniToken.token1Reserve = bunniToken.token1Reserve.minus(amount1);
 
+  /// update the pool aggregates with new amounts
+  pool.token0Reserve = pool.token0Reserve.minus(amount0);
+  pool.token1Reserve = pool.token1Reserve.minus(amount1);
+
   bunniToken.save();
+  pool.save();
 }
