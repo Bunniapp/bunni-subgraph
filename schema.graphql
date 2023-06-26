@@ -5,6 +5,7 @@ type BunniToken @entity {
   decimals: BigInt!                                                       # bunni token decimals
   name: String!                                                           # bunni token name                                         
   symbol: String!                                                         # bunni token symbol
+  totalSupply: BigDecimal!                                                # bunni token total supply
 }
 
 type Token @entity {

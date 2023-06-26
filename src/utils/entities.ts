@@ -1,17 +1,18 @@
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { BunniToken, Token } from "../types/schema";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "./token";
 
 export function getBunniToken(bunniKey: Bytes): BunniToken {
-  let bunniToken = Token.load(bunniKey);
+  let bunniToken = BunniToken.load(bunniKey);
 
   if (bunniToken === null) {
-    bunniToken = new Token(bunniKey);
+    bunniToken = new BunniToken(bunniKey);
 
     bunniToken.address = Address.zero();
     bunniToken.decimals = BigInt.zero();
     bunniToken.name = '';
     bunniToken.symbol = '';
+    bunniToken.totalSupply = BigDecimal.zero();
 
     bunniToken.save();
   }
