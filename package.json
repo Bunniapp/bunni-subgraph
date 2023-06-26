@@ -2,6 +2,7 @@
   "name": "bunni-development",
   "license": "UNLICENSED",
   "scripts": {
+    "build:goerli": "graph build subgraph.goerli.yaml",
     "prepare:goerli": "mustache ./config/goerli.json manifest.template.yaml > subgraph.goerli.yaml && graph codegen subgraph.goerli.yaml --output-dir src/types/",
     "codegen": "graph codegen",
     "build": "graph build",
