@@ -39,6 +39,8 @@ export function handleSwap(event: Swap): void {
         /// update the position reserves
         bunniToken.token0Reserve = convertToDecimals(reserveResult.value.value0, token0.decimals);
         bunniToken.token1Reserve = convertToDecimals(reserveResult.value.value1, token1.decimals);
+        bunniToken.token0Share = bunniToken.token0Reserve.div(bunniToken.totalSupply);
+        bunniToken.token1Share = bunniToken.token1Reserve.div(bunniToken.totalSupply);
 
         /// update the pool aggregates with new amounts
         pool.token0Reserve = pool.token0Reserve.plus(bunniToken.token0Reserve);

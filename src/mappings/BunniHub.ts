@@ -16,11 +16,13 @@ export function handleCompound(event: Compound): void {
   let token0 = getToken(Address.fromBytes(pool.token0));
   let token1 = getToken(Address.fromBytes(pool.token1));
 
-  /// update the position reserves
+  /// update the position reserve and shares
   let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
   let amount1 = convertToDecimals(event.params.amount1, token1.decimals);
   bunniToken.token0Reserve = bunniToken.token0Reserve.plus(amount0);
   bunniToken.token1Reserve = bunniToken.token1Reserve.plus(amount1);
+  bunniToken.token0Share = bunniToken.token0Reserve.div(bunniToken.totalSupply);
+  bunniToken.token1Share = bunniToken.token1Reserve.div(bunniToken.totalSupply);
 
   /// update the pool aggregates with new amounts
   pool.token0Reserve = pool.token0Reserve.plus(amount0);
@@ -44,11 +46,13 @@ export function handleDeposit(event: Deposit): void {
   /// update the position liquidity
   bunniToken.liquidity = bunniToken.liquidity.plus(event.params.liquidity);
 
-  /// update the position reserves
+  /// update the position reserve and share
   let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
   let amount1 = convertToDecimals(event.params.amount1, token1.decimals);
   bunniToken.token0Reserve = bunniToken.token0Reserve.plus(amount0);
   bunniToken.token1Reserve = bunniToken.token1Reserve.plus(amount1);
+  bunniToken.token0Share = bunniToken.token0Reserve.div(bunniToken.totalSupply);
+  bunniToken.token1Share = bunniToken.token1Reserve.div(bunniToken.totalSupply);
 
   /// update the pool aggregates with new amounts
   pool.token0Reserve = pool.token0Reserve.plus(amount0);
@@ -102,11 +106,13 @@ export function handleWithdraw(event: Withdraw): void {
   /// update the position liquidity
   bunniToken.liquidity = bunniToken.liquidity.minus(event.params.liquidity);
 
-  /// update the position reserves
+  /// update the position reserve and shares
   let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
   let amount1 = convertToDecimals(event.params.amount1, token1.decimals);
   bunniToken.token0Reserve = bunniToken.token0Reserve.minus(amount0);
   bunniToken.token1Reserve = bunniToken.token1Reserve.minus(amount1);
+  bunniToken.token0Share = bunniToken.token0Reserve.div(bunniToken.totalSupply);
+  bunniToken.token1Share = bunniToken.token1Reserve.div(bunniToken.totalSupply);
 
   /// update the pool aggregates with new amounts
   pool.token0Reserve = pool.token0Reserve.minus(amount0);

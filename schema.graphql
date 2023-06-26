@@ -13,6 +13,8 @@ type BunniToken @entity {
 
   token0Reserve: BigDecimal!                                              # amount of token0 held by the liquidity position
   token1Reserve: BigDecimal!                                              # amount of token1 held by the liquidity position
+  token0Share: BigDecimal!                                                # amount of token0 each full share can be redeemed for
+  token1Share: BigDecimal!                                                # amount of token1 each full share can be redeemed for
 
   pool: Pool!                                                             # pool         
 }

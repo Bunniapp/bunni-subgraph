@@ -25,6 +25,8 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
 
     bunniToken.token0Reserve = BigDecimal.zero();
     bunniToken.token1Reserve = BigDecimal.zero();
+    bunniToken.token0Share = BigDecimal.zero();
+    bunniToken.token1Share = BigDecimal.zero();
 
     bunniToken.pool = Address.zero();
 
