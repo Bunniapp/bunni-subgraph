@@ -1,6 +1,6 @@
 import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../types/BunniHub/BunniHub";
 
-import { getBunniToken } from "../utils/entities";
+import { getBunniToken, getPool } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "../utils/token";
 
@@ -16,6 +16,7 @@ export function handleDeposit(event: Deposit): void {
 }
 
 export function handleNewBunni(event: NewBunni): void {
+  let pool = getPool(event.params.pool);
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
 
   bunniToken.address = event.params.token;

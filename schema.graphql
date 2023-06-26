@@ -8,6 +8,16 @@ type BunniToken @entity {
   totalSupply: BigDecimal!                                                # bunni token total supply
 }
 
+type Pool @entity {
+  id: Bytes!                                                              # pool address
+
+  address: Bytes!                                                         # pool address
+  fee: BigInt!                                                            # fee tier (10000 = 1%)
+  liquidity: BigInt!                                                      # in range liquidity
+  sqrtPriceX96: BigInt!                                                   # current price tracker
+  tick: BigInt!                                                           # current tick
+}
+
 type Token @entity {
   id: Bytes!                                                              # token address
 
