@@ -4,6 +4,7 @@ import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw }
 import { getBunniToken, getPool, getToken, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "../utils/token";
+import { fetchPricePerFullShare, fetchReserves } from "../utils/lens";
 
 export function handleCompound(event: Compound): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
@@ -16,17 +17,23 @@ export function handleCompound(event: Compound): void {
   /// update the position liquidity
   bunniToken.liquidity = bunniToken.liquidity.plus(event.params.liquidity);
 
-  /// update the position reserve and shares
-  let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
-  let amount1 = convertToDecimals(event.params.amount1, token1.decimals);
-  bunniToken.token0Reserve = bunniToken.token0Reserve.plus(amount0);
-  bunniToken.token1Reserve = bunniToken.token1Reserve.plus(amount1);
-  bunniToken.token0Share = bunniToken.token0Reserve.div(bunniToken.totalSupply);
-  bunniToken.token1Share = bunniToken.token1Reserve.div(bunniToken.totalSupply);
+  /// reset pool aggregates until new amounts calculated
+  pool.reserve0 = pool.reserve0.minus(bunniToken.reserve0);
+  pool.reserve1 = pool.reserve1.minus(bunniToken.reserve1);
+
+  /// update the position reserves
+  let reserves: BigInt[] = fetchReserves(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
+  bunniToken.reserve0 = convertToDecimals(reserves[0], token0.decimals);
+  bunniToken.reserve1 = convertToDecimals(reserves[1], token1.decimals);
+
+  /// update the position shares
+  let pricePerFullShare: BigInt[] = fetchPricePerFullShare(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
+  bunniToken.amount0PerShare = convertToDecimals(pricePerFullShare[1], token0.decimals);
+  bunniToken.amount1PerShare = convertToDecimals(pricePerFullShare[2], token1.decimals);
 
   /// update the pool aggregates with new amounts
-  pool.token0Reserve = pool.token0Reserve.plus(amount0);
-  pool.token1Reserve = pool.token1Reserve.plus(amount1);
+  pool.reserve0 = pool.reserve0.plus(bunniToken.reserve0);
+  pool.reserve1 = pool.reserve1.plus(bunniToken.reserve1);
 
   bunniToken.save();
   pool.save();
@@ -49,21 +56,27 @@ export function handleDeposit(event: Deposit): void {
   let shares = convertToDecimals(event.params.shares, bunniToken.decimals);
   bunniToken.totalSupply = bunniToken.totalSupply.plus(shares);
 
-  /// update the position reserve and share
-  let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
-  let amount1 = convertToDecimals(event.params.amount1, token1.decimals);
-  bunniToken.token0Reserve = bunniToken.token0Reserve.plus(amount0);
-  bunniToken.token1Reserve = bunniToken.token1Reserve.plus(amount1);
-  bunniToken.token0Share = bunniToken.token0Reserve.div(bunniToken.totalSupply);
-  bunniToken.token1Share = bunniToken.token1Reserve.div(bunniToken.totalSupply);
+  /// reset pool aggregates until new amounts calculated
+  pool.reserve0 = pool.reserve0.minus(bunniToken.reserve0);
+  pool.reserve1 = pool.reserve1.minus(bunniToken.reserve1);
+
+  /// update the position reserves
+  let reserves: BigInt[] = fetchReserves(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
+  bunniToken.reserve0 = convertToDecimals(reserves[0], token0.decimals);
+  bunniToken.reserve1 = convertToDecimals(reserves[1], token1.decimals);
+
+  /// update the position shares
+  let pricePerFullShare: BigInt[] = fetchPricePerFullShare(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
+  bunniToken.amount0PerShare = convertToDecimals(pricePerFullShare[1], token0.decimals);
+  bunniToken.amount1PerShare = convertToDecimals(pricePerFullShare[2], token1.decimals);
 
   /// update the pool aggregates with new amounts
-  pool.token0Reserve = pool.token0Reserve.plus(amount0);
-  pool.token1Reserve = pool.token1Reserve.plus(amount1);
+  pool.reserve0 = pool.reserve0.plus(bunniToken.reserve0);
+  pool.reserve1 = pool.reserve1.plus(bunniToken.reserve1);
 
   /// update the user position balance and cost basis per share
-  let token0CostBasis = userPosition.token0CostBasisPerShare.times(userPosition.balance).plus(bunniToken.token0Share.times(shares));
-  let token1CostBasis = userPosition.token1CostBasisPerShare.times(userPosition.balance).plus(bunniToken.token1Share.times(shares));
+  let token0CostBasis = userPosition.token0CostBasisPerShare.times(userPosition.balance).plus(bunniToken.amount0PerShare.times(shares));
+  let token1CostBasis = userPosition.token1CostBasisPerShare.times(userPosition.balance).plus(bunniToken.amount1PerShare.times(shares));
   userPosition.balance = userPosition.balance.plus(shares);
   if (userPosition.balance.gt(BigDecimal.zero())) {
     userPosition.token0CostBasisPerShare = token0CostBasis.div(userPosition.balance);
@@ -150,17 +163,23 @@ export function handleWithdraw(event: Withdraw): void {
   let shares = convertToDecimals(event.params.shares, bunniToken.decimals);
   bunniToken.totalSupply = bunniToken.totalSupply.minus(shares);
 
-  /// update the position reserve and shares
-  let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
-  let amount1 = convertToDecimals(event.params.amount1, token1.decimals);
-  bunniToken.token0Reserve = bunniToken.token0Reserve.minus(amount0);
-  bunniToken.token1Reserve = bunniToken.token1Reserve.minus(amount1);
-  bunniToken.token0Share = bunniToken.totalSupply.gt(BigDecimal.zero()) ? bunniToken.token0Reserve.div(bunniToken.totalSupply) : BigDecimal.zero();
-  bunniToken.token1Share = bunniToken.totalSupply.gt(BigDecimal.zero()) ? bunniToken.token1Reserve.div(bunniToken.totalSupply) : BigDecimal.zero();
+  /// reset pool aggregates until new amounts calculated
+  pool.reserve0 = pool.reserve0.minus(bunniToken.reserve0);
+  pool.reserve1 = pool.reserve1.minus(bunniToken.reserve1);
+
+  /// update the position reserves
+  let reserves: BigInt[] = fetchReserves(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
+  bunniToken.reserve0 = convertToDecimals(reserves[0], token0.decimals);
+  bunniToken.reserve1 = convertToDecimals(reserves[1], token1.decimals);
+
+  /// update the position shares
+  let pricePerFullShare: BigInt[] = fetchPricePerFullShare(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
+  bunniToken.amount0PerShare = convertToDecimals(pricePerFullShare[1], token0.decimals);
+  bunniToken.amount1PerShare = convertToDecimals(pricePerFullShare[2], token1.decimals);
 
   /// update the pool aggregates with new amounts
-  pool.token0Reserve = pool.token0Reserve.minus(amount0);
-  pool.token1Reserve = pool.token1Reserve.minus(amount1);
+  pool.reserve0 = pool.reserve0.plus(bunniToken.reserve0);
+  pool.reserve1 = pool.reserve1.plus(bunniToken.reserve1);
 
   /// update the user position balance
   userPosition.balance = userPosition.balance.minus(shares);

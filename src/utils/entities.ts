@@ -23,10 +23,11 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
     bunniToken.tickLower = BigInt.zero();
     bunniToken.tickUpper = BigInt.zero();
 
-    bunniToken.token0Reserve = BigDecimal.zero();
-    bunniToken.token1Reserve = BigDecimal.zero();
-    bunniToken.token0Share = BigDecimal.zero();
-    bunniToken.token1Share = BigDecimal.zero();
+    bunniToken.amount0PerShare = BigDecimal.zero();
+    bunniToken.amount1PerShare = BigDecimal.zero();
+    bunniToken.liquidityPerShare = BigDecimal.zero();
+    bunniToken.reserve0 = BigDecimal.zero();
+    bunniToken.reserve1 = BigDecimal.zero();
 
     bunniToken.token0Fees = BigDecimal.zero();
     bunniToken.token1Fees = BigDecimal.zero();
@@ -58,8 +59,8 @@ export function getPool(poolAddress: Address): Pool {
     pool.token0Price = sqrtPriceX96ToTokenPrices(pool.sqrtPriceX96)[0];
     pool.token1Price = sqrtPriceX96ToTokenPrices(pool.sqrtPriceX96)[1];
 
-    pool.token0Reserve = BigDecimal.zero();
-    pool.token1Reserve = BigDecimal.zero();
+    pool.reserve0 = BigDecimal.zero();
+    pool.reserve1 = BigDecimal.zero();
 
     pool.token0Fees = BigDecimal.zero();
     pool.token1Fees = BigDecimal.zero();
