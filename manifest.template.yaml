@@ -25,6 +25,8 @@ dataSources:
           file: ./abis/BunniHub.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: UniswapV3Pool
+          file: ./abis/UniswapV3Pool.json
       eventHandlers:
         - event: Compound(indexed address,indexed bytes32,uint128,uint256,uint256)
           handler: handleCompound
