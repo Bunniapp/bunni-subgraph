@@ -18,6 +18,8 @@ dataSources:
         - BunniToken
         - Pool
         - Token
+        - User
+        - UserPosition
       abis:
         - name: BunniHub
           file: ./abis/BunniHub.json

@@ -57,3 +57,21 @@ type Token @entity {
   name: String!                                                           # token name                                         
   symbol: String!                                                         # token symbol
 }
+
+type User @entity {
+  id: Bytes!                                                              # user address
+
+  address: Bytes!                                                         # user address
+  positions: [UserPosition!] @derivedFrom(field: "user")                  # list of the user's positions
+}
+
+type UserPosition @entity {
+  id: ID!                                                                 # bunni token address - user address
+
+  user: User!                                                             # the user associated with the position
+  balance: BigDecimal!                                                    # amount of bunni tokens held by the user
+  bunniToken: BunniToken!                                                 # the bunni token associated with the position
+  
+  token0CostBasisPerShare: BigDecimal!                                    # the average amount of token0 used to acquire one share 
+  token1CostBasisPerShare: BigDecimal!                                    # the average amount of token1 used to acquire one share 
+}

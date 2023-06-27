@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { BunniToken, Pool, Token } from "../types/schema";
+import { BunniToken, Pool, Token, User, UserPosition } from "../types/schema";
 import { UniswapV3Pool } from "../types/templates";
 
 import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fetchPoolToken1 } from "./pool";
@@ -90,4 +90,37 @@ export function getToken(tokenAddress: Address): Token {
   }
 
   return token as Token;
+}
+
+export function getUser(userAddress: Address): User {
+  let user = User.load(userAddress);
+
+  if (user === null) {
+    user = new User(userAddress);
+
+    user.address = userAddress;
+
+    user.save();
+  }
+
+  return user as User;
+}
+
+export function getUserPosition(bunniToken: BunniToken, user: User): UserPosition {
+  let userPosition = UserPosition.load(bunniToken.address.toHex() + '-' + user.address.toHex());
+
+  if (userPosition === null) {
+    userPosition = new UserPosition(bunniToken.address.toHex() + '-' + user.address.toHex());
+
+    userPosition.user = user.id;
+    userPosition.balance = BigDecimal.zero();
+    userPosition.bunniToken = bunniToken.id;
+
+    userPosition.token0CostBasisPerShare = BigDecimal.zero();
+    userPosition.token1CostBasisPerShare = BigDecimal.zero();
+
+    userPosition.save();
+  }
+
+  return userPosition as UserPosition;
 }

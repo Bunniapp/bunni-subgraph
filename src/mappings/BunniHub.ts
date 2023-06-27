@@ -1,7 +1,7 @@
-import { Address, BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
 import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../types/BunniHub/BunniHub";
 
-import { getBunniToken, getPool, getToken } from "../utils/entities";
+import { getBunniToken, getPool, getToken, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "../utils/token";
 
@@ -34,6 +34,8 @@ export function handleCompound(event: Compound): void {
 
 export function handleDeposit(event: Deposit): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
+  let user = getUser(event.params.sender);
+  let userPosition = getUserPosition(bunniToken, user);
 
   /// load the ancillary entities
   let pool = getPool(Address.fromBytes(bunniToken.pool));
@@ -44,7 +46,8 @@ export function handleDeposit(event: Deposit): void {
   bunniToken.liquidity = bunniToken.liquidity.plus(event.params.liquidity);
   
   /// update bunni token total supply
-  bunniToken.totalSupply = bunniToken.totalSupply.plus(convertToDecimals(event.params.shares, bunniToken.decimals));
+  let shares = convertToDecimals(event.params.shares, bunniToken.decimals);
+  bunniToken.totalSupply = bunniToken.totalSupply.plus(shares);
 
   /// update the position reserve and share
   let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
@@ -58,8 +61,18 @@ export function handleDeposit(event: Deposit): void {
   pool.token0Reserve = pool.token0Reserve.plus(amount0);
   pool.token1Reserve = pool.token1Reserve.plus(amount1);
 
+  /// update the user position balance and cost basis per share
+  let token0CostBasis = userPosition.token0CostBasisPerShare.times(userPosition.balance).plus(bunniToken.token0Share.times(shares));
+  let token1CostBasis = userPosition.token1CostBasisPerShare.times(userPosition.balance).plus(bunniToken.token1Share.times(shares));
+  userPosition.balance = userPosition.balance.plus(shares);
+  if (userPosition.balance.gt(BigDecimal.zero())) {
+    userPosition.token0CostBasisPerShare = token0CostBasis.div(userPosition.balance);
+    userPosition.token1CostBasisPerShare = token1CostBasis.div(userPosition.balance);
+  }
+  
   bunniToken.save();
   pool.save();
+  userPosition.save();
 }
 
 export function handleNewBunni(event: NewBunni): void {
@@ -122,6 +135,8 @@ export function handleSetProtocolFee(event: SetProtocolFee): void {}
 
 export function handleWithdraw(event: Withdraw): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
+  let user = getUser(event.params.sender);
+  let userPosition = getUserPosition(bunniToken, user);
 
   /// load the ancillary entities
   let pool = getPool(Address.fromBytes(bunniToken.pool));
@@ -132,7 +147,8 @@ export function handleWithdraw(event: Withdraw): void {
   bunniToken.liquidity = bunniToken.liquidity.minus(event.params.liquidity);
 
   /// update bunni token total supply
-  bunniToken.totalSupply = bunniToken.totalSupply.minus(convertToDecimals(event.params.shares, bunniToken.decimals));
+  let shares = convertToDecimals(event.params.shares, bunniToken.decimals);
+  bunniToken.totalSupply = bunniToken.totalSupply.minus(shares);
 
   /// update the position reserve and shares
   let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
@@ -146,6 +162,10 @@ export function handleWithdraw(event: Withdraw): void {
   pool.token0Reserve = pool.token0Reserve.minus(amount0);
   pool.token1Reserve = pool.token1Reserve.minus(amount1);
 
+  /// update the user position balance
+  userPosition.balance = userPosition.balance.minus(shares);
+
   bunniToken.save();
   pool.save();
+  userPosition.save();
 }
