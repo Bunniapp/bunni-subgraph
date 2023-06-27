@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, ethereum, log } from "@graphprotocol/graph-ts";
 import { Mint, Burn, Swap } from "../types/templates/UniswapV3Pool/UniswapV3Pool";
 import { BunniLens, BunniLens__getReservesInputKeyStruct } from "../types/templates/UniswapV3Pool/BunniLens";
 
@@ -50,7 +50,7 @@ export function handleSwap(event: Swap): void {
     if (bunniToken.totalSupply.gt(BigDecimal.zero())) {
       /// generate the key struct
       let key = new BunniLens__getReservesInputKeyStruct();
-      key.push(ethereum.Value.fromBytes(pool.address));
+      key.push(ethereum.Value.fromAddress(Address.fromBytes(pool.address)));
       key.push(ethereum.Value.fromSignedBigInt(bunniToken.tickLower));
       key.push(ethereum.Value.fromSignedBigInt(bunniToken.tickUpper));
 
