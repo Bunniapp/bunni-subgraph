@@ -141,10 +141,13 @@ export function getUserPosition(bunniToken: BunniToken, user: User): UserPositio
 
     userPosition.user = user.id;
     userPosition.balance = BigDecimal.zero();
-    userPosition.bunniToken = bunniToken.id;
+    userPosition.gaugeBalance = BigDecimal.zero();
+    userPosition.workingBalance = BigDecimal.zero();
 
     userPosition.token0CostBasisPerShare = BigDecimal.zero();
     userPosition.token1CostBasisPerShare = BigDecimal.zero();
+
+    userPosition.bunniToken = bunniToken.id;
 
     userPosition.save();
   }

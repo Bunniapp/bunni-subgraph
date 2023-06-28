@@ -90,8 +90,11 @@ type UserPosition @entity {
 
   user: User!                                                             # the user associated with the position
   balance: BigDecimal!                                                    # amount of bunni tokens held by the user
-  bunniToken: BunniToken!                                                 # the bunni token associated with the position
-  
+  gaugeBalance: BigDecimal!                                               # amount of gauge tokens held by the user
+  workingBalance: BigDecimal!                                             # user working balance for the gauge
+
   token0CostBasisPerShare: BigDecimal!                                    # the average amount of token0 used to acquire one share 
   token1CostBasisPerShare: BigDecimal!                                    # the average amount of token1 used to acquire one share 
+
+  bunniToken: BunniToken!                                                 # the bunni token associated with the position
 }
