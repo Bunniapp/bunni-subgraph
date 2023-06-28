@@ -44,6 +44,26 @@ dataSources:
   {{/BunniHub}}
 templates:
   - kind: ethereum/contract
+    name: BunniToken
+    network: {{ network }}
+    source:
+      abi: BunniToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BunniToken
+      abis:
+        - name: BunniToken
+          file: ./abis/BunniToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+      file: ./src/mappings/BunniToken.ts
+  - kind: ethereum/contract
     name: UniswapV3Pool
     network: {{ network }}
     source:

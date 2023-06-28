@@ -1,5 +1,6 @@
 import { Address, BigDecimal, BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
 import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../types/BunniHub/BunniHub";
+import { BunniToken as BunniTokenTemplate } from "../types/templates";
 
 import { getBunniToken, getPool, getToken, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
@@ -112,6 +113,8 @@ export function handleNewBunni(event: NewBunni): void {
 
   bunniToken.save();
   pool.save();
+
+  BunniTokenTemplate.create(event.params.token);
 }
 
 export function handlePayProtocolFee(event: PayProtocolFee): void {
