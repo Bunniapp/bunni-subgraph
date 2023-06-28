@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, ByteArray, crypto } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, ByteArray, DataSourceContext, crypto } from "@graphprotocol/graph-ts";
 import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../types/BunniHub/BunniHub";
 import { BunniToken as BunniTokenTemplate } from "../types/templates";
 
@@ -114,7 +114,9 @@ export function handleNewBunni(event: NewBunni): void {
   bunniToken.save();
   pool.save();
 
-  BunniTokenTemplate.create(event.params.token);
+  let bunniTokenContext = new DataSourceContext();
+  bunniTokenContext.setBytes("bunniKeyHash", event.params.bunniKeyHash);
+  BunniTokenTemplate.createWithContext(event.params.token, bunniTokenContext);
 }
 
 export function handlePayProtocolFee(event: PayProtocolFee): void {
