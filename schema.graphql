@@ -17,10 +17,10 @@ type BunniToken @entity {
   reserve0: BigDecimal!                                                   # amount of token0 in the liquidity position
   reserve1: BigDecimal!                                                   # amount of token1 in the liquidity position
 
-  token0Fees: BigDecimal!                                                 # amount of token0 collected as protocol fees
-  token1Fees: BigDecimal!                                                 # amount of token1 collected as protocol fees
   token0Volume: BigDecimal!                                               # total volume processed by the liquidity position in terms of token0
   token1Volume: BigDecimal!                                               # total volume processed by the liquidity position in terms of token1
+  token0CollectedFees: BigDecimal!                                        # amount of token0 collected as protocol fees
+  token1CollectedFees: BigDecimal!                                        # amount of token1 collected as protocol fees
 
   pool: Pool!                                                             # pool         
 }
@@ -42,10 +42,10 @@ type Pool @entity {
   reserve0: BigDecimal!                                                   # total amount of token0 in all liquidity positions
   reserve1: BigDecimal!                                                   # total amount of token1 in all liquidity positions
 
-  token0Fees: BigDecimal!                                                 # total amount of token0 collected as protocol fees by bunni token positions
-  token1Fees: BigDecimal!                                                 # total amount of token1 collected as protocol fees by bunni token positions
   token0Volume: BigDecimal!                                               # total volume processed by bunni token positions in terms of token0
   token1Volume: BigDecimal!                                               # total volume processed by bunni token positions in terms of token1
+  token0CollectedFees: BigDecimal!                                        # total amount of token0 collected as protocol fees from bunni token positions
+  token1CollectedFees: BigDecimal!                                        # total amount of token1 collected as protocol fees from bunni token positions
 
   bunniTokens: [BunniToken!]!                                             # bunni tokens associated with the pool
 }

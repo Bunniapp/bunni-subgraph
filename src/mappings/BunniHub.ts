@@ -131,13 +131,13 @@ export function handlePayProtocolFee(event: PayProtocolFee): void {
         let token1 = getToken(Address.fromBytes(pool.token1));
 
         /// update the bunni token fees
-        bunniToken.token0Fees = bunniToken.token0Fees.plus(convertToDecimals(event.params.amount0, token0.decimals));
-        bunniToken.token1Fees = bunniToken.token1Fees.plus(convertToDecimals(event.params.amount1, token1.decimals));
+        bunniToken.token0CollectedFees = bunniToken.token0CollectedFees.plus(convertToDecimals(event.params.amount0, token0.decimals));
+        bunniToken.token1CollectedFees = bunniToken.token1CollectedFees.plus(convertToDecimals(event.params.amount1, token1.decimals));
         bunniToken.save();
 
         // update the pool aggregates with new amounts
-        pool.token0Fees = pool.token0Fees.plus(convertToDecimals(event.params.amount0, token0.decimals));
-        pool.token1Fees = pool.token1Fees.plus(convertToDecimals(event.params.amount1, token1.decimals));
+        pool.token0CollectedFees = pool.token0CollectedFees.plus(convertToDecimals(event.params.amount0, token0.decimals));
+        pool.token1CollectedFees = pool.token1CollectedFees.plus(convertToDecimals(event.params.amount1, token1.decimals));
         pool.save();
       }
     }
