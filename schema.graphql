@@ -22,7 +22,26 @@ type BunniToken @entity {
   token0CollectedFees: BigDecimal!                                        # amount of token0 collected as protocol fees
   token1CollectedFees: BigDecimal!                                        # amount of token1 collected as protocol fees
 
-  pool: Pool!                                                             # pool         
+  gauge: Gauge                                                            # gauge associated with the bunni token
+  pool: Pool!                                                             # pool associated with the bunni token   
+}
+
+type Gauge @entity {
+  id: Bytes!                                                              # hash of the gauge address
+
+  address: Bytes!                                                         # gauge address
+  chain: BigInt!                                                          # numeric chain ID associated with the gauge (relevant for root gauges)
+  decimals: BigInt!                                                       # gauge decimals
+  name: String!                                                           # gauge name
+  symbol: String!                                                         # gauge symbol
+  totalSupply: BigDecimal!                                                # gauge total supply
+
+  relativeWeightCap: BigDecimal!                                          # gauge relative weight cap (controls emissions cap)
+  tokenlessProduction: BigInt!                                            # gauge tokenless production (controls max boost multiplier)
+  workingSupply: BigDecimal!                                              # gauge working supply
+
+  bunniToken: BunniToken!                                                 # bunni token associated with the gauge
+  rewardTokens: [Token!]!                                                 # additional reward tokens permitted for the gauge
 }
 
 type Pool @entity {

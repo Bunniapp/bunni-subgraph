@@ -42,6 +42,33 @@ dataSources:
           handler: handleWithdraw
       file: ./src/mappings/BunniHub.ts
   {{/BunniHub}}
+  {{#LiquidityGaugeFactory}}
+  - kind: ethereum
+    name: LiquidityGaugeFactory
+    network: {{ network }}
+    source:
+      address: '{{ LiquidityGaugeFactory.address }}'
+      abi: LiquidityGaugeFactory
+      startBlock: {{ LiquidityGaugeFactory.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BunniToken
+        - Gauge
+      abis:
+        - name: LiquidityGaugeFactory
+          file: ./abis/LiquidityGaugeFactory.json
+        - name: LiquidityGauge
+          file: ./abis/LiquidityGauge.json
+        - name: BunniToken
+          file: ./abis/BunniToken.json
+      eventHandlers:
+        - event: GaugeCreated(indexed address)
+          handler: handleGaugeCreated
+      file: ./src/mappings/LiquidityGaugeFactory.ts
+  {{/LiquidityGaugeFactory}}
 templates:
   - kind: ethereum/contract
     name: BunniToken
@@ -63,6 +90,43 @@ templates:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/BunniToken.ts
+  - kind: ethereum/contract
+    name: LiquidityGauge
+    network: {{ network }}
+    source:
+      abi: LiquidityGauge
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+        - Token
+      abis:
+        - name: LiquidityGauge
+          file: ./abis/LiquidityGauge.json
+      eventHandlers:
+        - event: Deposit(indexed address,uint256)
+          handler: handleDeposit
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
+        - event: UpdateLiquidityLimit(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleUpdateLiquidityLimit
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        # - event: Approval(indexed address,indexed address,uint256)
+        #   handler: handleApproval
+        - event: RewardDistributorUpdated(indexed address,address)
+          handler: handleRewardDistributorUpdated
+        - event: RelativeWeightCapChanged(uint256)
+          handler: handleRelativeWeightCapChanged
+        # - event: NewPendingAdmin(address)
+        #   handler: handleNewPendingAdmin
+        # - event: NewAdmin(address)
+        #   handler: handleNewAdmin
+        - event: NewTokenlessProduction(uint8)
+          handler: handleNewTokenlessProduction
+      file: ./src/mappings/LiquidityGauge.ts
   - kind: ethereum/contract
     name: UniswapV3Pool
     network: {{ network }}

@@ -3,5 +3,9 @@
   "BunniHub": {
     "address": "0xb5087F95643A9a4069471A28d32C569D9bd57fE4",
     "startBlock": 7729900
+  },
+  "LiquidityGaugeFactory": {
+    "address": "0x8fd0Bc47CaE3358Bafa7DADd1A423D9bF877fe35",
+    "startBlock": 7995565
   }
 }

@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { BunniToken, Pool, Token, User, UserPosition } from "../types/schema";
+import { BunniToken, Gauge, Pool, Token, User, UserPosition } from "../types/schema";
 import { UniswapV3Pool } from "../types/templates";
 
 import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fetchPoolToken1 } from "./pool";
@@ -40,6 +40,32 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
   }
 
   return bunniToken as BunniToken;
+}
+
+export function getGauge(gaugeIdentifier: Bytes): Gauge {
+  let gauge = Gauge.load(gaugeIdentifier);
+
+  if (gauge === null) {
+    gauge = new Gauge(gaugeIdentifier);
+
+    gauge.address = Address.zero();
+    gauge.chain = BigInt.zero();
+    gauge.decimals = BigInt.zero();
+    gauge.name = '';
+    gauge.symbol = '';
+    gauge.totalSupply = BigDecimal.zero();
+
+    gauge.relativeWeightCap = BigDecimal.zero();
+    gauge.tokenlessProduction = BigInt.zero();
+    gauge.workingSupply = BigDecimal.zero();
+
+    gauge.bunniToken = Address.zero();
+    gauge.rewardTokens = [];
+
+    gauge.save();
+  }
+
+  return gauge as Gauge;
 }
 
 export function getPool(poolAddress: Address): Pool {
