@@ -23,6 +23,8 @@ dataSources:
       abis:
         - name: BunniHub
           file: ./abis/BunniHub.json
+        - name: BunniLens
+          file: ./abis/BunniLens.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: UniswapV3Pool
