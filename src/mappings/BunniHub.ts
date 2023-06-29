@@ -2,7 +2,7 @@ import { Address, BigDecimal, BigInt, ByteArray, DataSourceContext, crypto } fro
 import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../types/BunniHub/BunniHub";
 import { BunniToken as BunniTokenTemplate } from "../types/templates";
 
-import { getBunniToken, getPool, getToken, getUser, getUserPosition } from "../utils/entities";
+import { getBunni, getBunniToken, getPool, getToken, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "../utils/token";
 import { fetchPricePerFullShare, fetchReserves } from "../utils/lens";
@@ -149,7 +149,11 @@ export function handlePayProtocolFee(event: PayProtocolFee): void {
   }
 }
 
-export function handleSetProtocolFee(event: SetProtocolFee): void {}
+export function handleSetProtocolFee(event: SetProtocolFee): void {
+  let bunni = getBunni();
+  bunni.protocolFee = convertToDecimals(event.params.newProtocolFee, BigInt.fromI32(18));
+  bunni.save();
+}
 
 export function handleWithdraw(event: Withdraw): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);

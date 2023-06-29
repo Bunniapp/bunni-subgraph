@@ -1,11 +1,26 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { BunniToken, Gauge, Pool, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
+import { Bunni, BunniToken, Gauge, Pool, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
 import { UniswapV3Pool } from "../types/templates";
 
+import { BUNNI_HUB } from "./constants";
 import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fetchPoolToken1 } from "./pool";
 import { sqrtPriceX96ToTokenPrices } from "./price";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "./token";
+
+export function getBunni(): Bunni {
+  let bunni = Bunni.load(BUNNI_HUB);
+
+  if (bunni === null) {
+    bunni = new Bunni(BUNNI_HUB);
+
+    bunni.protocolFee = BigDecimal.zero();
+
+    bunni.save();
+  }
+
+  return bunni as Bunni;
+}
 
 export function getBunniToken(bunniKey: Bytes): BunniToken {
   let bunniToken = BunniToken.load(bunniKey);
