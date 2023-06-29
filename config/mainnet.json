@@ -11,5 +11,9 @@
   "GaugeController": {
     "address": "0x901c8aA6A61f74aC95E7f397E22A0Ac7c1242218",
     "startBlock": 16345397
+  },
+  "VotingEscrow": {
+    "address": "0xf17d23136B4FeAd139f54fB766c8795faae09660",
+    "startBlock": 16345397
   }
 }

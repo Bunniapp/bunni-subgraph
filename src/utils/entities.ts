@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { BunniToken, Gauge, Pool, Token, User, UserPosition, Vote } from "../types/schema";
+import { BunniToken, Gauge, Pool, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
 import { UniswapV3Pool } from "../types/templates";
 
 import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fetchPoolToken1 } from "./pool";
@@ -173,4 +173,24 @@ export function getVote(gauge: Gauge, user: User): Vote {
   }
 
   return vote as Vote;
+}
+
+export function getVotingLock(user: User): VotingLock {
+  let lock = VotingLock.load(user.address);
+
+  if (lock === null) {
+    lock = new VotingLock(user.address);
+
+    lock.amount = BigDecimal.zero();
+    lock.balance = BigDecimal.zero();
+    lock.decay = BigDecimal.zero();
+    lock.lastUpdate = BigInt.zero();
+    lock.lockEnd = BigInt.zero();
+
+    lock.user = user.id;
+
+    lock.save();
+  }
+
+  return lock as VotingLock;
 }

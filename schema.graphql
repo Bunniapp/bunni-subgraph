@@ -87,6 +87,7 @@ type User @entity {
   address: Bytes!                                                         # user address
   positions: [UserPosition!] @derivedFrom(field: "user")                  # list of the user's positions
   votes: [Vote!]! @derivedFrom(field: "user")                             # list of the user's gauge votes
+  votingLock: [VotingLock!] @derivedFrom(field: "user")                   # the user's voting lock
 }
 
 type UserPosition @entity {
@@ -111,4 +112,16 @@ type Vote @entity {
 
   gauge: Gauge!                                                           # gauge associated with the vote
   user: User!                                                             # user associated with the vote
+}
+
+type VotingLock @entity {
+  id: Bytes!                                                              # user address
+
+  amount: BigDecimal!                                                     # amount of BPT locked
+  balance: BigDecimal!                                                    # amount of veLIT received at the time of lock
+  decay: BigDecimal!                                                      # rate that balance decays per second
+  lastUpdate: BigInt!                                                     # timestamp when the voting lock was last updated
+  lockEnd: BigInt!                                                        # timestamp when the voting lock ends
+
+  user: User!                                                             # user associated with the voting lock
 }
