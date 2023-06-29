@@ -66,6 +66,8 @@ dataSources:
           file: ./abis/LiquidityGauge.json
         - name: BunniToken
           file: ./abis/BunniToken.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: GaugeCreated(indexed address)
           handler: handleGaugeCreated
