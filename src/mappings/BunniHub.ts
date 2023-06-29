@@ -42,7 +42,7 @@ export function handleCompound(event: Compound): void {
 
 export function handleDeposit(event: Deposit): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
-  let user = getUser(event.params.sender);
+  let user = getUser(event.params.recipient);
   let userPosition = getUserPosition(bunniToken, user);
 
   /// load the ancillary entities
@@ -153,7 +153,7 @@ export function handleSetProtocolFee(event: SetProtocolFee): void {}
 
 export function handleWithdraw(event: Withdraw): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
-  let user = getUser(event.params.sender);
+  let user = getUser(event.params.recipient);
   let userPosition = getUserPosition(bunniToken, user);
 
   /// load the ancillary entities
