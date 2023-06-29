@@ -2,6 +2,7 @@ type Bunni @entity {
   id: Bytes!                                                              # BunniHub address
 
   protocolFee: BigDecimal!                                                # proportion of swap fees taken by Bunni
+  inflationRate: BigDecimal!                                              # rate of oLIT flation
 }
 
 type BunniToken @entity {

@@ -15,6 +15,7 @@ export function getBunni(): Bunni {
     bunni = new Bunni(BUNNI_HUB);
 
     bunni.protocolFee = BigDecimal.zero();
+    bunni.inflationRate = BigDecimal.zero();
 
     bunni.save();
   }

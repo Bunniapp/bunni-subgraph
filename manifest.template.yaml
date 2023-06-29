@@ -22,6 +22,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - Bunni
         - BunniToken
         - Pool
         - Token
@@ -146,6 +147,28 @@ dataSources:
         #   handler: handleNewAdmin
       file: ./src/mappings/VotingEscrow.ts
   {{/VotingEscrow}}
+  {{#TokenAdmin}}
+  - kind: ethereum/contract
+    name: TokenAdmin
+    network: {{ network }}
+    source:
+      address: '{{ TokenAdmin.address }}'
+      abi: TokenAdmin
+      startBlock: {{ TokenAdmin.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Bunni
+      abis:
+        - name: TokenAdmin
+          file: ./abis/TokenAdmin.json
+      eventHandlers:
+        - event: MiningParametersUpdated(uint256,uint256)
+          handler: handleMiningParametersUpdated
+      file: ./src/mappings/TokenAdmin.ts
+  {{/TokenAdmin}}
 templates:
   - kind: ethereum/contract
     name: BunniToken

@@ -15,5 +15,9 @@
   "VotingEscrow": {
     "address": "0xf17d23136B4FeAd139f54fB766c8795faae09660",
     "startBlock": 16345397
+  },
+  "TokenAdmin": {
+    "address": "0x4cc39AF0d46b0F66Fd33778C6629A696bDC310a0",
+    "startBlock": 16345397
   }
 }
