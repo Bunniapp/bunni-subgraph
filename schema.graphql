@@ -36,8 +36,10 @@ type Gauge @entity {
   symbol: String!                                                         # gauge symbol
   totalSupply: BigDecimal!                                                # gauge total supply
 
+  exists: Boolean!                                                        # gauge has been added to the gauge controller
   relativeWeightCap: BigDecimal!                                          # gauge relative weight cap (controls emissions cap)
   tokenlessProduction: BigInt!                                            # gauge tokenless production (controls max boost multiplier)
+  type: BigInt!                                                           # gauge type
   workingSupply: BigDecimal!                                              # gauge working supply
 
   bunniToken: BunniToken!                                                 # bunni token associated with the gauge

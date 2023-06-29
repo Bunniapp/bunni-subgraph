@@ -10,7 +10,7 @@ schema:
   file: ./schema.graphql
 dataSources:
   {{#BunniHub}}
-  - kind: ethereum
+  - kind: ethereum/contract
     name: BunniHub
     network: {{ network }}
     source:
@@ -52,7 +52,7 @@ dataSources:
       file: ./src/mappings/BunniHub.ts
   {{/BunniHub}}
   {{#LiquidityGaugeFactory}}
-  - kind: ethereum
+  - kind: ethereum/contract
     name: LiquidityGaugeFactory
     network: {{ network }}
     source:
@@ -80,6 +80,40 @@ dataSources:
           handler: handleGaugeCreated
       file: ./src/mappings/LiquidityGaugeFactory.ts
   {{/LiquidityGaugeFactory}}
+  {{#GaugeController}}
+  - kind: ethereum/contract
+    name: GaugeController
+    network: {{ network }}
+    source:
+      address: '{{ GaugeController.address }}'
+      abi: GaugeController
+      startBlock: {{ GaugeController.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+      abis:
+        - name: GaugeController
+          file: ./abis/GaugeController.json
+      eventHandlers:
+        # - event: AddType(string,int128)
+        #   handler: handleAddType
+        # - event: NewAdmin(address)
+        #   handler: handleNewAdmin
+        - event: NewGauge(address,int128,uint256)
+          handler: handleNewGauge
+        # - event: NewGaugeWeight(address,uint256,uint256,uint256)
+        #   handler: handleNewGaugeWeight
+        # - event: NewPendingAdmin(address)
+        #   handler: handleNewPendingAdmin
+        # - event: NewTypeWeight(int128,uint256,uint256,uint256)
+        #   handler: handleNewTypeWeight
+        - event: VoteForGauge(uint256,address,address,uint256)
+          handler: handleVoteForGauge
+      file: ./src/mappings/GaugeController.ts
+  {{/GaugeController}}
 templates:
   - kind: ethereum/contract
     name: BunniToken

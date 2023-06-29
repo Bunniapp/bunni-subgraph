@@ -7,5 +7,9 @@
   "LiquidityGaugeFactory": {
     "address": "0x8fd0Bc47CaE3358Bafa7DADd1A423D9bF877fe35",
     "startBlock": 7995565
+  },
+  "GaugeController": {
+    "address": "0xFe16CC67B62b10119BC03E7E7Bf2983f868f8CE5",
+    "startBlock": 7995565
   }
 }

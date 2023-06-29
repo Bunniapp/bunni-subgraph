@@ -55,8 +55,10 @@ export function getGauge(gaugeIdentifier: Bytes): Gauge {
     gauge.symbol = '';
     gauge.totalSupply = BigDecimal.zero();
 
+    gauge.exists = false;
     gauge.relativeWeightCap = BigDecimal.zero();
     gauge.tokenlessProduction = BigInt.zero();
+    gauge.type = BigInt.zero();
     gauge.workingSupply = BigDecimal.zero();
 
     gauge.bunniToken = Address.zero();
