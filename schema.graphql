@@ -44,6 +44,7 @@ type Gauge @entity {
 
   bunniToken: BunniToken!                                                 # bunni token associated with the gauge
   rewardTokens: [Token!]!                                                 # additional reward tokens permitted for the gauge
+  votes: [Vote!]! @derivedFrom(field: "gauge")                            # votes associated with the gauge
 }
 
 type Pool @entity {
@@ -85,6 +86,7 @@ type User @entity {
 
   address: Bytes!                                                         # user address
   positions: [UserPosition!] @derivedFrom(field: "user")                  # list of the user's positions
+  votes: [Vote!]! @derivedFrom(field: "user")                             # list of the user's gauge votes
 }
 
 type UserPosition @entity {
@@ -99,4 +101,14 @@ type UserPosition @entity {
   token1CostBasisPerShare: BigDecimal!                                    # the average amount of token1 used to acquire one share 
 
   bunniToken: BunniToken!                                                 # the bunni token associated with the position
+}
+
+type Vote @entity {
+  id: ID!                                                                 # gauge address - user address
+
+  timestamp: BigInt!                                                      # timestamp when the vote was cast
+  weight: BigInt!                                                         # user voting weight allocated to the gauge
+
+  gauge: Gauge!                                                           # gauge associated with the vote
+  user: User!                                                             # user associated with the vote
 }

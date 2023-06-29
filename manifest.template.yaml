@@ -94,6 +94,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Gauge
+        - Vote
       abis:
         - name: GaugeController
           file: ./abis/GaugeController.json
