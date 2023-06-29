@@ -4,19 +4,18 @@ import { getBunniToken, getGauge, getUser, getUserPosition } from "../utils/enti
 import { convertToDecimals } from "../utils/math";
 
 export function handleTransfer(event: Transfer): void {
-  let bunniToken = getBunniToken(dataSource.context().getBytes("bunniKey"));
-
   /// ignore minting and burning events
-  if (event.params.from !== Address.zero() && event.params.to !== Address.zero()) {
+  if (event.params.from != Address.zero() && event.params.to != Address.zero()) {
+    let bunniToken = getBunniToken(dataSource.context().getBytes("bunniKey"));
 
     let amount = convertToDecimals(event.params.value, bunniToken.decimals);
 
-    if (bunniToken.gauge !== null && event.params.from === getGauge(bunniToken.gauge as Bytes).address) {
+    if (bunniToken.gauge !== null && event.params.from == getGauge(bunniToken.gauge as Bytes).address) {
       /// bunni token was sent from the gauge contract
       let toPosition = getUserPosition(bunniToken, getUser(event.params.to));
       toPosition.balance = toPosition.balance.plus(amount);
       toPosition.save();
-    } else if (bunniToken.gauge !== null && event.params.to === getGauge(bunniToken.gauge as Bytes).address) {
+    } else if (bunniToken.gauge !== null && event.params.to == getGauge(bunniToken.gauge as Bytes).address) {
       /// bunni token was sent to the gauge contract
       let fromPosition = getUserPosition(bunniToken, getUser(event.params.from));
       fromPosition.balance = fromPosition.balance.minus(amount);
@@ -29,7 +28,7 @@ export function handleTransfer(event: Transfer): void {
 
         for (let i = 0; i < eventLogs.length; i++) {
           if (eventLogs[i].topics[0].toHex() == signatureHash.toHex()) {
-            if (event.params.from !== Address.fromBytes(eventLogs[i].topics[1])) {
+            if (event.params.from != Address.fromBytes(eventLogs[i].topics[1])) {
               /// update provider user position, accounting for the cost basis of the amount transferred
               let providerPosition = getUserPosition(bunniToken, getUser(Address.fromBytes(eventLogs[i].topics[1])));
 

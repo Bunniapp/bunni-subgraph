@@ -60,7 +60,7 @@ export function handleUpdateLiquidityLimit(event: UpdateLiquidityLimit): void {
 
 export function handleTransfer(event: Transfer): void {
   /// ignore minting and burning events
-  if (event.params._from !== Address.zero() && event.params._to !== Address.zero()) {
+  if (event.params._from != Address.zero() && event.params._to != Address.zero()) {
     let gauge = getGauge(dataSource.context().getBytes("id"));
     let fromPosition = getUserPosition(getBunniToken(gauge.bunniToken), getUser(event.params._from));
     let toPosition = getUserPosition(getBunniToken(gauge.bunniToken), getUser(event.params._to));
