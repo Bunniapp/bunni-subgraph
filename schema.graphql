@@ -107,6 +107,8 @@ type UserPosition @entity {
 type Vote @entity {
   id: ID!                                                                 # gauge address - user address
 
+  power: BigDecimal!                                                      # voting balance used for the vote (balance * vote percent)
+  decay: BigDecimal!                                                      # rate that power decays per second
   timestamp: BigInt!                                                      # timestamp when the vote was cast
   weight: BigInt!                                                         # user voting weight allocated to the gauge
 

@@ -163,6 +163,8 @@ export function getVote(gauge: Gauge, user: User): Vote {
   if (vote === null) {
     vote = new Vote(gauge.address.toHex() + '-' + user.address.toHex());
 
+    vote.power = BigDecimal.zero();
+    vote.decay = BigDecimal.zero();
     vote.timestamp = BigInt.zero();
     vote.weight = BigInt.zero();
 
