@@ -79,7 +79,7 @@ export function handleTransfer(event: Transfer): void {
       toPosition.token0CostBasisPerShare = token0CostBasis.div(toNewTotalBalance);
       toPosition.token1CostBasisPerShare = token1CostBasis.div(toNewTotalBalance);
     }
-    toPosition.balance = toPosition.balance.plus(amount);
+    toPosition.gaugeBalance = toPosition.gaugeBalance.plus(amount);
 
     fromPosition.save();
     toPosition.save();
