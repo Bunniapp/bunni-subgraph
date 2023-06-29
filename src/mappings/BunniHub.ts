@@ -153,7 +153,7 @@ export function handleSetProtocolFee(event: SetProtocolFee): void {}
 
 export function handleWithdraw(event: Withdraw): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
-  let user = getUser(event.params.recipient);
+  let user = getUser(event.params.sender);
   let userPosition = getUserPosition(bunniToken, user);
 
   /// load the ancillary entities
