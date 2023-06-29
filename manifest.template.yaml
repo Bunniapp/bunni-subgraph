@@ -1,4 +1,11 @@
 specVersion: 0.0.6
+{{#graft}}
+features:
+  - grafting
+graft:
+  base: {{graft.base}}
+  block: {{graft.block}}
+{{/graft}}
 schema:
   file: ./schema.graphql
 dataSources:
