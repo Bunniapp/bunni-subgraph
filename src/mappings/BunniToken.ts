@@ -1,4 +1,4 @@
-import { Address, BigDecimal, ByteArray, Bytes, crypto, dataSource } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, ByteArray, Bytes, crypto, dataSource, ethereum } from "@graphprotocol/graph-ts";
 import { Transfer } from "../types/templates/BunniToken/BunniToken";
 import { getBunniToken, getGauge, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
@@ -6,7 +6,7 @@ import { convertToDecimals } from "../utils/math";
 export function handleTransfer(event: Transfer): void {
   /// ignore minting and burning events
   if (event.params.from != Address.zero() && event.params.to != Address.zero()) {
-    let bunniToken = getBunniToken(dataSource.context().getBytes("bunniKey"));
+    let bunniToken = getBunniToken(dataSource.context().getBytes("bunniKeyHash"));
 
     let amount = convertToDecimals(event.params.value, bunniToken.decimals);
 
@@ -28,9 +28,11 @@ export function handleTransfer(event: Transfer): void {
 
         for (let i = 0; i < eventLogs.length; i++) {
           if (eventLogs[i].topics[0].toHex() == signatureHash.toHex()) {
-            if (event.params.from != Address.fromBytes(eventLogs[i].topics[1])) {
+            let provider = ethereum.decode('address', eventLogs[i].topics[1]);
+
+            if (provider && event.params.from != provider.toAddress()) {
               /// update provider user position, accounting for the cost basis of the amount transferred
-              let providerPosition = getUserPosition(bunniToken, getUser(Address.fromBytes(eventLogs[i].topics[1])));
+              let providerPosition = getUserPosition(bunniToken, getUser(provider.toAddress()));
 
               let providerOldTotalBalance = providerPosition.balance.plus(providerPosition.gaugeBalance);
               let providerNewTotalBalance = providerPosition.balance.plus(providerPosition.gaugeBalance).plus(amount);
