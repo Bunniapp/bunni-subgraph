@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { Bunni, BunniToken, Gauge, Pool, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
+import { Bribe, Bunni, BunniToken, Gauge, Pool, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
 import { BunniHub } from "../types/BunniHub/BunniHub";
 import { UniswapV3Pool } from "../types/templates";
 
@@ -9,6 +9,27 @@ import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fe
 import { sqrtPriceX96ToTokenPrices } from "./price";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "./token";
 import { convertToDecimals } from "./math";
+
+export function getBribe(bribeIdentifier: Bytes, bribeIndex: i32): Bribe {
+  let bribe = Bribe.load(bribeIdentifier.toHex() + '-' + bribeIndex.toString());
+
+  if (bribe == null) {
+    bribe = new Bribe(bribeIdentifier.toHex() + '-' + bribeIndex.toString());
+
+    bribe.proposal = Address.zero();
+    bribe.bribeIdentifier = bribeIdentifier;
+    bribe.rewardIdentifier = Address.zero();
+
+    bribe.token = Address.zero();
+    bribe.amount = BigDecimal.zero();
+    bribe.deadline = BigInt.zero();
+    bribe.briber = Address.zero();
+
+    bribe.save();
+  }
+
+  return bribe as Bribe;
+}
 
 export function getBunni(): Bunni {
   let bunni = Bunni.load(BUNNI_HUB);
@@ -90,6 +111,7 @@ export function getGauge(gaugeIdentifier: Bytes): Gauge {
 
     gauge.bunniToken = Address.zero();
     gauge.rewardTokens = [];
+    gauge.bribes = [];
 
     gauge.save();
   }

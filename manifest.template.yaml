@@ -282,6 +282,30 @@ dataSources:
           handler: handleSetParams
       file: ./src/mappings/OptionsToken.ts
   {{/BalancerOracle}}
+  {{#BunniBribe}}
+  - kind: ethereum/contract
+    name: BunniBribe
+    network: {{ network }}
+    source:
+      address: '{{ BunniBribe.address }}'
+      abi: BunniBribe
+      startBlock: {{ BunniBribe.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+        - Bribe
+        - Token
+      abis:
+        - name: BunniBribe
+          file: ./abis/BunniBribe.json
+      eventHandlers:
+        - event: DepositBribe(indexed bytes32,indexed address,uint256,bytes32,bytes32,indexed address)
+          handler: handleDepositBribe
+      file: ./src/mappings/BunniBribe.ts
+  {{/BunniBribe}}
 templates:
   - kind: ethereum/contract
     name: BunniToken

@@ -1,3 +1,16 @@
+type Bribe @entity {
+  id: ID!                                                                 # bribe identifier - bribe index
+
+  proposal: Bytes!                                                        # the hashed address of the associated Gauge
+  bribeIdentifier: Bytes!                                                 # the bribe identifier
+  rewardIdentifier: Bytes!                                                # the reward identifier
+
+  token: Token!                                                           # the bribe token address
+  amount: BigDecimal!                                                     # the bribe amount
+  deadline: BigInt!                                                       # timestamp when the bribe ends
+  briber: Bytes!                                                          # the bribe creator
+}
+
 type Bunni @entity {
   id: Bytes!                                                              # BunniHub address
 
@@ -57,6 +70,7 @@ type Gauge @entity {
   bunniToken: BunniToken!                                                 # bunni token associated with the gauge
   rewardTokens: [Token!]!                                                 # additional reward tokens permitted for the gauge
   votes: [Vote!]! @derivedFrom(field: "gauge")                            # votes associated with the gauge
+  bribes: [Bribe!]!                                                       # hidden hand bribes associated with the gauge
 }
 
 type Pool @entity {
