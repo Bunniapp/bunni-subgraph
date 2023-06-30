@@ -2,7 +2,8 @@ import { Bytes, DataSourceContext, crypto, dataSource } from "@graphprotocol/gra
 import { BunniToken } from "../types/LiquidityGaugeFactory/BunniToken";
 import { LiquidityGauge } from "../types/LiquidityGaugeFactory/LiquidityGauge";
 import { GaugeCreated } from "../types/LiquidityGaugeFactory/LiquidityGaugeFactory";
-import { LiquidityGauge as LiquidityGaugeTemplate } from "../types/templates";
+import { DeployedGauge as DeployedRootGauge } from "../types/RootGaugeFactory/RootGaugeFactory";
+import { LiquidityGauge as LiquidityGaugeTemplate, RootGauge as RootGaugeTemplate } from "../types/templates";
 
 import { CHAIN_ID } from "../utils/constants";
 import { getBunniToken, getGauge } from "../utils/entities";
@@ -34,4 +35,16 @@ export function handleGaugeCreated(event: GaugeCreated): void {
   let liquidityGaugeContext = new DataSourceContext();
   liquidityGaugeContext.setBytes("id", gauge.id);
   LiquidityGaugeTemplate.createWithContext(event.params.gauge, liquidityGaugeContext);
+}
+
+export function handleDeployedRootGauge(event: DeployedRootGauge): void {
+  let gauge = getGauge(Bytes.fromByteArray(crypto.keccak256(event.params._gauge)));
+  gauge.chain = event.params._chain_id;
+  gauge.address = event.params._gauge;
+  // leave the gauge.bunniToken as ZERO_ADDRESS for root gauges (this is how we know it's a root gauge)
+  gauge.save();
+  
+  let rootGaugeContext = new DataSourceContext();
+  rootGaugeContext.setBytes("id", gauge.id);
+  RootGaugeTemplate.createWithContext(event.params._gauge, rootGaugeContext);
 }

@@ -81,6 +81,34 @@ dataSources:
           handler: handleGaugeCreated
       file: ./src/mappings/LiquidityGaugeFactory.ts
   {{/LiquidityGaugeFactory}}
+  {{#RootGaugeFactory}}
+  - kind: ethereum/contract
+    name: RootGaugeFactory
+    network: {{ network }}
+    source:
+      address: '{{ RootGaugeFactory.address }}'
+      abi: RootGaugeFactory
+      startBlock: {{ RootGaugeFactory.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+      abis:
+        - name: RootGaugeFactory
+          file: ./abis/RootGaugeFactory.json
+      eventHandlers:
+        # - event: BridgerUpdated(indexed uint256,address,address)
+        #   handler: handleBridgerUpdated
+        - event: DeployedGauge(indexed address,indexed uint256,(address,int24,int24),address)
+          handler: handleDeployedRootGauge
+        # - event: TransferOwnership(address,address)
+        #   handler: handleTransferOwnership
+        # - event: UpdateImplementation(address,address)
+        #   handler: handleUpdateImplementation
+      file: ./src/mappings/LiquidityGaugeFactory.ts
+  {{/RootGaugeFactory}}
   {{#GaugeController}}
   - kind: ethereum/contract
     name: GaugeController
@@ -276,6 +304,26 @@ templates:
         - event: NewTokenlessProduction(uint8)
           handler: handleNewTokenlessProduction
       file: ./src/mappings/LiquidityGauge.ts
+  - kind: ethereum/contract
+    name: RootGauge
+    network: {{ network }}
+    source:
+      abi: RootGauge
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+      abis:
+        - name: RootGauge
+          file: ./abis/RootGauge.json
+      eventHandlers:
+        - event: RelativeWeightCapChanged(uint256)
+          handler: handleRelativeWeightCapChanged
+        # - event: SetKilled(bool)
+        #   handler: handleSetKilled
+      file: ./src/mappings/RootGauge.ts
   - kind: ethereum/contract
     name: UniswapV3Pool
     network: {{ network }}

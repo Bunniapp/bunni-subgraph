@@ -8,6 +8,10 @@
     "address": "0x822E5828Cb9C0e2aD2DC5035577E6d63B672D0e2",
     "startBlock": 16345397
   },
+  "RootGaugeFactory": {
+    "address": "0xC5C3A1F095aC7cCA8c832FcAe526b3487e343AC2",
+    "startBlock": 17523219
+  },
   "GaugeController": {
     "address": "0x901c8aA6A61f74aC95E7f397E22A0Ac7c1242218",
     "startBlock": 16345397
