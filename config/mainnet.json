@@ -19,5 +19,13 @@
   "TokenAdmin": {
     "address": "0x4cc39AF0d46b0F66Fd33778C6629A696bDC310a0",
     "startBlock": 16345397
+  },
+  "OptionsToken": {
+    "address": "0x627fee87d0D9D2c55098A06ac805Db8F98B158Aa",
+    "startBlock": 16345202
+  },
+  "BalancerOracle": {
+    "address": "0x9d43ccb1aD7E0081cC8A8F1fd54D16E54A637E30",
+    "startBlock": 16345202
   }
 }

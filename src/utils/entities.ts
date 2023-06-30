@@ -1,21 +1,32 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 import { Bunni, BunniToken, Gauge, Pool, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
+import { BunniHub } from "../types/BunniHub/BunniHub";
 import { UniswapV3Pool } from "../types/templates";
 
 import { BUNNI_HUB } from "./constants";
 import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fetchPoolToken1 } from "./pool";
 import { sqrtPriceX96ToTokenPrices } from "./price";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "./token";
+import { convertToDecimals } from "./math";
 
 export function getBunni(): Bunni {
   let bunni = Bunni.load(BUNNI_HUB);
+  let hubContract = BunniHub.bind(BUNNI_HUB);
 
   if (bunni === null) {
     bunni = new Bunni(BUNNI_HUB);
 
-    bunni.protocolFee = BigDecimal.zero();
+    let protocolFeeResult = hubContract.try_protocolFee();
+    if (!protocolFeeResult.reverted) {
+      bunni.protocolFee = convertToDecimals(protocolFeeResult.value, BigInt.fromI32(18));
+    }
     bunni.inflationRate = BigDecimal.zero();
+
+    bunni.optionsMultiplier = BigDecimal.zero();
+    bunni.optionsOracle = Address.zero();
+    bunni.optionsTreasury = Address.zero();
+    bunni.wethRedeemed = BigDecimal.zero();
 
     bunni.save();
   }

@@ -3,6 +3,11 @@ type Bunni @entity {
 
   protocolFee: BigDecimal!                                                # proportion of swap fees taken by Bunni
   inflationRate: BigDecimal!                                              # rate of oLIT flation
+
+  optionsMultiplier: BigDecimal!                                          # encodes the discount rate for redeeming oLIT
+  optionsOracle: Bytes!                                                   # address that provides the options strike price
+  optionsTreasury: Bytes!                                                 # address that receives WETH paid during redeption
+  wethRedeemed: BigDecimal!                                               # total amount of WETH received from oLIT redemptions 
 }
 
 type BunniToken @entity {

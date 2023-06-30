@@ -169,6 +169,54 @@ dataSources:
           handler: handleMiningParametersUpdated
       file: ./src/mappings/TokenAdmin.ts
   {{/TokenAdmin}}
+  {{#OptionsToken}}
+  - kind: ethereum/contract
+    name: OptionsToken
+    network: {{ network }}
+    source:
+      address: '{{ OptionsToken.address }}'
+      abi: OptionsToken
+      startBlock: {{ OptionsToken.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Bunni
+      abis:
+        - name: OptionsToken
+          file: ./abis/OptionsToken.json
+      eventHandlers:
+        - event: Exercise(indexed address,indexed address,uint256,uint256)
+          handler: handleExercise
+        - event: SetOracle(indexed address)
+          handler: handleSetOracle
+        - event: SetTreasury(indexed address)
+          handler: handleSetTreasury
+      file: ./src/mappings/OptionsToken.ts
+  {{/OptionsToken}}
+  {{#BalancerOracle}}
+  - kind: ethereum/contract
+    name: BalancerOracle
+    network: {{ network }}
+    source:
+      address: '{{ BalancerOracle.address }}'
+      abi: BalancerOracle
+      startBlock: {{ BalancerOracle.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Bunni
+      abis:
+        - name: BalancerOracle
+          file: ./abis/BalancerOracle.json
+      eventHandlers:
+        - event: SetParams(uint16,uint56,uint56,uint128)
+          handler: handleSetParams
+      file: ./src/mappings/OptionsToken.ts
+  {{/BalancerOracle}}
 templates:
   - kind: ethereum/contract
     name: BunniToken

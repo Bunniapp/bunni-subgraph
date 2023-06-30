@@ -92,6 +92,7 @@ export function handleDeposit(event: Deposit): void {
 export function handleNewBunni(event: NewBunni): void {
   let pool = getPool(event.params.pool);
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
+  let bunni = getBunni();
 
   /// update the token info
   bunniToken.address = event.params.token;
