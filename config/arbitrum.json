@@ -3,5 +3,9 @@
   "BunniHub": {
     "address": "0xb5087F95643A9a4069471A28d32C569D9bd57fE4",
     "startBlock": 29986993
+  },
+  "ChildGaugeFactory": {
+    "address": "0xC5C3A1F095aC7cCA8c832FcAe526b3487e343AC2",
+    "startBlock": 103520454
   }
 }

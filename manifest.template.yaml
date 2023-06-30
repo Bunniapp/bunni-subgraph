@@ -109,6 +109,43 @@ dataSources:
         #   handler: handleUpdateImplementation
       file: ./src/mappings/LiquidityGaugeFactory.ts
   {{/RootGaugeFactory}}
+  {{#ChildGaugeFactory}}
+  - kind: ethereum/contract
+    name: ChildGaugeFactory
+    network: {{ network }}
+    source:
+      address: '{{ ChildGaugeFactory.address }}'
+      abi: ChildGaugeFactory
+      startBlock: {{ ChildGaugeFactory.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BunniToken
+        - Gauge
+      abis:
+        - name: ChildGaugeFactory
+          file: ./abis/ChildGaugeFactory.json
+        - name: ChildGauge
+          file: ./abis/ChildGauge.json
+        - name: BunniToken
+          file: ./abis/BunniToken.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: DeployedGauge(indexed address,(address,int24,int24),address)
+          handler: handleDeployedChildGauge
+        # - event: Minted(indexed address,indexed address,uint256)
+        #   handler: handleMinted
+        # - event: TransferOwnership(address,address)
+        #   handler: handleTransferOwnership
+        # - event: UpdateImplementation(address,address)
+        #   handler: handleUpdateImplementation
+        # - event: UpdateVotingEscrow(address,address)
+        #   handler: handleUpdateVotingEscrow
+      file: ./src/mappings/LiquidityGaugeFactory.ts
+  {{/ChildGaugeFactory}}
   {{#GaugeController}}
   - kind: ethereum/contract
     name: GaugeController
@@ -324,6 +361,52 @@ templates:
         # - event: SetKilled(bool)
         #   handler: handleSetKilled
       file: ./src/mappings/RootGauge.ts
+  - kind: ethereum/contract
+    name: ChildGauge
+    network: {{ network }}
+    source:
+      abi: ChildGauge
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+        - Token
+        - UserPosition
+      abis:
+        - name: ChildGauge
+          file: ./abis/ChildGauge.json
+      eventHandlers:
+        - event: AddReward(indexed address)
+          handler: handleAddReward
+        # - event: Approval(indexed address,indexed address,uint256)
+        #   handler: handleApproval
+        # - event: ClaimRewards(indexed address,indexed address)
+        #   handler: handleClaimRewards
+        - event: Deposit(indexed address,uint256)
+          handler: handleDeposit
+        # - event: DepositRewardToken(indexed address,uint256)
+        #   handler: handleDepositRewardToken
+        # - event: Kick(indexed address)
+        #   handler: handleKick
+        # - event: NewGaugeState(indexed uint8)
+        #   handler: handleNewGaugeState
+        # - event: NewManager(indexed address)
+        #   handler: handleNewManager
+        - event: NewTokenlessProduction(indexed uint8)
+          handler: handleNewTokenlessProduction
+        # - event: SetRewardDistributor(indexed address,indexed address)
+        #   handler: handleSetRewardDistributor
+        # - event: SetRewardsReceiver(indexed address,indexed address)
+        #   handler: handleSetRewardsReceiver
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: UpdateLiquidityLimit(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleUpdateLiquidityLimit
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
+      file: ./src/mappings/ChildGauge.ts
   - kind: ethereum/contract
     name: UniswapV3Pool
     network: {{ network }}
