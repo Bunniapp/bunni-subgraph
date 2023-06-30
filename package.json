@@ -4,10 +4,19 @@
   "scripts": {
     "build:mainnet": "graph build subgraph.mainnet.yaml",
     "build:goerli": "graph build subgraph.goerli.yaml",
+    "build:optimism": "graph build subgraph.optimism.yaml",
+    "build:arbitrum": "graph build subgraph.arbitrum.yaml",
+    "build:polygon": "graph build subgraph.polygon.yaml",
+
     "deploy:mainnet": "graph deploy bunniapp/bunni-mainnet-v2 subgraph.mainnet.yaml --node https://api.thegraph.com/deploy/",
     "deploy:goerli": "graph deploy bunniapp/bunni-goerli-v2 subgraph.goerli.yaml --node https://api.thegraph.com/deploy/",
+
     "prepare:mainnet": "mustache ./config/mainnet.json manifest.template.yaml > subgraph.mainnet.yaml && graph codegen subgraph.mainnet.yaml --output-dir src/types/",
     "prepare:goerli": "mustache ./config/goerli.json manifest.template.yaml > subgraph.goerli.yaml && graph codegen subgraph.goerli.yaml --output-dir src/types/",
+    "prepare:optimism": "mustache ./config/optimism.json manifest.template.yaml > subgraph.optimism.yaml && graph codegen subgraph.optimism.yaml --output-dir src/types/",
+    "prepare:arbitrum": "mustache ./config/arbitrum.json manifest.template.yaml > subgraph.arbitrum.yaml && graph codegen subgraph.arbitrum.yaml --output-dir src/types/",
+    "prepare:polygon": "mustache ./config/polygon.json manifest.template.yaml > subgraph.polygon.yaml && graph codegen subgraph.polygon.yaml --output-dir src/types/",
+
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy bunniapp/bunni-mainnet-development subgraph.yaml --node https://api.thegraph.com/deploy/",
