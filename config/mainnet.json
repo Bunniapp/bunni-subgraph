@@ -35,5 +35,9 @@
   "BunniBribe": {
     "address": "0x78C45fBDB71E7c0FbDfe49bDEFdACDcc4764336f",
     "startBlock": 16617430
+  },
+  "QuestBoard": {
+    "address": "0x602E94D90F34126f31444D001732a1974378D9FC",
+    "startBlock": 16613263
   }
 }

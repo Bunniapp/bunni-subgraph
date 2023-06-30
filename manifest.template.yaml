@@ -306,6 +306,36 @@ dataSources:
           handler: handleDepositBribe
       file: ./src/mappings/BunniBribe.ts
   {{/BunniBribe}}
+  {{#QuestBoard}}
+  - kind: ethereum/contract
+    name: QuestBoard
+    network: {{ network }}
+    source:
+      address: '{{ QuestBoard.address }}'
+      abi: QuestBoard
+      startBlock: {{ QuestBoard.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+        - Quest
+        - Token
+      abis:
+        - name: QuestBoard
+          file: ./abis/QuestBoard.json
+      eventHandlers:
+        - event: IncreasedQuestDuration(indexed uint256,uint256,uint256)
+          handler: handleIncreasedQuestDuration
+        - event: IncreasedQuestObjective(indexed uint256,indexed uint256,uint256,uint256)
+          handler: handleIncreasedQuestObjective
+        - event: IncreasedQuestReward(indexed uint256,indexed uint256,uint256,uint256)
+          handler: handleIncreasedQuestReward
+        - event: NewQuest(indexed uint256,indexed address,indexed address,address,uint48,uint256,uint256,uint256)
+          handler: handleNewQuest
+      file: ./src/mappings/QuestBoard.ts
+  {{/QuestBoard}}
 templates:
   - kind: ethereum/contract
     name: BunniToken

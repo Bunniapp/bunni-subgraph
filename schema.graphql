@@ -71,6 +71,7 @@ type Gauge @entity {
   rewardTokens: [Token!]!                                                 # additional reward tokens permitted for the gauge
   votes: [Vote!]! @derivedFrom(field: "gauge")                            # votes associated with the gauge
   bribes: [Bribe!]!                                                       # hidden hand bribes associated with the gauge
+  quests: [Quest!]! @derivedFrom(field: "gauge")                          # quests associated with the Gauge
 }
 
 type Pool @entity {
@@ -96,6 +97,20 @@ type Pool @entity {
   token1CollectedFees: BigDecimal!                                        # total amount of token1 collected as protocol fees from bunni token positions
 
   bunniTokens: [BunniToken!]!                                             # bunni tokens associated with the pool
+}
+
+type Quest @entity {
+  id: ID!                                                                 # questID
+
+  startPeriod: BigInt!                                                    # timestamp when the quest begins
+  deadline: BigInt!                                                       # timestamp when the quest ends
+  duration: BigInt!                                                       # number of periods (weeks) for the quest
+  objectiveVotes: BigDecimal!                                             # target number of votes for the quest
+  rewardPerVote: BigDecimal!                                              # amount of rewards for each vote
+  creator: Bytes!                                                         # the quest creator
+
+  gauge: Gauge!                                                           # gauge associated with the quest
+  rewardToken: Token!                                                     # reward token associated with the quest
 }
 
 type Token @entity {

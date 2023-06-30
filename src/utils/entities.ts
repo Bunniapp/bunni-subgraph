@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { Bribe, Bunni, BunniToken, Gauge, Pool, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
+import { Bribe, Bunni, BunniToken, Gauge, Pool, Quest, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
 import { BunniHub } from "../types/BunniHub/BunniHub";
 import { UniswapV3Pool } from "../types/templates";
 
@@ -151,6 +151,28 @@ export function getPool(poolAddress: Address): Pool {
   }
 
   return pool as Pool;
+}
+
+export function getQuest(questID: BigInt): Quest {
+  let quest = Quest.load(questID.toHex());
+
+  if (quest == null) {
+    quest = new Quest(questID.toHex());
+
+    quest.startPeriod = BigInt.zero();
+    quest.duration = BigInt.zero();
+    quest.deadline = BigInt.zero();
+    quest.objectiveVotes = BigDecimal.zero();
+    quest.rewardPerVote = BigDecimal.zero();
+    quest.creator = Address.zero();
+
+    quest.gauge = Address.zero();
+    quest.rewardToken = Address.zero();
+
+    quest.save();
+  }
+
+  return quest as Quest;
 }
 
 export function getToken(tokenAddress: Address): Token {
