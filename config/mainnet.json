@@ -43,5 +43,9 @@
   "VoteMarket": {
     "address": "0x000000071a273073c824E2a8B0192963e0eEA68b",
     "startBlock": 17384413
+  },
+  "Minter": {
+    "address": "0xF087521Ffca0Fa8A43F5C445773aB37C5f574DA0",
+    "startBlock": 16345397
   }
 }

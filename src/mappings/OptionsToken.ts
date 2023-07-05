@@ -1,8 +1,9 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, crypto } from "@graphprotocol/graph-ts";
 import { Exercise, SetOracle, SetTreasury } from "../types/OptionsToken/OptionsToken";
 import { SetParams } from "../types/BalancerOracle/BalancerOracle";
+import { Minted } from "../types/Minter/Minter";
 
-import { getBunni } from "../utils/entities";
+import { getBunni, getBunniToken, getGauge, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
 
 export function handleExercise(event: Exercise): void {
@@ -31,4 +32,21 @@ export function handleSetParams(event: SetParams): void {
   }
 
   bunni.save();
+}
+
+export function handleMinted(event: Minted): void {
+  let gauge = getGauge(Bytes.fromByteArray(crypto.keccak256(event.params.gauge)));
+  let bunniToken = getBunniToken(gauge.bunniToken);
+
+  let user = getUser(event.params.recipient);
+  let userPosition = getUserPosition(bunniToken, user);
+
+  let amount = convertToDecimals(event.params.minted, BigInt.fromI32(18));
+  gauge.claimedRewards = gauge.claimedRewards.plus(amount);
+  user.claimedRewards = user.claimedRewards.plus(amount);
+  userPosition.claimedRewards = userPosition.claimedRewards.plus(amount);
+
+  gauge.save();
+  user.save();
+  userPosition.save();
 }

@@ -27,5 +27,9 @@
   "BalancerOracle": {
     "address": "0x049feC23d5D4c5f2570233216BCE7114294fCb6C",
     "startBlock": 7995539
+  },
+  "Minter": {
+    "address": "0x323a2Ace3038C503EccF3e6B612541F0a44fa022",
+    "startBlock": 7995565
   }
 }

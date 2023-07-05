@@ -82,6 +82,8 @@ type Gauge @entity {
   type: BigInt!                                                           # gauge type
   workingSupply: BigDecimal!                                              # gauge working supply
 
+  claimedRewards: BigDecimal!                                             # total amount of oLIT claimed from the gauge
+
   bunniToken: BunniToken!                                                 # bunni token associated with the gauge
   rewardTokens: [Token!]!                                                 # additional reward tokens permitted for the gauge
   votes: [Vote!]! @derivedFrom(field: "gauge")                            # votes associated with the gauge
@@ -145,6 +147,8 @@ type User @entity {
   positions: [UserPosition!] @derivedFrom(field: "user")                  # list of the user's positions
   votes: [Vote!]! @derivedFrom(field: "user")                             # list of the user's gauge votes
   votingLock: [VotingLock!] @derivedFrom(field: "user")                   # the user's voting lock
+
+  claimedRewards: BigDecimal!                                             # total amount of oLIT claimed by the user
 }
 
 type UserPosition @entity {
@@ -156,7 +160,8 @@ type UserPosition @entity {
   workingBalance: BigDecimal!                                             # user working balance for the gauge
 
   token0CostBasisPerShare: BigDecimal!                                    # the average amount of token0 used to acquire one share 
-  token1CostBasisPerShare: BigDecimal!                                    # the average amount of token1 used to acquire one share 
+  token1CostBasisPerShare: BigDecimal!                                    # the average amount of token1 used to acquire one share
+  claimedRewards: BigDecimal!                                             # total amount of oLIT claimed by the position
 
   bunniToken: BunniToken!                                                 # the bunni token associated with the position
 }

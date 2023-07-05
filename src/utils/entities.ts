@@ -132,6 +132,8 @@ export function getGauge(gaugeIdentifier: Bytes): Gauge {
     gauge.type = BigInt.zero();
     gauge.workingSupply = BigDecimal.zero();
 
+    gauge.claimedRewards = BigDecimal.zero();
+
     gauge.bunniToken = Address.zero();
     gauge.rewardTokens = [];
     gauge.bribes = [];
@@ -222,6 +224,7 @@ export function getUser(userAddress: Address): User {
     user = new User(userAddress);
 
     user.address = userAddress;
+    user.claimedRewards = BigDecimal.zero();
 
     user.save();
   }
@@ -242,6 +245,7 @@ export function getUserPosition(bunniToken: BunniToken, user: User): UserPositio
 
     userPosition.token0CostBasisPerShare = BigDecimal.zero();
     userPosition.token1CostBasisPerShare = BigDecimal.zero();
+    user.claimedRewards = BigDecimal.zero();
 
     userPosition.bunniToken = bunniToken.id;
 

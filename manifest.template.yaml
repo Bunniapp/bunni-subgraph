@@ -370,6 +370,32 @@ dataSources:
           handler: handlePeriodRolledOver
       file: ./src/mappings/VoteMarket.ts
   {{/VoteMarket}}
+  {{#Minter}}
+  - kind: ethereum/contract
+    name: Minter
+    network: {{ network }}
+    source:
+      address: '{{ Minter.address }}'
+      abi: Minter
+      startBlock: {{ Minter.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+        - User
+        - UserPosition
+      abis:
+        - name: Minter
+          file: ./abis/Minter.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Minted(indexed address,address,uint256)
+          handler: handleMinted
+      file: ./src/mappings/OptionsToken.ts
+  {{/Minter}}
 templates:
   - kind: ethereum/contract
     name: BunniToken
