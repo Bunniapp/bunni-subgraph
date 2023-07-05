@@ -303,6 +303,7 @@ export function getVotingLock(user: User): VotingLock {
     lock.balance = BigDecimal.zero();
     lock.decay = BigDecimal.zero();
     lock.lastUpdate = BigInt.zero();
+    lock.lastBroadcast = BigInt.zero();
     lock.lockEnd = BigInt.zero();
 
     lock.user = user.id;

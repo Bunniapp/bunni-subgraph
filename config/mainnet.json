@@ -47,5 +47,9 @@
   "Minter": {
     "address": "0xF087521Ffca0Fa8A43F5C445773aB37C5f574DA0",
     "startBlock": 16345397
+  },
+  "Beacon": {
+    "address": "0x892b62134F51034CB256A040ca15769Ab26Af2E0",
+    "startBlock": 17474315
   }
 }

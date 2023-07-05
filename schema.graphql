@@ -196,6 +196,7 @@ type VotingLock @entity {
   balance: BigDecimal!                                                    # amount of veLIT received at the time of lock
   decay: BigDecimal!                                                      # rate that balance decays per second
   lastUpdate: BigInt!                                                     # timestamp when the voting lock was last updated
+  lastBroadcast: BigInt!                                                  # timestamp when balance was last broadcast to L2
   lockEnd: BigInt!                                                        # timestamp when the voting lock ends
 
   user: User!                                                             # user associated with the voting lock

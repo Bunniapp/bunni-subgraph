@@ -1,5 +1,6 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { Deposit, Withdraw, VotingEscrow } from "../types/VotingEscrow/VotingEscrow";
+import { BroadcastVeBalance } from "../types/Beacon/Beacon";
 
 import { getUser, getVotingLock } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
@@ -33,5 +34,11 @@ export function handleWithdraw(event: Withdraw): void {
   lock.decay = BigDecimal.zero();
   lock.lastUpdate = event.params.ts;
 
+  lock.save();
+}
+
+export function handleBroadcastVeBalance(event: BroadcastVeBalance): void {
+  let lock = getVotingLock(getUser(event.params.user));
+  lock.lastBroadcast = event.block.timestamp;
   lock.save();
 }
