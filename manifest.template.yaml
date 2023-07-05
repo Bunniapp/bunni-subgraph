@@ -431,10 +431,13 @@ templates:
       entities:
         - Gauge
         - Token
+        - RewardToken
         - UserPosition
       abis:
         - name: LiquidityGauge
           file: ./abis/LiquidityGauge.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: Deposit(indexed address,uint256)
           handler: handleDeposit
@@ -489,10 +492,13 @@ templates:
       entities:
         - Gauge
         - Token
+        - RewardToken
         - UserPosition
       abis:
         - name: ChildGauge
           file: ./abis/ChildGauge.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: AddReward(indexed address)
           handler: handleAddReward
@@ -512,8 +518,8 @@ templates:
         #   handler: handleNewManager
         - event: NewTokenlessProduction(indexed uint8)
           handler: handleNewTokenlessProduction
-        # - event: SetRewardDistributor(indexed address,indexed address)
-        #   handler: handleSetRewardDistributor
+        - event: SetRewardDistributor(indexed address,indexed address)
+          handler: handleSetRewardDistributor
         # - event: SetRewardsReceiver(indexed address,indexed address)
         #   handler: handleSetRewardsReceiver
         - event: Transfer(indexed address,indexed address,uint256)

@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { Bounty, Bribe, Bunni, BunniToken, Gauge, Pool, Quest, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
+import { Bounty, Bribe, Bunni, BunniToken, Gauge, Pool, Quest, RewardToken, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
 import { BunniHub } from "../types/BunniHub/BunniHub";
 import { UniswapV3Pool } from "../types/templates";
 
@@ -135,7 +135,6 @@ export function getGauge(gaugeIdentifier: Bytes): Gauge {
     gauge.claimedRewards = BigDecimal.zero();
 
     gauge.bunniToken = Address.zero();
-    gauge.rewardTokens = [];
     gauge.bribes = [];
 
     gauge.save();
@@ -198,6 +197,22 @@ export function getQuest(questID: BigInt): Quest {
   }
 
   return quest as Quest;
+}
+
+export function getRewardToken(gauge: Gauge, token: Token): RewardToken {
+  let rewardToken = RewardToken.load(gauge.address.toHex() + "-" + token.address.toHex());
+
+  if (rewardToken === null) {
+    rewardToken = new RewardToken(gauge.address.toHex() + "-" + token.address.toHex());
+
+    rewardToken.distributor = Address.zero();
+    rewardToken.gauge = gauge.id;
+    rewardToken.token = token.id;
+
+    rewardToken.save();
+  }
+
+  return rewardToken as RewardToken;
 }
 
 export function getToken(tokenAddress: Address): Token {

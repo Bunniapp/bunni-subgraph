@@ -85,7 +85,7 @@ type Gauge @entity {
   claimedRewards: BigDecimal!                                             # total amount of oLIT claimed from the gauge
 
   bunniToken: BunniToken!                                                 # bunni token associated with the gauge
-  rewardTokens: [Token!]!                                                 # additional reward tokens permitted for the gauge
+  rewardTokens: [RewardToken!]! @derivedFrom(field: "gauge")              # additional reward tokens permitted for the gauge
   votes: [Vote!]! @derivedFrom(field: "gauge")                            # votes associated with the gauge
   bribes: [Bribe!]!                                                       # hidden hand bribes associated with the gauge
   quests: [Quest!]! @derivedFrom(field: "gauge")                          # warden quests associated with the Gauge
@@ -129,6 +129,14 @@ type Quest @entity {
 
   gauge: Gauge!                                                           # gauge associated with the quest
   rewardToken: Token!                                                     # reward token associated with the quest
+}
+
+type RewardToken @entity {
+  id: ID!                                                                 # gauge address - token address
+
+  distributor: Bytes!                                                     # address permitted to distribute the reward token
+  gauge: Gauge!                                                           # the associated gauge
+  token: Token!                                                           # the associated token
 }
 
 type Token @entity {

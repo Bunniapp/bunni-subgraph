@@ -11,7 +11,7 @@ import {
   // NewAdmin,
   NewTokenlessProduction
 } from "../types/templates/LiquidityGauge/LiquidityGauge";
-import { getBunniToken, getGauge, getToken, getUser, getUserPosition } from "../utils/entities";
+import { getBunniToken, getGauge, getRewardToken, getToken, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
 
 export function handleDeposit(event: Deposit): void {
@@ -91,15 +91,10 @@ export function handleTransfer(event: Transfer): void {
 export function handleRewardDistributorUpdated(event: RewardDistributorUpdated): void {
   let gauge = getGauge(dataSource.context().getBytes("id"));
   let token = getToken(event.params.reward_token);
+  let rewardToken = getRewardToken(gauge, token);
 
-  let rewardTokens = gauge.rewardTokens;
-  if (!rewardTokens.includes(token.id)) {
-    rewardTokens.push(token.id);
-    gauge.rewardTokens = rewardTokens;
-  }
-
-  gauge.save();
-  token.save();
+  rewardToken.distributor = event.params.distributor;
+  rewardToken.save();
 }
 
 export function handleRelativeWeightCapChanged(event: RelativeWeightCapChanged): void {

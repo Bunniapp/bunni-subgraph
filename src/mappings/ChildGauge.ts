@@ -1,20 +1,13 @@
 import { Address, BigDecimal, BigInt, dataSource } from "@graphprotocol/graph-ts";
-import { AddReward, Deposit, Withdraw, UpdateLiquidityLimit, Transfer, NewTokenlessProduction } from "../types/templates/ChildGauge/ChildGauge";
-import { getBunniToken, getGauge, getToken, getUser, getUserPosition } from "../utils/entities";
+import { AddReward, Deposit, Withdraw, UpdateLiquidityLimit, Transfer, NewTokenlessProduction, SetRewardDistributor } from "../types/templates/ChildGauge/ChildGauge";
+import { getBunniToken, getGauge, getRewardToken, getToken, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
 
 export function handleAddReward(event: AddReward): void {
   let gauge = getGauge(dataSource.context().getBytes("id"));
   let token = getToken(event.params.reward_token);
-
-  let rewardTokens = gauge.rewardTokens;
-  if (!rewardTokens.includes(token.id)) {
-    rewardTokens.push(token.id);
-    gauge.rewardTokens = rewardTokens;
-  }
-
-  gauge.save();
-  token.save();
+  let rewardToken = getRewardToken(gauge, token);
+  rewardToken.save();
 }
 
 export function handleDeposit(event: Deposit): void {
@@ -91,4 +84,13 @@ export function handleNewTokenlessProduction(event: NewTokenlessProduction): voi
   let gauge = getGauge(dataSource.context().getBytes("id"));
   gauge.tokenlessProduction = BigInt.fromI32(event.params.new_tokenless_production);
   gauge.save();
+}
+
+export function handleSetRewardDistributor(event: SetRewardDistributor): void {
+  let gauge = getGauge(dataSource.context().getBytes("id"));
+  let token = getToken(event.params.reward_token);
+  let rewardToken = getRewardToken(gauge, token);
+
+  rewardToken.distributor = event.params.distributor;
+  rewardToken.save();
 }
