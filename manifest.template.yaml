@@ -124,6 +124,8 @@ dataSources:
       entities:
         - BunniToken
         - Gauge
+        - User
+        - UserPosition
       abis:
         - name: ChildGaugeFactory
           file: ./abis/ChildGaugeFactory.json
@@ -136,8 +138,8 @@ dataSources:
       eventHandlers:
         - event: DeployedGauge(indexed address,(address,int24,int24),address)
           handler: handleDeployedChildGauge
-        # - event: Minted(indexed address,indexed address,uint256)
-        #   handler: handleMinted
+        - event: Minted(indexed address,indexed address,uint256)
+          handler: handleMinted
         # - event: TransferOwnership(address,address)
         #   handler: handleTransferOwnership
         # - event: UpdateImplementation(address,address)
