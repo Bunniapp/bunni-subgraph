@@ -41,10 +41,16 @@ export function handleMinted(event: Minted): void {
   let user = getUser(event.params.recipient);
   let userPosition = getUserPosition(bunniToken, user);
 
-  let amount = convertToDecimals(event.params.minted, BigInt.fromI32(18));
-  gauge.claimedRewards = gauge.claimedRewards.plus(amount);
-  user.claimedRewards = user.claimedRewards.plus(amount);
-  userPosition.claimedRewards = userPosition.claimedRewards.plus(amount);
+  /// reset aggregates until new amounts calculated
+  let oldAmount = userPosition.claimedRewards;
+  user.claimedRewards = user.claimedRewards.minus(oldAmount);
+  gauge.claimedRewards = gauge.claimedRewards.minus(oldAmount);
+
+  /// update with new amounts
+  let newAmount = convertToDecimals(event.params.minted, BigInt.fromI32(18));
+  gauge.claimedRewards = gauge.claimedRewards.plus(newAmount);
+  user.claimedRewards = user.claimedRewards.plus(newAmount);
+  userPosition.claimedRewards = newAmount;
 
   gauge.save();
   user.save();
