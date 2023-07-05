@@ -93,6 +93,7 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
     bunniToken.liquidity = BigInt.zero();
     bunniToken.tickLower = BigInt.zero();
     bunniToken.tickUpper = BigInt.zero();
+    bunniToken.positionKey = Address.zero();
 
     bunniToken.amount0PerShare = BigDecimal.zero();
     bunniToken.amount1PerShare = BigDecimal.zero();

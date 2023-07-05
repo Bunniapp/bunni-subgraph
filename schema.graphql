@@ -50,6 +50,7 @@ type BunniToken @entity {
   liquidity: BigInt!                                                      # position liquidity
   tickLower: BigInt!                                                      # lower tick of the position
   tickUpper: BigInt!                                                      # upper tick of the position
+  positionKey: Bytes!                                                     # the uniswap v3 position key
 
   amount0PerShare: BigDecimal!                                            # amount of token0 that each full share can be redeemed for
   amount1PerShare: BigDecimal!                                            # amount of token1 that each full share can be redeemed for

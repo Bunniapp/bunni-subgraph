@@ -6,6 +6,7 @@ import { getBunni, getBunniToken, getPool, getToken, getUser, getUserPosition } 
 import { convertToDecimals } from "../utils/math";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "../utils/token";
 import { fetchPricePerFullShare, fetchReserves } from "../utils/lens";
+import { uniswapV3PositionKey } from "../utils/helpers";
 
 export function handleCompound(event: Compound): void {
   let bunniToken = getBunniToken(event.params.bunniKeyHash);
@@ -103,6 +104,9 @@ export function handleNewBunni(event: NewBunni): void {
   /// update the position ticks
   bunniToken.tickLower = BigInt.fromI32(event.params.tickLower);
   bunniToken.tickUpper = BigInt.fromI32(event.params.tickUpper);
+
+  /// update the uniswap position key
+  bunniToken.positionKey = uniswapV3PositionKey(event.address, event.params.tickLower, event.params.tickUpper);
 
   /// add pool to the bunni token entity
   bunniToken.pool = pool.id;
