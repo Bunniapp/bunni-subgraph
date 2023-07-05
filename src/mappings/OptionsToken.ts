@@ -27,7 +27,7 @@ export function handleSetTreasury(event: SetTreasury): void {
 export function handleSetParams(event: SetParams): void {
   let bunni = getBunni();
 
-  if (event.address == Address.fromBytes(bunni.optionsOracle)) {
+  if (Address.fromBytes(bunni.optionsOracle) == Address.zero() || Address.fromBytes(bunni.optionsOracle) == event.address) {
     bunni.optionsMultiplier = convertToDecimals(BigInt.fromI32(event.params.multiplier), BigInt.fromI32(4))
   }
 
