@@ -39,5 +39,9 @@
   "QuestBoard": {
     "address": "0x602E94D90F34126f31444D001732a1974378D9FC",
     "startBlock": 16613263
+  },
+  "VoteMarket": {
+    "address": "0x000000071a273073c824E2a8B0192963e0eEA68b",
+    "startBlock": 17384413
   }
 }

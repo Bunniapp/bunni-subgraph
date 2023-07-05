@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { Bribe, Bunni, BunniToken, Gauge, Pool, Quest, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
+import { Bounty, Bribe, Bunni, BunniToken, Gauge, Pool, Quest, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
 import { BunniHub } from "../types/BunniHub/BunniHub";
 import { UniswapV3Pool } from "../types/templates";
 
@@ -9,6 +9,29 @@ import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fe
 import { sqrtPriceX96ToTokenPrices } from "./price";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "./token";
 import { convertToDecimals } from "./math";
+
+export function getBounty(bountyID: BigInt): Bounty {
+  let bounty = Bounty.load(bountyID.toHex());
+
+  if (bounty === null) {
+    bounty = new Bounty(bountyID.toHex());
+
+    bounty.rewardAmount = BigDecimal.zero();
+    bounty.rewardPerPeriod = BigDecimal.zero();
+    bounty.maxRewardPerVote = BigDecimal.zero();
+    
+    bounty.numberOfPeriods = BigInt.zero();
+    bounty.startPeriod = BigInt.zero();
+    bounty.endPeriod = BigInt.zero();
+
+    bounty.gauge = Address.zero();
+    bounty.rewardToken = Address.zero();
+
+    bounty.save();
+  }
+
+  return bounty as Bounty;
+}
 
 export function getBribe(bribeIdentifier: Bytes, bribeIndex: i32): Bribe {
   let bribe = Bribe.load(bribeIdentifier.toHex() + '-' + bribeIndex.toString());

@@ -301,6 +301,8 @@ dataSources:
       abis:
         - name: BunniBribe
           file: ./abis/BunniBribe.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: DepositBribe(indexed bytes32,indexed address,uint256,bytes32,bytes32,indexed address)
           handler: handleDepositBribe
@@ -325,6 +327,8 @@ dataSources:
       abis:
         - name: QuestBoard
           file: ./abis/QuestBoard.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: IncreasedQuestDuration(indexed uint256,uint256,uint256)
           handler: handleIncreasedQuestDuration
@@ -336,6 +340,36 @@ dataSources:
           handler: handleNewQuest
       file: ./src/mappings/QuestBoard.ts
   {{/QuestBoard}}
+  {{#VoteMarket}}
+  - kind: ethereum/contract
+    name: VoteMarket
+    network: {{ network }}
+    source:
+      address: '{{ VoteMarket.address }}'
+      abi: VoteMarket
+      startBlock: {{ VoteMarket.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Bounty
+        - Gauge
+        - Token
+      abis:
+        - name: VoteMarket
+          file: ./abis/VoteMarket.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: BountyCreated(indexed uint256,indexed address,address,address,uint8,uint256,uint256,uint256,bool)
+          handler: handleBountyCreated
+        - event: BountyDurationIncrease(uint256,uint8,uint256,uint256)
+          handler: handleBountyDurationIncrease
+        - event: PeriodRolledOver(uint256,uint256,uint256,uint256)
+          handler: handlePeriodRolledOver
+      file: ./src/mappings/VoteMarket.ts
+  {{/VoteMarket}}
 templates:
   - kind: ethereum/contract
     name: BunniToken

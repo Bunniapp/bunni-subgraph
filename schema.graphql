@@ -1,3 +1,18 @@
+type Bounty @entity {
+  id: ID!                                                                 # bountyID
+
+  rewardAmount: BigDecimal!                                               # total reward amount
+  rewardPerPeriod: BigDecimal!                                            # reward per period
+  maxRewardPerVote: BigDecimal!                                           # maximum reward per vote
+  
+  numberOfPeriods: BigInt!                                                # number of periods (weeks) for the bounty
+  startPeriod: BigInt!                                                    # timestamp when the bounty starts
+  endPeriod: BigInt!                                                      # timestamp when the bounty ends
+
+  gauge: Gauge!                                                           # gauge associated with the bounty
+  rewardToken: Token!                                                     # reward token associated with the bounty
+}
+
 type Bribe @entity {
   id: ID!                                                                 # bribe identifier - bribe index
 
@@ -71,7 +86,8 @@ type Gauge @entity {
   rewardTokens: [Token!]!                                                 # additional reward tokens permitted for the gauge
   votes: [Vote!]! @derivedFrom(field: "gauge")                            # votes associated with the gauge
   bribes: [Bribe!]!                                                       # hidden hand bribes associated with the gauge
-  quests: [Quest!]! @derivedFrom(field: "gauge")                          # quests associated with the Gauge
+  quests: [Quest!]! @derivedFrom(field: "gauge")                          # warden quests associated with the Gauge
+  bounties: [Bounty!]! @derivedFrom(field: "gauge")                       # stakedao bounties associated with the Gauge
 }
 
 type Pool @entity {
