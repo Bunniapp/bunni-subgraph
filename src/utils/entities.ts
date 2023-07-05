@@ -245,7 +245,7 @@ export function getUserPosition(bunniToken: BunniToken, user: User): UserPositio
 
     userPosition.token0CostBasisPerShare = BigDecimal.zero();
     userPosition.token1CostBasisPerShare = BigDecimal.zero();
-    user.claimedRewards = BigDecimal.zero();
+    userPosition.claimedRewards = BigDecimal.zero();
 
     userPosition.bunniToken = bunniToken.id;
 
