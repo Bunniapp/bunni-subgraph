@@ -60,6 +60,8 @@ type BunniToken @entity {
 
   token0Volume: BigDecimal!                                               # total volume processed by the liquidity position in terms of token0
   token1Volume: BigDecimal!                                               # total volume processed by the liquidity position in terms of token1
+  token0Compounded: BigDecimal!                                           # amount of token0 compounded back into the liquidity position
+  token1Compounded: BigDecimal!                                           # amount of token1 compounded back into the liquidity position
   token0CollectedFees: BigDecimal!                                        # amount of token0 collected as protocol fees
   token1CollectedFees: BigDecimal!                                        # amount of token1 collected as protocol fees
 

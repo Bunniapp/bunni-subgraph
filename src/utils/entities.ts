@@ -103,6 +103,8 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
 
     bunniToken.token0Volume = BigDecimal.zero();
     bunniToken.token1Volume = BigDecimal.zero();
+    bunniToken.token0Compounded = BigDecimal.zero();
+    bunniToken.token1Compounded = BigDecimal.zero();
     bunniToken.token0CollectedFees = BigDecimal.zero();
     bunniToken.token1CollectedFees = BigDecimal.zero();
 

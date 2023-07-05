@@ -19,6 +19,10 @@ export function handleCompound(event: Compound): void {
   /// update the position liquidity
   bunniToken.liquidity = bunniToken.liquidity.plus(event.params.liquidity);
 
+  /// update the position compounded amounts
+  bunniToken.token0Compounded = bunniToken.token0Compounded.plus(convertToDecimals(event.params.amount0, token0.decimals));
+  bunniToken.token1Compounded = bunniToken.token1Compounded.plus(convertToDecimals(event.params.amount1, token1.decimals));
+
   /// reset pool aggregates until new amounts calculated
   pool.reserve0 = pool.reserve0.minus(bunniToken.reserve0);
   pool.reserve1 = pool.reserve1.minus(bunniToken.reserve1);
