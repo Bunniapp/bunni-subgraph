@@ -72,7 +72,7 @@ export function handleSwap(event: Swap): void {
       pool.token1Volume = pool.token1Volume.minus(bunniToken.token1Volume);
 
       let adjustedVolumeToken0 = event.params.amount0.abs().times(bunniToken.liquidity).div(event.params.liquidity);
-      let adjustedVolumeToken1 = event.params.amount0.abs().times(bunniToken.liquidity).div(event.params.liquidity);
+      let adjustedVolumeToken1 = event.params.amount1.abs().times(bunniToken.liquidity).div(event.params.liquidity);
       bunniToken.token0Volume = bunniToken.token0Volume.plus(convertToDecimals(adjustedVolumeToken0, token0.decimals));
       bunniToken.token1Volume = bunniToken.token1Volume.plus(convertToDecimals(adjustedVolumeToken1, token1.decimals));
 
