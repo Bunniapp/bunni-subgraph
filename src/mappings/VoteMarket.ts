@@ -17,7 +17,7 @@ export function handleBountyCreated(event: BountyCreated): void {
 
   let currentPeriodResult = platformContract.try_getCurrentPeriod();
   if (!currentPeriodResult.reverted) {
-    bounty.startPeriod = currentPeriodResult.value.plus(WEEK);
+    bounty.startPeriod = currentPeriodResult.value;
     bounty.endPeriod = bounty.startPeriod.plus(bounty.numberOfPeriods.times(WEEK));
   }
 
