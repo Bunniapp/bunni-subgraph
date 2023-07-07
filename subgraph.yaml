@@ -72,9 +72,9 @@ dataSources:
     name: RootGaugeFactory
     network: mainnet
     source:
-      address: "0xC5C3A1F095aC7cCA8c832FcAe526b3487e343AC2"
+      address: "0xe4666F0937B62d64C10316DB0b7061549F87e95F"
       abi: RootGaugeFactory
-      startBlock: 17523219
+      startBlock: 17638544
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
