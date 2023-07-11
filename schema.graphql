@@ -157,7 +157,7 @@ type User @entity {
   address: Bytes!                                                         # user address
   positions: [UserPosition!] @derivedFrom(field: "user")                  # list of the user's positions
   votes: [Vote!]! @derivedFrom(field: "user")                             # list of the user's gauge votes
-  votingLock: [VotingLock!] @derivedFrom(field: "user")                   # the user's voting lock
+  votingLock: VotingLock @derivedFrom(field: "user")                      # the user's voting lock
 
   claimedRewards: BigDecimal!                                             # total amount of oLIT claimed by the user
 }
