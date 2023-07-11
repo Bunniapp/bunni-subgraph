@@ -283,6 +283,7 @@ export function getVote(gauge: Gauge, user: User): Vote {
     vote.decay = BigDecimal.zero();
     vote.timestamp = BigInt.zero();
     vote.weight = BigInt.zero();
+    vote.end = BigInt.zero();
 
     vote.gauge = gauge.id;
     vote.user = user.id;

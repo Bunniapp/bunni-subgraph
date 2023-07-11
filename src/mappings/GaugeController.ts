@@ -22,6 +22,7 @@ export function handleVoteForGauge(event: VoteForGauge): void {
   vote.decay = adjustedPower.times(event.params.weight.toBigDecimal()).div(BigDecimal.fromString("10000")).div(timeLeft.toBigDecimal());
   vote.timestamp = event.params.time;
   vote.weight = event.params.weight;
+  vote.end = lock.lockEnd;
 
   vote.save();
 

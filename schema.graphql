@@ -184,6 +184,7 @@ type Vote @entity {
   decay: BigDecimal!                                                      # rate that power decays per second
   timestamp: BigInt!                                                      # timestamp when the vote was cast
   weight: BigInt!                                                         # user voting weight allocated to the gauge
+  end: BigInt!                                                            # voting lock end when the vote was cast
 
   gauge: Gauge!                                                           # gauge associated with the vote
   user: User!                                                             # user associated with the vote
