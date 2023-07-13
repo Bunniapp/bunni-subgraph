@@ -57,6 +57,7 @@ export function handleSwap(event: Swap): void {
 
       /// update the position shares
       let pricePerFullShare: BigInt[] = fetchPricePerFullShare(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
+      bunniToken.liquidityPerShare = pricePerFullShare[0];
       bunniToken.amount0PerShare = convertToDecimals(pricePerFullShare[1], token0.decimals);
       bunniToken.amount1PerShare = convertToDecimals(pricePerFullShare[2], token1.decimals);
 

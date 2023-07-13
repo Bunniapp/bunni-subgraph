@@ -54,7 +54,7 @@ type BunniToken @entity {
 
   amount0PerShare: BigDecimal!                                            # amount of token0 that each full share can be redeemed for
   amount1PerShare: BigDecimal!                                            # amount of token1 that each full share can be redeemed for
-  liquidityPerShare: BigDecimal!                                          # liquidity amount that each full share is worth
+  liquidityPerShare: BigInt!                                              # liquidity amount that each full share is worth
   reserve0: BigDecimal!                                                   # amount of token0 in the liquidity position
   reserve1: BigDecimal!                                                   # amount of token1 in the liquidity position
 
