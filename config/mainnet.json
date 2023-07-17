@@ -36,6 +36,10 @@
     "address": "0x78C45fBDB71E7c0FbDfe49bDEFdACDcc4764336f",
     "startBlock": 16617430
   },
+  "BribeVault": {
+    "address": "0x175b01eF7CEa8615B1D9485BC827378EA5D50C86",
+    "startBlock": 17621937
+  },
   "QuestBoard": {
     "address": "0x602E94D90F34126f31444D001732a1974378D9FC",
     "startBlock": 16613263

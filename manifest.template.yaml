@@ -310,6 +310,34 @@ dataSources:
           handler: handleDepositBribe
       file: ./src/mappings/BunniBribe.ts
   {{/BunniBribe}}
+  {{#BribeVault}}
+  - kind: ethereum/contract
+    name: BribeVault
+    network: {{ network }}
+    source:
+      address: '{{ BribeVault.address }}'
+      abi: BribeVault
+      startBlock: {{ BribeVault.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+        - Bribe
+        - Token
+      abis:
+        - name: BribeVault
+          file: ./abis/BribeVault.json
+        - name: BribeMarket
+          file: ./abis/BribeMarket.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: DepositBribe(indexed address,indexed bytes32,indexed uint256,address,address,uint256,uint256,uint256,uint256)
+          handler: handleDepositBribeV2
+      file: ./src/mappings/BunniBribe.ts
+  {{/BribeVault}}
   {{#QuestBoard}}
   - kind: ethereum/contract
     name: QuestBoard

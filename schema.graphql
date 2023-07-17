@@ -15,6 +15,7 @@ type Bounty @entity {
 
 type Bribe @entity {
   id: ID!                                                                 # bribe identifier - bribe index
+  version: BigInt!                                                        # Hidden Hand version
 
   proposal: Bytes!                                                        # the hashed address of the associated Gauge
   bribeIdentifier: Bytes!                                                 # the bribe identifier
@@ -22,6 +23,7 @@ type Bribe @entity {
 
   token: Token!                                                           # the bribe token address
   amount: BigDecimal!                                                     # the bribe amount
+  maxTokensPerVote: BigDecimal!                                           # maximum reward per vote
   deadline: BigInt!                                                       # timestamp when the bribe ends
   briber: Bytes!                                                          # the bribe creator
 }

@@ -38,13 +38,15 @@ export function getBribe(bribeIdentifier: Bytes, bribeIndex: i32): Bribe {
 
   if (bribe == null) {
     bribe = new Bribe(bribeIdentifier.toHex() + '-' + bribeIndex.toString());
-
+    
+    bribe.version = BigInt.zero();
     bribe.proposal = Address.zero();
     bribe.bribeIdentifier = bribeIdentifier;
     bribe.rewardIdentifier = Address.zero();
 
     bribe.token = Address.zero();
     bribe.amount = BigDecimal.zero();
+    bribe.maxTokensPerVote = BigDecimal.zero();
     bribe.deadline = BigInt.zero();
     bribe.briber = Address.zero();
 
