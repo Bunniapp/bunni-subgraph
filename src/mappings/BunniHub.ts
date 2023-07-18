@@ -1,6 +1,7 @@
 import { Address, BigDecimal, BigInt, ByteArray, DataSourceContext, crypto } from "@graphprotocol/graph-ts";
 import { Compound, Deposit, NewBunni, PayProtocolFee, SetProtocolFee, Withdraw } from "../types/BunniHub/BunniHub";
 import { BunniToken as BunniTokenTemplate } from "../types/templates";
+import { UserPosition } from "../types/schema";
 
 import { getBunni, getBunniToken, getPool, getToken, getUser, getUserPosition } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
@@ -20,8 +21,10 @@ export function handleCompound(event: Compound): void {
   bunniToken.liquidity = bunniToken.liquidity.plus(event.params.liquidity);
 
   /// update the position compounded amounts
-  bunniToken.token0Compounded = bunniToken.token0Compounded.plus(convertToDecimals(event.params.amount0, token0.decimals));
-  bunniToken.token1Compounded = bunniToken.token1Compounded.plus(convertToDecimals(event.params.amount1, token1.decimals));
+  let amount0 = convertToDecimals(event.params.amount0, token0.decimals);
+  let amount1 = convertToDecimals(event.params.amount1, token1.decimals)
+  bunniToken.token0Compounded = bunniToken.token0Compounded.plus(amount0);
+  bunniToken.token1Compounded = bunniToken.token1Compounded.plus(amount1);
 
   /// reset pool aggregates until new amounts calculated
   pool.reserve0 = pool.reserve0.minus(bunniToken.reserve0);
@@ -36,6 +39,19 @@ export function handleCompound(event: Compound): void {
   let pricePerFullShare: BigInt[] = fetchPricePerFullShare(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
   bunniToken.amount0PerShare = convertToDecimals(pricePerFullShare[1], token0.decimals);
   bunniToken.amount1PerShare = convertToDecimals(pricePerFullShare[2], token1.decimals);
+
+  /// update the individual positions
+  let average0 = amount0.div(bunniToken.totalSupply);
+  let average1 = amount1.div(bunniToken.totalSupply);
+
+  for(let i = 0; i < bunniToken.positions.length; ++i) {
+    let position = UserPosition.load(bunniToken.positions[i]);
+    if (position && (position.balance.gt(BigDecimal.zero()) || position.gaugeBalance.gt(BigDecimal.zero()))) {
+      position.token0CompoundedPerShare = position.token0CompoundedPerShare.plus(average0);
+      position.token1CompoundedPerShare = position.token1CompoundedPerShare.plus(average1);
+      position.save();
+    }
+  }
 
   /// update the pool aggregates with new amounts
   pool.reserve0 = pool.reserve0.plus(bunniToken.reserve0);
@@ -75,6 +91,13 @@ export function handleDeposit(event: Deposit): void {
   let pricePerFullShare: BigInt[] = fetchPricePerFullShare(pool.address, bunniToken.tickLower, bunniToken.tickUpper);
   bunniToken.amount0PerShare = convertToDecimals(pricePerFullShare[1], token0.decimals);
   bunniToken.amount1PerShare = convertToDecimals(pricePerFullShare[2], token1.decimals);
+
+  /// update the positions list
+  let positions = bunniToken.positions;
+  if (!positions.includes(userPosition.id)) {
+    positions.push(userPosition.id);
+    bunniToken.positions = positions;
+  }
 
   /// update the pool aggregates with new amounts
   pool.reserve0 = pool.reserve0.plus(bunniToken.reserve0);
@@ -202,6 +225,14 @@ export function handleWithdraw(event: Withdraw): void {
 
   /// update the user position balance
   userPosition.balance = userPosition.balance.minus(shares);
+  if (userPosition.balance.equals(BigDecimal.zero()) && userPosition.gaugeBalance.equals(BigDecimal.zero())) {
+    /// position is fully exited, reset per share values
+    userPosition.token0CostBasisPerShare = BigDecimal.zero();
+    userPosition.token1CostBasisPerShare = BigDecimal.zero();
+    userPosition.token0CompoundedPerShare = BigDecimal.zero();
+    userPosition.token1CompoundedPerShare = BigDecimal.zero();
+    userPosition.claimedRewardsPerShare = BigDecimal.zero();
+  }
 
   bunniToken.save();
   pool.save();

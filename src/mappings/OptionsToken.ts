@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, crypto } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, Bytes, crypto } from "@graphprotocol/graph-ts";
 import { Exercise, SetOracle, SetTreasury } from "../types/OptionsToken/OptionsToken";
 import { SetParams } from "../types/BalancerOracle/BalancerOracle";
 import { Minted } from "../types/Minter/Minter";
@@ -52,6 +52,13 @@ export function handleMinted(event: Minted): void {
   user.claimedRewards = user.claimedRewards.plus(newAmount);
   userPosition.claimedRewards = newAmount;
 
+  /// update the user position claimed reward per share
+  if (userPosition.balance.gt(BigDecimal.zero()) || userPosition.gaugeBalance.gt(BigDecimal.zero())) {
+    let delta = newAmount.minus(oldAmount);
+    let rewardPerShare = delta.div(userPosition.balance.plus(userPosition.gaugeBalance));
+    userPosition.claimedRewardsPerShare = userPosition.claimedRewardsPerShare.plus(rewardPerShare);
+  }
+  
   gauge.save();
   user.save();
   userPosition.save();

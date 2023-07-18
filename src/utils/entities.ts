@@ -111,6 +111,7 @@ export function getBunniToken(bunniKey: Bytes): BunniToken {
     bunniToken.token1CollectedFees = BigDecimal.zero();
 
     bunniToken.pool = Address.zero();
+    bunniToken.positions = [];
 
     bunniToken.save();
   }
@@ -262,10 +263,13 @@ export function getUserPosition(bunniToken: BunniToken, user: User): UserPositio
     userPosition.balance = BigDecimal.zero();
     userPosition.gaugeBalance = BigDecimal.zero();
     userPosition.workingBalance = BigDecimal.zero();
+    userPosition.claimedRewards = BigDecimal.zero();
 
     userPosition.token0CostBasisPerShare = BigDecimal.zero();
     userPosition.token1CostBasisPerShare = BigDecimal.zero();
-    userPosition.claimedRewards = BigDecimal.zero();
+    userPosition.token0CompoundedPerShare = BigDecimal.zero();
+    userPosition.token1CompoundedPerShare = BigDecimal.zero();
+    userPosition.claimedRewardsPerShare = BigDecimal.zero();
 
     userPosition.bunniToken = bunniToken.id;
 

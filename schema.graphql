@@ -68,7 +68,8 @@ type BunniToken @entity {
   token1CollectedFees: BigDecimal!                                        # amount of token1 collected as protocol fees
 
   gauge: Gauge                                                            # gauge associated with the bunni token
-  pool: Pool!                                                             # pool associated with the bunni token   
+  pool: Pool!                                                             # pool associated with the bunni token
+  positions: [UserPosition!]!                                             # positions associated with the bunni token  
 }
 
 type Gauge @entity {
@@ -171,10 +172,13 @@ type UserPosition @entity {
   balance: BigDecimal!                                                    # amount of bunni tokens held by the user
   gaugeBalance: BigDecimal!                                               # amount of gauge tokens held by the user
   workingBalance: BigDecimal!                                             # user working balance for the gauge
+  claimedRewards: BigDecimal!                                             # total amount of oLIT claimed by the position
 
   token0CostBasisPerShare: BigDecimal!                                    # the average amount of token0 used to acquire one share 
   token1CostBasisPerShare: BigDecimal!                                    # the average amount of token1 used to acquire one share
-  claimedRewards: BigDecimal!                                             # total amount of oLIT claimed by the position
+  token0CompoundedPerShare: BigDecimal!                                   # the average amount of token0 compounded back into the position per share
+  token1CompoundedPerShare: BigDecimal!                                   # the average amount of token1 compounded back into the position per share
+  claimedRewardsPerShare: BigDecimal!                                     # the average amount of oLIT claimed per share
 
   bunniToken: BunniToken!                                                 # the bunni token associated with the position
 }

@@ -1,4 +1,4 @@
-import { BigInt, Bytes, DataSourceContext, crypto, dataSource } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, Bytes, DataSourceContext, crypto, dataSource } from "@graphprotocol/graph-ts";
 import { BunniToken } from "../types/LiquidityGaugeFactory/BunniToken";
 import { LiquidityGauge } from "../types/LiquidityGaugeFactory/LiquidityGauge";
 import { ChildGauge } from "../types/ChildGaugeFactory/ChildGauge";
@@ -96,6 +96,13 @@ export function handleMinted(event: Minted): void {
   gauge.claimedRewards = gauge.claimedRewards.plus(newAmount);
   user.claimedRewards = user.claimedRewards.plus(newAmount);
   userPosition.claimedRewards = newAmount;
+
+  /// update the user position claimed reward per share
+  if (userPosition.balance.gt(BigDecimal.zero()) || userPosition.gaugeBalance.gt(BigDecimal.zero())) {
+    let delta = newAmount.minus(oldAmount);
+    let rewardPerShare = delta.div(userPosition.balance.plus(userPosition.gaugeBalance));
+    userPosition.claimedRewardsPerShare = userPosition.claimedRewardsPerShare.plus(rewardPerShare);
+  }
 
   gauge.save();
   user.save();
