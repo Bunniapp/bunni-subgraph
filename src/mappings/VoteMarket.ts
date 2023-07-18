@@ -1,5 +1,5 @@
 import { Address, BigInt, Bytes, crypto } from "@graphprotocol/graph-ts";
-import { VoteMarket, BountyCreated, BountyDurationIncrease, PeriodRolledOver } from "../types/VoteMarket/VoteMarket";
+import { VoteMarket, BountyCreated, BountyDurationIncrease } from "../types/VoteMarket/VoteMarket";
 import { getBounty, getToken } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
 import { WEEK } from "../utils/constants";
@@ -36,15 +36,6 @@ export function handleBountyDurationIncrease(event: BountyDurationIncrease): voi
 
   bounty.numberOfPeriods = BigInt.fromI32(event.params.numberOfPeriods);
   bounty.endPeriod = bounty.startPeriod.plus(bounty.numberOfPeriods.times(WEEK));
-
-  bounty.save();
-}
-
-export function handlePeriodRolledOver(event: PeriodRolledOver): void {
-  let bounty = getBounty(event.params.id);
-  let token = getToken(Address.fromBytes(bounty.rewardToken));
-
-  bounty.rewardPerPeriod = convertToDecimals(event.params.rewardPerPeriod, token.decimals);
 
   bounty.save();
 }

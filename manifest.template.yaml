@@ -396,8 +396,6 @@ dataSources:
           handler: handleBountyCreated
         - event: BountyDurationIncrease(uint256,uint8,uint256,uint256)
           handler: handleBountyDurationIncrease
-        - event: PeriodRolledOver(uint256,uint256,uint256,uint256)
-          handler: handlePeriodRolledOver
       file: ./src/mappings/VoteMarket.ts
   {{/VoteMarket}}
   {{#Minter}}
