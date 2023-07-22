@@ -8,8 +8,11 @@
     "build:arbitrum": "graph build subgraph.arbitrum.yaml",
     "build:polygon": "graph build subgraph.polygon.yaml",
 
-    "deploy:mainnet": "graph deploy bunniapp/bunni-mainnet-v2 subgraph.mainnet.yaml --node https://api.thegraph.com/deploy/",
-    "deploy:goerli": "graph deploy bunniapp/bunni-goerli-v2 subgraph.goerli.yaml --node https://api.thegraph.com/deploy/",
+    "deploy:mainnet": "graph deploy bunniapp/bunni-mainnet-development subgraph.mainnet.yaml --node https://api.thegraph.com/deploy/",
+    "deploy:goerli": "graph deploy bunniapp/bunni-goerli-development subgraph.goerli.yaml --node https://api.thegraph.com/deploy/",
+    "deploy:optimism": "graph deploy bunniapp/bunni-optimism-development subgraph.optimism.yaml --node https://api.thegraph.com/deploy/",
+    "deploy:polygon": "graph deploy bunniapp/bunni-polygon-development subgraph.polygon.yaml --node https://api.thegraph.com/deploy/",
+    "deploy:arbitrum": "graph deploy bunniapp/bunni-arbitrum-development subgraph.arbitrum.yaml --node https://api.thegraph.com/deploy/",
 
     "prepare:mainnet": "mustache ./config/mainnet.json manifest.template.yaml > subgraph.mainnet.yaml && graph codegen subgraph.mainnet.yaml --output-dir src/types/",
     "prepare:goerli": "mustache ./config/goerli.json manifest.template.yaml > subgraph.goerli.yaml && graph codegen subgraph.goerli.yaml --output-dir src/types/",
