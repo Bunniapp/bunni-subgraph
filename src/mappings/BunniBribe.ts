@@ -3,9 +3,9 @@ import { BunniBribe, DepositBribe } from "../types/BunniBribe/BunniBribe";
 import { BribeVault, DepositBribe as DepositBribeV2 } from "../types/BribeVault/BribeVault";
 import { BribeMarket } from "../types/BribeVault/BribeMarket";
 
+import { BRIBE_MARKET, WEEK } from "../utils/constants";
 import { getGauge, getBribe, getToken } from "../utils/entities";
 import { convertToDecimals } from "../utils/math";
-import { BRIBE_MARKET } from "../utils/constants";
 
 export function handleDepositBribe(event: DepositBribe): void {
     let bribeContract = BunniBribe.bind(event.address);
@@ -54,7 +54,7 @@ export function handleDepositBribeV2(event: DepositBribeV2): void {
     bribe.token = token.id;
     bribe.amount = convertToDecimals(event.params.amount, token.decimals);
     bribe.maxTokensPerVote = convertToDecimals(event.params.maxTokensPerVote, token.decimals);
-    bribe.deadline = deadline;
+    bribe.deadline = event.block.timestamp.div(WEEK).times(WEEK).plus(event.params.periodIndex.times(WEEK)).plus(WEEK);
     bribe.briber = event.params.briber;
 
     bribe.save();
