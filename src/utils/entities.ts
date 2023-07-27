@@ -1,8 +1,8 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { Bounty, Bribe, Bunni, BunniToken, Gauge, Pool, Quest, RewardToken, Token, User, UserPosition, Vote, VotingLock } from "../types/schema";
+import { Bounty, Bribe, Bunni, BunniToken, Gauge, Pool, Quest, RewardToken, Token, User, UserPosition, Vault, Vote, VotingLock, xPYT } from "../types/schema";
 import { BunniHub } from "../types/BunniHub/BunniHub";
-import { UniswapV3Pool } from "../types/templates";
+import { UniswapV3Pool, xPYT as xPYT_template} from "../types/templates";
 
 import { BUNNI_HUB } from "./constants";
 import { fetchPoolFee, fetchPoolSqrtPriceX96, fetchPoolTick, fetchPoolToken0, fetchPoolToken1 } from "./pool";
@@ -279,6 +279,25 @@ export function getUserPosition(bunniToken: BunniToken, user: User): UserPositio
   return userPosition as UserPosition;
 }
 
+export function getVault(share: Address): Vault {
+  let vault = Vault.load(share);
+
+  if (vault === null) {
+    vault = new Vault(share);
+
+    vault.gate = Address.zero();
+    vault.underlying = Address.zero();
+    vault.share = Address.zero();
+    vault.nyt = Address.zero();
+    vault.pyt = Address.zero();
+    vault.xpyt = [];
+
+    vault.save();
+  }
+
+  return vault as Vault;
+}
+
 export function getVote(gauge: Gauge, user: User): Vote {
   let vote = Vote.load(gauge.address.toHex() + '-' + user.address.toHex());
 
@@ -319,4 +338,26 @@ export function getVotingLock(user: User): VotingLock {
   }
 
   return lock as VotingLock;
+}
+
+export function getXpyt(xpytAddress: Address): xPYT {
+  let xpyt = xPYT.load(xpytAddress);
+
+  if (xpyt === null) {
+    xpyt = new xPYT(xpytAddress);
+
+    xpyt.address = xpytAddress;
+    xpyt.decimals = fetchTokenDecimals(xpytAddress);
+    xpyt.name = fetchTokenName(xpytAddress);
+    xpyt.symbol = fetchTokenSymbol(xpytAddress);
+
+    xpyt.conversionRate = BigDecimal.fromString("1");
+    xpyt.pools = [];
+    xpyt.vault = Address.zero();
+
+    xpyt.save();
+    xPYT_template.create(xpytAddress);
+  }
+
+  return xpyt as xPYT;
 }

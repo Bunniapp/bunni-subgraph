@@ -1,5 +1,13 @@
 {
   "network": "matic",
+  "GateFactory": {
+    "address": "0xbd16088611054fce04711aa9509d1d86e04dce2c",
+    "startBlock": 32785588
+  },
+  "UniswapV3xPYTFactory": {
+    "address": "0x302c230bc53901d3fe363d3483b2548f938efa33",
+    "startBlock": 32785736
+  },
   "BunniHub": {
     "address": "0xb5087F95643A9a4069471A28d32C569D9bd57fE4",
     "startBlock": 34317600

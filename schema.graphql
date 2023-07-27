@@ -183,6 +183,17 @@ type UserPosition @entity {
   bunniToken: BunniToken!                                                 # the bunni token associated with the position
 }
 
+type Vault @entity {
+  id: Bytes!                                                              # the share token address
+
+  gate: Bytes!                                                            # the gate address
+  underlying: Token!                                                      # the underlying token
+  share: Token!                                                           # the share token
+  nyt: Token!                                                             # the pyt token
+  pyt: Token!                                                             # the nyt token
+  xpyt: [xPYT!]!                                                          # the associated xPYTs
+}
+
 type Vote @entity {
   id: ID!                                                                 # gauge address - user address
 
@@ -207,4 +218,17 @@ type VotingLock @entity {
   lockEnd: BigInt!                                                        # timestamp when the voting lock ends
 
   user: User!                                                             # user associated with the voting lock
+}
+
+type xPYT @entity {
+  id: Bytes!                                                              # xPYT address
+
+  address: Bytes!                                                         # xPYT address
+  decimals: BigInt!                                                       # xPYT decimals
+  name: String!                                                           # xPYT name                                         
+  symbol: String!                                                         # xPYT symbol
+
+  conversionRate: BigDecimal!                                             # the exchange rate between PYT and xPYT
+  pools: [Pool!]!                                                         # pools associated with the xPYT
+  vault: Vault!                                                           # vault associated with the xPYT
 }

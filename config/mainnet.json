@@ -1,5 +1,21 @@
 {
   "network": "mainnet",
+  "GateFactory": {
+    "address": "0xbd16088611054fce04711aa9509d1d86e04dce2c",
+    "startBlock": 14916846
+  },
+  "UniswapV3Factory": {
+    "address": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    "startBlock": 14916846
+  },
+  "xPYTFactory": {
+    "address": "0x302c230bc53901d3fe363d3483b2548f938efa33",
+    "startBlock": 14916881
+  },
+  "UniswapV3xPYTFactory": {
+    "address": "0xD373A63Ce95fe95bB8A3417DC075943CC39dD1d2",
+    "startBlock": 15330182
+  },
   "BunniHub": {
     "address": "0xb5087F95643A9a4069471A28d32C569D9bd57fE4",
     "startBlock": 15743582

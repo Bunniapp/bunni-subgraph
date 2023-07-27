@@ -1,5 +1,13 @@
 {
   "network": "arbitrum-one",
+  "GateFactory": {
+    "address": "0xBD16088611054fce04711Aa9509D1D86E04dCe2c",
+    "startBlock": 21005251
+  },
+  "UniswapV3xPYTFactory": {
+    "address": "0x302C230bc53901D3fE363D3483B2548F938EfA33",
+    "startBlock": 21007748
+  },
   "BunniHub": {
     "address": "0xb5087F95643A9a4069471A28d32C569D9bd57fE4",
     "startBlock": 29986993
