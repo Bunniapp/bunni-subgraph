@@ -20,6 +20,12 @@
     "prepare:arbitrum": "mustache ./config/arbitrum.json manifest.template.yaml > subgraph.arbitrum.yaml && graph codegen subgraph.arbitrum.yaml --output-dir src/types/",
     "prepare:polygon": "mustache ./config/polygon.json manifest.template.yaml > subgraph.polygon.yaml && graph codegen subgraph.polygon.yaml --output-dir src/types/",
 
+    "studio:mainnet": "graph deploy --studio bunni-mainnet subgraph.mainnet.yaml",
+    "studio:goerli": "graph deploy --studio bunni-goerli subgraph.goerli.yaml",
+    "studio:optimism": "graph deploy --studio bunni-optimism subgraph.optimism.yaml",
+    "studio:polygon": "graph deploy --studio bunni-polygon subgraph.polygon.yaml",
+    "studio:arbitrum": "graph deploy --studio bunni-arbitrum subgraph.arbitrum.yaml",
+
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy bunniapp/bunni-mainnet-development subgraph.yaml --node https://api.thegraph.com/deploy/",
