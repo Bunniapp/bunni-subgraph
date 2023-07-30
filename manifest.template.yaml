@@ -54,6 +54,10 @@ dataSources:
       abis:
         - name: UniswapV3Factory
           file: ./abis/UniswapV3Factory.json
+        - name: UniswapV3Pool
+          file: ./abis/UniswapV3Pool.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
           handler: handlePoolCreated

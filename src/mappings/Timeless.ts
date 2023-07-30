@@ -31,7 +31,7 @@ export function handlePoolCreated(event: PoolCreated): void {
   let xpyt0 = xPYT.load(event.params.token0);
   if (xpyt0 !== null) {
     let vault = getVault(Address.fromBytes(xpyt0.vault));
-    if (Address.fromBytes(vault.nyt) === event.params.token1) {
+    if (Address.fromBytes(vault.nyt) == event.params.token1) {
       let pool = getPool(event.params.pool);
       let pools = xpyt0.pools;
       pools.push(pool.id);
@@ -43,7 +43,7 @@ export function handlePoolCreated(event: PoolCreated): void {
   let xpyt1 = xPYT.load(event.params.token1);
   if (xpyt1 !== null) {
     let vault = getVault(Address.fromBytes(xpyt1.vault));
-    if (Address.fromBytes(vault.nyt) === event.params.token0) {
+    if (Address.fromBytes(vault.nyt) == event.params.token0) {
       let pool = getPool(event.params.pool);
       let pools = xpyt1.pools;
       pools.push(pool.id);
