@@ -106,10 +106,17 @@ export function handleDeposit(event: Deposit): void {
   /// update the user position balance and cost basis per share
   let token0CostBasis = userPosition.token0CostBasisPerShare.times(userPosition.balance).plus(bunniToken.amount0PerShare.times(shares));
   let token1CostBasis = userPosition.token1CostBasisPerShare.times(userPosition.balance).plus(bunniToken.amount1PerShare.times(shares));
+  let token0Compounded = userPosition.token0CompoundedPerShare.times(userPosition.balance);
+  let token1Compounded = userPosition.token1CompoundedPerShare.times(userPosition.balance);
+  let claimedRewards = userPosition.claimedRewardsPerShare.times(userPosition.balance);
+
   userPosition.balance = userPosition.balance.plus(shares);
   if (userPosition.balance.gt(BigDecimal.zero())) {
     userPosition.token0CostBasisPerShare = token0CostBasis.div(userPosition.balance);
     userPosition.token1CostBasisPerShare = token1CostBasis.div(userPosition.balance);
+    userPosition.token0CompoundedPerShare = token0Compounded.div(userPosition.balance);
+    userPosition.token1CompoundedPerShare = token1Compounded.div(userPosition.balance);
+    userPosition.claimedRewardsPerShare = claimedRewards.div(userPosition.balance);
   }
   
   bunniToken.save();

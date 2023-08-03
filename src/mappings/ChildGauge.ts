@@ -22,6 +22,7 @@ export function handleDeposit(event: Deposit): void {
   userPosition.gaugeBalance = userPosition.gaugeBalance.plus(amount);
 
   gauge.save();
+  userPosition.save();
 }
 
 export function handleWithdraw(event: Withdraw): void {
@@ -36,6 +37,7 @@ export function handleWithdraw(event: Withdraw): void {
   userPosition.gaugeBalance = userPosition.gaugeBalance.minus(amount);
 
   gauge.save();
+  userPosition.save();
 }
 
 export function handleUpdateLiquidityLimit(event: UpdateLiquidityLimit): void {
@@ -56,6 +58,7 @@ export function handleTransfer(event: Transfer): void {
   /// ignore minting and burning events
   if (event.params._from != Address.zero() && event.params._to != Address.zero()) {
     let gauge = getGauge(dataSource.context().getBytes("id"));
+    let bunniToken = getBunniToken(gauge.bunniToken);
     let fromPosition = getUserPosition(getBunniToken(gauge.bunniToken), getUser(event.params._from));
     let toPosition = getUserPosition(getBunniToken(gauge.bunniToken), getUser(event.params._to));
     let amount = convertToDecimals(event.params._value, gauge.decimals);
@@ -72,9 +75,20 @@ export function handleTransfer(event: Transfer): void {
     if (toNewTotalBalance.gt(BigDecimal.zero())) {
       toPosition.token0CostBasisPerShare = token0CostBasis.div(toNewTotalBalance);
       toPosition.token1CostBasisPerShare = token1CostBasis.div(toNewTotalBalance);
+      toPosition.token0CompoundedPerShare = toPosition.token0CompoundedPerShare.times(toOldTotalBalance).div(toNewTotalBalance);
+      toPosition.token1CompoundedPerShare = toPosition.token1CompoundedPerShare.times(toOldTotalBalance).div(toNewTotalBalance);
+      toPosition.claimedRewardsPerShare = toPosition.claimedRewardsPerShare.times(toOldTotalBalance).div(toNewTotalBalance);
     }
     toPosition.gaugeBalance = toPosition.gaugeBalance.plus(amount);
 
+    /// update the positions list
+    let positions = bunniToken.positions;
+    if (!positions.includes(toPosition.id)) {
+      positions.push(toPosition.id);
+      bunniToken.positions = positions;
+    }
+
+    bunniToken.save();
     fromPosition.save();
     toPosition.save();
   }

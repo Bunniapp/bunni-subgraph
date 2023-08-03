@@ -42,8 +42,19 @@ export function handleTransfer(event: Transfer): void {
               if (providerNewTotalBalance.gt(BigDecimal.zero())) {
                 providerPosition.token0CostBasisPerShare = token0CostBasis.div(providerNewTotalBalance);
                 providerPosition.token1CostBasisPerShare = token1CostBasis.div(providerNewTotalBalance);
+                providerPosition.token0CompoundedPerShare = providerPosition.token0CompoundedPerShare.times(providerOldTotalBalance).div(providerNewTotalBalance);
+                providerPosition.token1CompoundedPerShare = providerPosition.token1CompoundedPerShare.times(providerOldTotalBalance).div(providerNewTotalBalance);
+                providerPosition.claimedRewardsPerShare = providerPosition.claimedRewardsPerShare.times(providerOldTotalBalance).div(providerNewTotalBalance);
               }
 
+              /// update the positions list
+              let positions = bunniToken.positions;
+              if (!positions.includes(providerPosition.id)) {
+                positions.push(providerPosition.id);
+                bunniToken.positions = positions;
+              }
+
+              bunniToken.save();
               providerPosition.save();
             }
           }
@@ -66,9 +77,20 @@ export function handleTransfer(event: Transfer): void {
       if (toNewTotalBalance.gt(BigDecimal.zero())) {
         toPosition.token0CostBasisPerShare = token0CostBasis.div(toNewTotalBalance);
         toPosition.token1CostBasisPerShare = token1CostBasis.div(toNewTotalBalance);
+        toPosition.token0CompoundedPerShare = toPosition.token0CompoundedPerShare.times(toOldTotalBalance).div(toNewTotalBalance);
+        toPosition.token1CompoundedPerShare = toPosition.token1CompoundedPerShare.times(toOldTotalBalance).div(toNewTotalBalance);
+        toPosition.claimedRewardsPerShare = toPosition.claimedRewardsPerShare.times(toOldTotalBalance).div(toNewTotalBalance);
       }
       toPosition.balance = toPosition.balance.plus(amount);
 
+      /// update the positions list
+      let positions = bunniToken.positions;
+      if (!positions.includes(toPosition.id)) {
+        positions.push(toPosition.id);
+        bunniToken.positions = positions;
+      }
+
+      bunniToken.save();
       fromPosition.save();
       toPosition.save();
     }
